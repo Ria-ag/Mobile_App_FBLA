@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "$RHVPLY9",
+            "cwd": "$RECYCLE.BIN\\S-1-5-21-3386445372-1327643079-3567596567-1001\\$RHVPLY9",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "$RHVPLY9 (profile mode)",
+            "cwd": "$RECYCLE.BIN\\S-1-5-21-3386445372-1327643079-3567596567-1001\\$RHVPLY9",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "$RHVPLY9 (release mode)",
+            "cwd": "$RECYCLE.BIN\\S-1-5-21-3386445372-1327643079-3567596567-1001\\$RHVPLY9",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
