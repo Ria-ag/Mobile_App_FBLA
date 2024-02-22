@@ -31,14 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _selectedIndex = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -51,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (_selectedIndex) {
       case 0:
-        page = IncrementCounter(counter: _counter);
+        page = Placeholder();
         break;
       case 1:
         page = Placeholder();
@@ -95,38 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: page,
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class IncrementCounter extends StatelessWidget {
-  const IncrementCounter({
-    super.key,
-    required int counter,
-  }) : _counter = counter;
-
-  final int _counter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'You have pushed the button this many times:',
-          ),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-        ],
-      ),
     );
   }
 }
