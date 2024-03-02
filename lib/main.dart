@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Placeholder();
         break;
       case 1:
-        page = Placeholder();
+        page = ProfilePage();
         break;
       case 2:
         page = Placeholder();
@@ -90,4 +90,187 @@ class _MyHomePageState extends State<MyHomePage> {
       body: page,
     );
   }
+}
+
+class ProfilePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: 
+        Container(
+          padding: const EdgeInsets.all(8),
+          color: Colors.grey[200],
+          child: Center(
+            child: Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Honors Classes", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: ListTile(
+                      subtitle: Column(
+                        children: [
+                          SizedBox(
+                            width:1000,
+                            height: 50,
+                            child: TextButton(
+                              onPressed: (){
+                                modalSheet(context);
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text("AP Calculus BC"),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Clubs/Organizations", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: ListTile(
+                      subtitle: Column(
+                        children: [
+                          SizedBox(
+                            width:1000,
+                            height: 50,
+                            child: TextButton(
+                              onPressed: (){
+                                modalSheet(context);
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text("FBLA"),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Projects", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: ListTile(
+                      subtitle: Column(
+                        children: [
+                          SizedBox(
+                            width:1000,
+                            height: 50,
+                            child: TextButton(
+                              onPressed: (){
+                                modalSheet(context);
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text("Mobile App"),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Tests", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: ListTile(
+                      subtitle: Column(
+                        children: [
+                          SizedBox(
+                            width:1000,
+                            height: 50,
+                           child: TextButton(
+                              onPressed: (){
+                                modalSheet(context);
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text("SAT"),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+    );
+  }
+}
+
+void modalSheet(context){
+  showModalBottomSheet(context: context, builder: (BuildContext bc) {  
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.6,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Text("More Information"),
+                const Spacer(),
+                TextButton(
+                  child:const Icon(Icons.cancel, color: Colors.red, size: 20,), 
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  }
+                ),
+              ],
+            ),
+          ],
+        ),
+      )
+    );
+  });
 }
