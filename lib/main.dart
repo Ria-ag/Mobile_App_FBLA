@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/text_tile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -92,18 +93,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class ProfilePage extends StatelessWidget{
+class ProfilePage extends StatefulWidget {
+  const  ProfilePage({super.key});
+  @override
+  State<ProfilePage> createState() => ProfilePageState();
+}
+
+class ProfilePageState extends State<ProfilePage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: 
+      body:
         Container(
           padding: const EdgeInsets.all(8),
           color: Colors.grey[200],
-          child: Center(
+          child: const Center(
             child: Column(
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -115,29 +122,10 @@ class ProfilePage extends StatelessWidget{
                     ),
                   ],
                 ),
-                Container(
-                  child: ListTile(
-                      subtitle: Column(
-                        children: [
-                          SizedBox(
-                            width:1000,
-                            height: 50,
-                            child: TextButton(
-                              onPressed: (){
-                                modalSheet(context);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                                backgroundColor: Colors.white,
-                              ),
-                              child: const Text("AP Calculus BC"),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ),
-                ),
-                const Row(
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -149,33 +137,14 @@ class ProfilePage extends StatelessWidget{
                     ),
                   ],
                 ),
-                Container(
-                  child: ListTile(
-                      subtitle: Column(
-                        children: [
-                          SizedBox(
-                            width:1000,
-                            height: 50,
-                            child: TextButton(
-                              onPressed: (){
-                                modalSheet(context);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                                backgroundColor: Colors.white,
-                              ),
-                              child: const Text("FBLA"),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ),
-                ),
-                const Row(
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Projects", 
+                      "Projects",
                       style: TextStyle(
                         fontWeight: FontWeight.bold, 
                         fontSize: 20,
@@ -183,29 +152,10 @@ class ProfilePage extends StatelessWidget{
                     ),
                   ],
                 ),
-                Container(
-                  child: ListTile(
-                      subtitle: Column(
-                        children: [
-                          SizedBox(
-                            width:1000,
-                            height: 50,
-                            child: TextButton(
-                              onPressed: (){
-                                modalSheet(context);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                                backgroundColor: Colors.white,
-                              ),
-                              child: const Text("Mobile App"),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ),
-                ),
-                const Row(
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -217,60 +167,23 @@ class ProfilePage extends StatelessWidget{
                     ),
                   ],
                 ),
-                Container(
-                  child: ListTile(
-                      subtitle: Column(
-                        children: [
-                          SizedBox(
-                            width:1000,
-                            height: 50,
-                           child: TextButton(
-                              onPressed: (){
-                                modalSheet(context);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                                backgroundColor: Colors.white,
-                              ),
-                              child: const Text("SAT"),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ),
-                ),
+                SizedBox(height: 8, width:8,),
+                TextTile(),
               ],
             ),
           ),
         ),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            addItem("input");
+          },
+          backgroundColor: Colors.blue,
+          child: const Text("+", style: TextStyle(fontSize: 20),),
+        ),
+      );
   }
 }
 
-void modalSheet(context){
-  showModalBottomSheet(context: context, builder: (BuildContext bc) {  
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const Text("More Information"),
-                const Spacer(),
-                TextButton(
-                  child:const Icon(Icons.cancel, color: Colors.red, size: 20,), 
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  }
-                ),
-              ],
-            ),
-          ],
-        ),
-      )
-    );
-  });
+void addItem(String name){
+
 }
