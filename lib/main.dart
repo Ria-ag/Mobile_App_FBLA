@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/text_tile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Placeholder();
         break;
       case 1:
-        page = Placeholder();
+        page = ProfilePage();
         break;
       case 2:
         page = Placeholder();
@@ -89,4 +90,99 @@ class _MyHomePageState extends State<MyHomePage> {
       body: page,
     );
   }
+}
+
+class ProfilePage extends StatefulWidget {
+  const  ProfilePage({super.key});
+  @override
+  State<ProfilePage> createState() => ProfilePageState();
+}
+
+class ProfilePageState extends State<ProfilePage>{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body:
+        Container(
+          padding: const EdgeInsets.all(8),
+          color: Colors.grey[200],
+          child: const Center(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Honors Classes", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Clubs/Organizations", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Projects",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+                SizedBox(height: 8, width:8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Tests", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8, width:8,),
+                TextTile(),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            addItem("input");
+          },
+          backgroundColor: Colors.blue,
+          child: const Text("+", style: TextStyle(fontSize: 20),),
+        ),
+      );
+  }
+}
+
+void addItem(String name){
+
 }
