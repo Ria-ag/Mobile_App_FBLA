@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FBLA Mobile App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme:
             ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 61, 117, 186)),
@@ -42,19 +43,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget icon;
     Widget page;
     switch (_selectedIndex) {
       case 0:
         page = Placeholder();
+        icon = MainIconButton();
         break;
       case 1:
         page = ProfilePage();
+        icon = ProfileIconButton();
         break;
       case 2:
         page = Placeholder();
+        icon = MainIconButton();
         break;
       case 3:
         page = Placeholder();
+        icon = MainIconButton();
         break;
       default:
         throw UnimplementedError();
@@ -62,8 +68,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        backgroundColor: Colors.white,
+        title: const Row(
+          children: [
+            Image(
+              image: AssetImage('assets/progress.png'),
+              // PLACEHOLDER ICON
+              height: 30,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Text('App Name'),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: 'Share Profile',
+            onPressed: () {
+              //PLACEHOLDER
+            },
+          ),
+          icon,
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: _onItemTapped,
@@ -92,97 +120,153 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class MainIconButton extends StatelessWidget {
+  const MainIconButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.smart_button),
+      tooltip: 'Show Snackbar',
+      onPressed: () {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('This is a snackbar')));
+      },
+    );
+  }
+}
+
+class ProfileIconButton extends StatelessWidget {
+  const ProfileIconButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.add),
+      tooltip: 'Add',
+      onPressed: () {
+        //PLACEHOLDER
+      },
+    );
+  }
+}
+
 class ProfilePage extends StatefulWidget {
-  const  ProfilePage({super.key});
+  const ProfilePage({super.key});
   @override
   State<ProfilePage> createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage>{
+class ProfilePageState extends State<ProfilePage> {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      body:
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.grey[200],
-          child: const Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Honors Classes", 
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, 
-                        fontSize: 20,
-                      ),
+      body: Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.grey[200],
+        child: const Center(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Honors Classes",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                SizedBox(height: 8, width:8,),
-                TextTile(),
-                SizedBox(height: 8, width:8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Clubs/Organizations", 
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, 
-                        fontSize: 20,
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              TextTile(),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Clubs/Organizations",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                SizedBox(height: 8, width:8,),
-                TextTile(),
-                SizedBox(height: 8, width:8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Projects",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, 
-                        fontSize: 20,
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              TextTile(),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Projects",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                SizedBox(height: 8, width:8,),
-                TextTile(),
-                SizedBox(height: 8, width:8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Tests", 
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, 
-                        fontSize: 20,
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              TextTile(),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Tests",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                SizedBox(height: 8, width:8,),
-                TextTile(),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+                width: 8,
+              ),
+              TextTile(),
+            ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            addItem("input");
-          },
-          backgroundColor: Colors.blue,
-          child: const Text("+", style: TextStyle(fontSize: 20),),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          addItem("input");
+        },
+        backgroundColor: Colors.blue,
+        child: const Text(
+          "+",
+          style: TextStyle(fontSize: 20),
         ),
-      );
+      ),
+    );
   }
 }
 
-void addItem(String name){
-
-}
+void addItem(String name) {}
