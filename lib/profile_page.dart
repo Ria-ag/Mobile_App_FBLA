@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/icon_tile.dart';
 import 'package:mobileapp/main.dart';
-import 'package:mobileapp/text_tile.dart';
+import 'package:mobileapp/tiles/arts_tile.dart';
+import 'package:mobileapp/tiles/athletic_tile.dart';
+import 'package:mobileapp/tiles/awards_tile.dart';
+import 'package:mobileapp/tiles/class_tile.dart';
+import 'package:mobileapp/tiles/clubs_tile.dart';
+import 'package:mobileapp/tiles/project_tile.dart';
+import 'package:mobileapp/tiles/service_tile.dart';
+import 'package:mobileapp/tiles/test_tile.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -76,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const IconTile(),
+                const SportTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const IconTile(),
+                const ArtTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const IconTile(),
+                const ServiceTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const IconTile(),
+                const AwardTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const TextTile(),
+                const ClassTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const TextTile(),
+                const ClubTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const TextTile(),
+                const ProjectTile(),
                 spacer,
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 spacer,
-                const TextTile(),
+                const TestTile(),
               ],
             ),
           ),
@@ -159,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   void addItem() {
     List<Widget> tempList= _listOfWidgets;
-    tempList.add(const TextTile());
+    tempList.add(const ClassTile());
     setState((){
       _listOfWidgets = tempList;
     });

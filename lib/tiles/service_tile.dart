@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class IconTile extends StatelessWidget {
-  const IconTile({super.key});
+class ServiceTile extends StatelessWidget {
+  const ServiceTile({super.key});
 
   @override
   Widget build (BuildContext context){
     return Container(
+      width: 100,
+      height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -14,7 +16,7 @@ class IconTile extends StatelessWidget {
         onTap: (){
           modalSheet(context);
         },
-        leading: const Icon(Icons.sports_tennis),
+        title: const Text("10", style: TextStyle(fontSize: 50)),
       ),
     );
   }

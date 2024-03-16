@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextTile extends StatelessWidget {
-  const TextTile({super.key});
+class ClassTile extends StatelessWidget {
+  const ClassTile({super.key});
 
   @override
   Widget build (BuildContext context){
@@ -14,7 +14,7 @@ class TextTile extends StatelessWidget {
         onTap: (){
           modalSheet(context);
         },
-        title: const Text("Item"),
+        title: const Text("Class name"),
       ),
     );
   }
