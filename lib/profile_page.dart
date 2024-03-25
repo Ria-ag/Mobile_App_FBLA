@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/main.dart';
-import 'package:mobileapp/tiles/arts_tile.dart';
-import 'package:mobileapp/tiles/athletic_tile.dart';
-import 'package:mobileapp/tiles/awards_tile.dart';
-import 'package:mobileapp/tiles/class_tile.dart';
-import 'package:mobileapp/tiles/clubs_tile.dart';
-import 'package:mobileapp/tiles/project_tile.dart';
-import 'package:mobileapp/tiles/service_tile.dart';
-import 'package:mobileapp/tiles/test_tile.dart';
+import 'package:mobileapp/icon_tile.dart';
+import 'package:mobileapp/text_tile.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -16,25 +10,30 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-List<Widget> _listOfWidgets = [];
-
 class _ProfilePageState extends State<ProfilePage> {
-  final Widget spacer = const SizedBox(
-    height: 8,
-    width: 8,
-  );
+  void addItem() {
+    List<Widget> listOfWidgets = [];
+
+    List<Widget> tempList = listOfWidgets;
+    tempList
+        .add(const TextTile(name: "Class name", title: "Clubs/Organizations"));
+    setState(() {
+      listOfWidgets = tempList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.grey[200],
-          child: Center(
-            child: Column(
-              children: [
-                Row(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -63,7 +62,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: Column(
                           children: [
-                            Text(context.watch<MyAppState>().nameController.text,
+                            Text(
+                                context.watch<MyAppState>().nameController.text,
                                 style: const TextStyle(fontSize: 40.0)),
                             const Text('Woodinville High School',
                                 style: TextStyle(fontSize: 20.0)),
@@ -75,79 +75,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   ],
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Athletics", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const SportTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Performing Arts", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const ArtTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Community Service", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const ServiceTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Awards", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const AwardTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Honors Classes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const ClassTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Clubs/Organizations", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const ClubTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Projects", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const ProjectTile(),
-                spacer,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Tests", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
-                  ],
-                ),
-                spacer,
-                const TestTile(),
-              ],
-            ),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconTile(title: "Athletics", icon: Icons.sports_tennis),
+                  IconTile(title: "Performing Arts", icon: Icons.music_note),
+                  IconTile(title: "Community Serivce", icon: Icons.help),
+                  IconTile(title: "Awards", icon: Icons.star),
+                ],
+              ),
+              const TextTile(name: "Class name", title: "Honors Classes"),
+              const TextTile(name: "Club name", title: "Clubs/Organizations"),
+              const TextTile(name: "Project name", title: "Projects"),
+              const TextTile(
+                  name: "Test name", trailing: "score/total", title: "Tests")
+            ],
           ),
         ),
       ),
@@ -162,12 +105,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
-  }
-  void addItem() {
-    List<Widget> tempList= _listOfWidgets;
-    tempList.add(const ClassTile());
-    setState((){
-      _listOfWidgets = tempList;
-    });
   }
 }
