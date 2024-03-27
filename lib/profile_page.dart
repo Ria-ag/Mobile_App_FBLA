@@ -11,14 +11,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  void addItem() {
-    List<Widget> listOfWidgets = [];
+  List<Widget> widgetList = [];
 
-    List<Widget> tempList = listOfWidgets;
+  void addItem() {
+    List<Widget> tempList = widgetList;
     tempList
         .add(const TextTile(name: "Class name", title: "Clubs/Organizations"));
     setState(() {
-      listOfWidgets = tempList;
+      widgetList = tempList;
     });
   }
 
@@ -89,7 +89,8 @@ class _ProfilePageState extends State<ProfilePage> {
               const TextTile(name: "Club name", title: "Clubs/Organizations"),
               const TextTile(name: "Project name", title: "Projects"),
               const TextTile(
-                  name: "Test name", trailing: "score/total", title: "Tests")
+                  name: "Test name", title: "Tests", trailing: "score/total"),
+              Column(children: widgetList)
             ],
           ),
         ),
@@ -99,10 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
           addItem();
         },
         backgroundColor: Colors.blue,
-        child: const Text(
-          "+",
-          style: TextStyle(fontSize: 20),
-        ),
+        child: const Icon(Icons.edit),
       ),
     );
   }
