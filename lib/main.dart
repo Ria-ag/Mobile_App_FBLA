@@ -12,8 +12,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
+        ChangeNotifierProvider<MyProfileState>(
+            create: (context) => MyProfileState()),
+      ],
       child: MaterialApp(
         title: 'FBLA Mobile App',
         debugShowCheckedModeBanner: false,

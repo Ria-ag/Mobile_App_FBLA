@@ -4,26 +4,74 @@ import 'package:mobileapp/icon_tile.dart';
 import 'package:mobileapp/text_tile.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
+class MyProfileState extends ChangeNotifier {
   List<Widget> widgetList = [];
+  List<bool> isChecked = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
+  onChange(bool value, int index) {
+    isChecked[index] = value;
+    notifyListeners();
+  }
 
   void addItem() {
     List<Widget> tempList = widgetList;
     tempList
         .add(const TextTile(name: "Class name", title: "Clubs/Organizations"));
-    setState(() {
-      widgetList = tempList;
-    });
+    widgetList = tempList;
+    notifyListeners();
   }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<IconTile> ITs = [
+      const IconTile(title: "Athletics", icon: Icons.sports_tennis),
+      const IconTile(title: "Performing Arts", icon: Icons.music_note),
+      const IconTile(title: "Community Serivce", icon: Icons.help),
+      const IconTile(title: "Awards", icon: Icons.star),
+    ];
+
+    List<TextTile> TTs = [
+      const TextTile(name: "Class name", title: "Honors Classes"),
+      const TextTile(name: "Club name", title: "Clubs/Organizations"),
+      const TextTile(name: "Project name", title: "Projects"),
+      const TextTile(
+          name: "Test name", title: "Tests", trailing: "score/total"),
+    ];
+
+    List<Widget> displayITs = [];
+
+    List<Widget> displayTTs = [
+      Container(),
+      Container(),
+      Container(),
+      Container(),
+    ];
+
+    for (var i = 0; i < ITs.length; i++) {
+      if (context.watch<MyProfileState>().isChecked[i]) {
+        displayITs.add(ITs[i]);
+      }
+    }
+
+    for (var i = 0; i < TTs.length; i++) {
+      displayTTs[i] = (context.watch<MyProfileState>().isChecked[i + 4])
+          ? TTs[i]
+          : Container();
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
@@ -76,32 +124,86 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconTile(title: "Athletics", icon: Icons.sports_tennis),
-                  IconTile(title: "Performing Arts", icon: Icons.music_note),
-                  IconTile(title: "Community Serivce", icon: Icons.help),
-                  IconTile(title: "Awards", icon: Icons.star),
-                ],
+                children: displayITs,
               ),
-              const TextTile(name: "Class name", title: "Honors Classes"),
-              const TextTile(name: "Club name", title: "Clubs/Organizations"),
-              const TextTile(name: "Project name", title: "Projects"),
-              const TextTile(
-                  name: "Test name", title: "Tests", trailing: "score/total"),
-              Column(children: widgetList)
+              ...displayTTs,
+              ...context.watch<MyProfileState>().widgetList,
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          addItem();
-        },
-        backgroundColor: Colors.blue,
         child: const Icon(Icons.edit),
+        onPressed: () => _dialogBuilder(context),
       ),
+    );
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    List<String> blocks = [
+      "Athletics",
+      "Performing Arts",
+      "Community Service",
+      "Awards",
+      "Honors Class",
+      "Clubs/Organizations",
+      "Projects",
+      "Tests",
+    ];
+
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return ChangeNotifierProvider.value(
+          value: context.read<MyProfileState>(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 15, 165),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 300,
+                  padding: const EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    color: Theme.of(context).dialogBackgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        offset: const Offset(0, 4),
+                        blurRadius: 8,
+                        spreadRadius: 0,
+                      )
+                    ],
+                  ),
+                  child: Material(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: blocks.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(blocks[index]),
+                          value:
+                              context.watch<MyProfileState>().isChecked[index],
+                          onChanged: (value) => context
+                              .read<MyProfileState>()
+                              .onChange(value!, index),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
