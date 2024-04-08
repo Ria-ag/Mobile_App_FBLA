@@ -83,13 +83,13 @@ void modalSheet(BuildContext context, String title) {
                     TextButton(
                       child: const Icon(Icons.add, size: 20),
                       onPressed: () {
-                        readState.addXP(
-                          Experience(
-                            title: "Experience ${readState.xpList.length + 1}",
-                            remove: (index) => readState.removeXP(index),
-                            index: readState.xpList.length,
-                          ),
-                        );
+                        // readState.addXP(
+                        //   Experience(
+                        //     title: "Experience ${readState.xpList.length + 1}",
+                        //     // remove: (index) => readState.removeXP(index),
+                        //     // index: readState.xpList.length,
+                        //   ),
+                        // );
                       },
                     ),
                     TextButton(
@@ -101,7 +101,7 @@ void modalSheet(BuildContext context, String title) {
                     ),
                   ],
                 ),
-                ...watchState.xpList,
+                //...watchState.xpList,
               ],
             ),
           ),
