@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mobileapp/icon_tile_provider';
 import 'experience.dart';
 
 class IconTile extends StatefulWidget {
-  IconTile({super.key, required this.icon, required this.title});
+  const IconTile({super.key, required this.icon, required this.title});
 
   final String title;
   final IconData icon;
