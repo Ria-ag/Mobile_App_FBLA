@@ -48,7 +48,7 @@ class ProfilePage extends StatelessWidget {
       const TextTile(name: "Club name", title: "Clubs/Organizations"),
       const TextTile(name: "Project name", title: "Projects"),
       const TextTile(
-          name: "Test name", title: "Tests", trailing: "score/total"),
+          name: "Test name", title: "Tests"),
     ];
 
     List<Widget> displayITs = [];
@@ -138,7 +138,7 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
+        child: const Icon(Icons.add),
         onPressed: () => _dialogBuilder(context),
       ),
     );

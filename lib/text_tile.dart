@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mobileapp/experience.dart';
 
-class TextTile extends StatelessWidget {
+class TextTile extends StatefulWidget {
   const TextTile(
-      {super.key, required this.name, required this.title, this.trailing = ""});
+      {super.key, required this.name, required this.title});
 
   final String name;
-  final String trailing;
   final String title;
+
+  @override
+  State<TextTile> createState() => _TextTileState();
+}
+
+class _TextTileState extends State<TextTile> {
+  List<Widget> listTiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +24,7 @@ class TextTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            widget.title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           Container(
@@ -26,46 +34,62 @@ class TextTile extends StatelessWidget {
             ),
             child: ListTile(
               onTap: () {
-                modalSheet(context);
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (BuildContext bc) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text("More Information"),
+                                    const Spacer(),
+                                    TextButton(
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                    }),
+                                    TextButton(
+                                      child: const Icon(
+                                        Icons.add,
+                                        color: Colors.black,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          listTiles.add(Experience(
+                                            title: widget.title
+                                          ));
+                                        });
+                                    }),        
+                                  ],
+                                ),
+                                ListView(
+                                  children: listTiles, // Display ListTiles in a ListView
+                                ),
+                              ],
+                            ),
+                         )),
+                      ],
+                    );
+                });
               },
-              title: Text(name),
-              trailing: Text(trailing),
+              title: Text(widget.name),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-void modalSheet(context) {
-  showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Text("More Information"),
-                      const Spacer(),
-                      TextButton(
-                          child: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          }),
-                    ],
-                  ),
-                ],
-              ),
-            ));
-      });
 }
