@@ -57,50 +57,53 @@ class IconTile extends StatelessWidget {
 }
 
 void modalSheet(BuildContext context, String title) {
-  // var readState = context.read<IconNotifier>();
-  // var watchState = context.watch<IconNotifier>();
+  var readState = context.read<IconNotifier>();
+  var watchState = context.watch<IconNotifier>();
 
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (context) {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height - 50,
-        width: MediaQuery.of(context).size.width - 15,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    child: const Icon(Icons.add, size: 20),
-                    onPressed: () {
-                      // readState.addXP(
-                      //   Experience(
-                      //     title: "Experience ${readState.xpList.length + 1}",
-                      //     remove: (index) => readState.removeXP(index),
-                      //     index: readState.xpList.length,
-                      //   ),
-                      // );
-                    },
-                  ),
-                  TextButton(
-                    child:
-                        const Icon(Icons.cancel, color: Colors.red, size: 20),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              // ...watchState.xpList,
-            ],
+      return ChangeNotifierProvider.value(
+        value: context.read<IconNotifier>(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - 50,
+          width: MediaQuery.of(context).size.width - 15,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      child: const Icon(Icons.add, size: 20),
+                      onPressed: () {
+                        readState.addXP(
+                          Experience(
+                            title: "Experience ${readState.xpList.length + 1}",
+                            remove: (index) => readState.removeXP(index),
+                            index: readState.xpList.length,
+                          ),
+                        );
+                      },
+                    ),
+                    TextButton(
+                      child:
+                          const Icon(Icons.cancel, color: Colors.red, size: 20),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                ...watchState.xpList,
+              ],
+            ),
           ),
         ),
       );
