@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/icon_tile.dart';
-import 'package:mobileapp/icon_tile_provider';
 import 'package:mobileapp/main.dart';
 import 'package:mobileapp/text_tile.dart';
 import 'package:provider/provider.dart';
