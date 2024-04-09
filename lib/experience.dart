@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//this is my silly lil change so i can commit again!!
 
 class Experience extends StatefulWidget {
   const Experience(
@@ -23,6 +22,9 @@ class _ExperienceState extends State<Experience> {
   String score = "100";
   String grade = "A";
   String role = "President";
+  String hours = "10";
+  String award = "Woodinville High School";
+  String location = "Hopelink";
   bool editable = false;
 
   @override
@@ -50,7 +52,7 @@ class _ExperienceState extends State<Experience> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: ListTile(
-              title: !editable ? Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)) : TextFormField(
+              title: widget.title != "Community Service" ? !editable ? Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)) : TextFormField(
                 initialValue: name,
                 onFieldSubmitted: (value) {
                   setState(() {editable = false; name = value;});
@@ -58,6 +60,15 @@ class _ExperienceState extends State<Experience> {
                 decoration: const InputDecoration(
                   hintText: "ex. FBLA",
                   labelText: "Name",
+                ),
+              ) : !editable ? Text(location, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)) : TextFormField(
+                initialValue: location,
+                onFieldSubmitted: (value) {
+                  setState(() {editable = false; location = value;});
+                },
+                decoration: const InputDecoration(
+                  hintText: "ex. Hopelink",
+                  labelText: "Location",
                 ),
               ),
               subtitle: Column(
@@ -83,10 +94,21 @@ class _ExperienceState extends State<Experience> {
                                               setState(() {editable = false; role = value;});
                                             },
                                             decoration: const InputDecoration(
-                                              hintText: "President",
+                                              hintText: "ex. President",
                                               labelText: "Role",
                                             ),
                                           ),
+                    if (widget.title == "Awards")
+                                          !editable ? Text(award, style: const TextStyle(fontSize: 12,)) : TextFormField(
+                                              initialValue: award,
+                                              onFieldSubmitted: (value) {
+                                                setState(() {editable = false; award = value;});
+                                              },
+                                              decoration: const InputDecoration(
+                                                hintText: "ex. Woodinville High School",
+                                                labelText: "Issuer",
+                                              ),
+                                            ),
                     if (widget.title != "Tests" && widget.title != "Honors Classes") 
                     !editable ? Text(description, style: const TextStyle(fontSize: 12,)) : TextFormField(
                               initialValue: description,
@@ -97,6 +119,17 @@ class _ExperienceState extends State<Experience> {
                                 hintText: "ex. In this I...",
                                 labelText: "Description",
                               ),
+                        ),
+                    if (widget.title == "Community Service")
+                     !editable ? Text(hours, style: const TextStyle(fontSize: 12,)) : TextFormField(
+                          initialValue: hours,
+                          onFieldSubmitted: (value) {
+                            setState(() {editable = false; hours = value;});
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "ex. 10",
+                            labelText: "Hours",
+                          ),
                         ),
                     if (widget.title == "Tests") 
                     !editable ? Text(score, style: const TextStyle(fontSize: 12,)) : TextFormField(
@@ -116,7 +149,7 @@ class _ExperienceState extends State<Experience> {
                             setState(() {editable = false; grade = value;});
                           },
                           decoration: const InputDecoration(
-                            hintText: "A",
+                            hintText: "ex. A",
                             labelText: "Grade",
                           ),
                         ),

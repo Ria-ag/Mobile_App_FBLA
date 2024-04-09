@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
     List<IconTile> ITs = [
       IconTile(title: "Athletics", icon: Icons.sports_tennis),
       IconTile(title: "Performing Arts", icon: Icons.music_note),
-      IconTile(title: "Community Serivce", icon: Icons.help),
+      IconTile(title: "Community Service", icon: Icons.help),
       IconTile(title: "Awards", icon: Icons.star),
     ];
 
