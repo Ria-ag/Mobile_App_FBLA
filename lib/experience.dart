@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class MyExperiences extends ChangeNotifier {}
+class MyExperiences extends ChangeNotifier {
+  List<List<Widget>> xpList = [[], [], [], [], [], [], [], []];
+
+  void add(Experience xp, int index) {
+    xpList[index].add(xp);
+    notifyListeners();
+  }
+}
 
 class Experience extends StatefulWidget {
   const Experience({
@@ -49,6 +55,8 @@ class _ExperienceState extends State<Experience> {
       //     ),
       //   ],
       // ),
+
+      //TODO: Clean up this code, probably decomposing
       Container(
         decoration: BoxDecoration(
           color: Colors.white,

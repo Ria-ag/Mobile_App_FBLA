@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/experience.dart';
 
 class TextTile extends StatefulWidget {
-  const TextTile({super.key, required this.name, required this.title});
+  const TextTile(
+      {super.key,
+      required this.name,
+      required this.title,
+      required this.index});
 
   final String name;
   final String title;
+  final int index;
 
   @override
   State<TextTile> createState() => _TextTileState();
 }
 
+//TODO: Convert to stateless widget
 class _TextTileState extends State<TextTile> {
   List<Widget> xpList = [];
 
