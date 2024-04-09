@@ -37,10 +37,10 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<IconTile> ITs = [
-      IconTile(title: "Athletics", icon: Icons.sports_tennis),
-      IconTile(title: "Performing Arts", icon: Icons.music_note),
-      IconTile(title: "Community Serivce", icon: Icons.help),
-      IconTile(title: "Awards", icon: Icons.star),
+      const IconTile(title: "Athletics", icon: Icons.sports_tennis),
+      const IconTile(title: "Performing Arts", icon: Icons.music_note),
+      const IconTile(title: "Community Service", icon: Icons.help),
+      const IconTile(title: "Awards", icon: Icons.star),
     ];
 
     List<TextTile> TTs = [
