@@ -52,51 +52,53 @@ class _IconTileState extends State<IconTile> {
         context: context,
         isScrollControlled: true,
         builder: (BuildContext bc) {
-          return SizedBox(
-              height: MediaQuery.of(context).size.height - 50,
-              width: MediaQuery.of(context).size.width - 15,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Text("More Information"),
-                        const Spacer(),
-                        TextButton(
-                            child: const Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        TextButton(
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                xpList.add(Experience(title: widget.title));
-                              });
-                            }),
-                      ],
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        //height: 200,
-                        width: MediaQuery.of(context).size.width - 25,
-                        child: ListView(
-                          children: xpList, // Display ListTiles in a ListView
+          return ChangeNotifierProvider.value(
+            value: context.read<MyExperiences>(),
+            child: SizedBox(
+                height: MediaQuery.of(context).size.height - 50,
+                width: MediaQuery.of(context).size.width - 15,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Text("More Information"),
+                          const Spacer(),
+                          TextButton(
+                              child: const Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }),
+                          TextButton(
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  xpList.add(Experience(title: widget.title));
+                                });
+                              }),
+                        ],
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width - 25,
+                          child: ListView(
+                            children: xpList, // Display ListTiles in a ListView
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ));
+                    ],
+                  ),
+                )),
+          );
         });
   }
 }

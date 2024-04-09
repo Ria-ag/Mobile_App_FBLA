@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/experience.dart';
 import 'package:mobileapp/profile_page.dart';
 import 'package:mobileapp/settings_page.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
         ChangeNotifierProvider<MyProfileState>(
             create: (context) => MyProfileState()),
+        ChangeNotifierProvider<MyExperiences>(
+            create: (context) => MyExperiences())
       ],
       child: MaterialApp(
         title: 'FBLA Mobile App',
