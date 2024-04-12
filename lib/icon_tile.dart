@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'experience.dart';
+import 'package:mobileapp/modal_sheet.dart';
 
 class IconTile extends StatelessWidget {
   const IconTile(
@@ -27,7 +26,7 @@ class IconTile extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context);
+                modalSheet(context, title, index);
               },
               child: Container(
                 width: 100,
@@ -42,65 +41,6 @@ class IconTile extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-//TODO: Take modal sheet out of widget so that it can be shared by both widgets
-  Future<void> modalSheet(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return ChangeNotifierProvider.value(
-          value: context.read<MyExperiences>(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height - 50,
-            width: MediaQuery.of(context).size.width - 15,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Text("More Information"),
-                      const Spacer(),
-                      TextButton(
-                          child: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          }),
-                      TextButton(
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                        onPressed: () => context
-                            .read<MyExperiences>()
-                            .add(Experience(title: title), index),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 25,
-                      child: Column(
-                        children: context
-                            .watch<MyExperiences>()
-                            .xpList[index], // Display ListTiles in a ListView
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

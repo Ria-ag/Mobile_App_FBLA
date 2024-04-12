@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/experience.dart';
+import 'package:mobileapp/modal_sheet.dart';
 
-class TextTile extends StatefulWidget {
+class TextTile extends StatelessWidget {
   const TextTile(
       {super.key,
       required this.name,
@@ -13,14 +13,6 @@ class TextTile extends StatefulWidget {
   final int index;
 
   @override
-  State<TextTile> createState() => _TextTileState();
-}
-
-//TODO: Convert to stateless widget
-class _TextTileState extends State<TextTile> {
-  List<Widget> xpList = [];
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -28,76 +20,30 @@ class _TextTileState extends State<TextTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.title,
+            title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ListTile(
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
               onTap: () {
-                modalSheet(context);
+                modalSheet(context, title, index);
               },
-              title: Text(widget.name),
+              child: Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(child: Text(name)),
+              ),
             ),
           ),
         ],
       ),
     );
   }
-
-  Future<dynamic> modalSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext bc) {
-          return SizedBox(
-              height: MediaQuery.of(context).size.height - 50,
-              width: MediaQuery.of(context).size.width - 15,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Text("More Information"),
-                        const Spacer(),
-                        TextButton(
-                            child: const Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        TextButton(
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                xpList.add(Experience(title: widget.title));
-                              });
-                            }),
-                      ],
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        //height: 200,
-                        width: MediaQuery.of(context).size.width - 25,
-                        child: ListView(
-                          children: xpList, // Display ListTiles in a ListView
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ));
-        });
-  }
 }
+
+
