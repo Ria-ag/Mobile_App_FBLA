@@ -43,11 +43,11 @@ Future<void> modalSheet(BuildContext context, title, index) {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width - 25,
-                    child: ListView(
-                      //TODO: WON'T UPDATE IMMEDIATELY IF LISTVIEW, WON'T SCROLL IF COLUMN
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 25,
+                  height: MediaQuery.of(context).size.width - 375,
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: context.watch<MyExperiences>().xpList[index],
                     ),
                   ),

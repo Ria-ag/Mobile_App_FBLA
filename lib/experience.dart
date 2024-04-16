@@ -27,6 +27,7 @@ class Experience extends StatefulWidget {
 }
 
 class _ExperienceState extends State<Experience> {
+  //TODO: Change tips
   String name = "";
   String date = "";
   String description = "";

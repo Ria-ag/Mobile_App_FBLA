@@ -63,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget icon;
     Widget page;
     switch (_selectedIndex) {
       case 0:
