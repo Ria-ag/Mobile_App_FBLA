@@ -46,10 +46,9 @@ Future<void> modalSheet(BuildContext context, title, index) {
                 Expanded(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width - 25,
-                    child: Column(
-                      children: context
-                          .watch<MyExperiences>()
-                          .xpList[index], // Display ListTiles in a ListView
+                    child: ListView(
+                      //TODO: WON'T UPDATE IMMEDIATELY IF LISTVIEW, WON'T SCROLL IF COLUMN
+                      children: context.watch<MyExperiences>().xpList[index],
                     ),
                   ),
                 ),

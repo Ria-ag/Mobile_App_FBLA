@@ -148,22 +148,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(5.0),
-                        color: Theme.of(context).colorScheme.background,
-                        child: Column(
-                          children: [
-                            Text(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width - 230),
+                        child: Container(
+                          padding: const EdgeInsets.all(5.0),
+                          color: Theme.of(context).colorScheme.background,
+                          child: Column(
+                            children: [
+                              Text(
                                 context.watch<MyAppState>().nameController.text,
                                 style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                            Text('Woodinville High School',
+                                    Theme.of(context).textTheme.headlineLarge,
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Woodinville High School',
                                 style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                            Text('Class of 2025',
+                                    Theme.of(context).textTheme.headlineMedium,
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Class of 2025',
                                 style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                          ],
+                                    Theme.of(context).textTheme.headlineMedium,
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )
@@ -213,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
       "Performing Arts",
       "Community Service",
       "Awards",
-      "Honors Class",
+      "Honors Classes",
       "Clubs/Organizations",
       "Projects",
       "Tests",

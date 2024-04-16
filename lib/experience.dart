@@ -27,15 +27,15 @@ class Experience extends StatefulWidget {
 }
 
 class _ExperienceState extends State<Experience> {
-  String name = "Name";
-  String date = "4/6/24";
-  String description = "In this I...";
-  String score = "100";
-  String grade = "A";
-  String role = "President";
-  String hours = "10";
-  String award = "Woodinville High School";
-  String location = "Hopelink";
+  String name = "";
+  String date = "";
+  String description = "";
+  String score = "";
+  String grade = "";
+  String role = "";
+  String hours = "";
+  String award = "";
+  String location = "";
   bool editable = false;
   File? _image;
 
@@ -75,48 +75,49 @@ class _ExperienceState extends State<Experience> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          title: widget.title != "Community Service"
-              ? !editable
-                  ? Text(
-                      name,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )
-                  : TextFormField(
-                      initialValue: name,
-                      onFieldSubmitted: (value) {
-                        setState(() {
-                          editable = false;
-                          name = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: "ex. FBLA",
-                        labelText: "Name",
-                      ),
-                    )
-              : !editable
-                  ? Text(
-                      location,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )
-                  : TextFormField(
-                      initialValue: location,
-                      onFieldSubmitted: (value) {
-                        setState(() {
-                          editable = false;
-                          location = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: "ex. Hopelink",
-                        labelText: "Location",
-                      ),
-                    ),
-          subtitle: Column(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              widget.title != "Community Service"
+                  ? !editable
+                      ? Text(
+                          "Name: $name",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
+                      : TextFormField(
+                          initialValue: name,
+                          onFieldSubmitted: (value) {
+                            setState(() {
+                              editable = false;
+                              name = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "ex. FBLA",
+                            labelText: "Name",
+                          ),
+                        )
+                  : !editable
+                      ? Text(
+                          "Location$location",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
+                      : TextFormField(
+                          initialValue: location,
+                          onFieldSubmitted: (value) {
+                            setState(() {
+                              editable = false;
+                              location = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "ex. Hopelink",
+                            labelText: "Location",
+                          ),
+                        ),
               !editable
                   ? Text(
-                      date,
+                      "Start Date:$date",
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
                   : InputDatePickerFormField(
@@ -128,7 +129,7 @@ class _ExperienceState extends State<Experience> {
                     ),
               !editable
                   ? Text(
-                      date,
+                      "End Date: $date",
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
                   : InputDatePickerFormField(
@@ -141,7 +142,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title == "Clubs/Organizations")
                 !editable
                     ? Text(
-                        role,
+                        "Role: $role",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -160,7 +161,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title == "Awards")
                 !editable
                     ? Text(
-                        award,
+                        "Award: $award",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -179,7 +180,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title != "Tests" && widget.title != "Honors Classes")
                 !editable
                     ? Text(
-                        description,
+                        "Description: $description",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -198,7 +199,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title == "Community Service")
                 !editable
                     ? Text(
-                        hours,
+                        "Hours: $hours",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -217,7 +218,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title == "Tests")
                 !editable
                     ? Text(
-                        score,
+                        "Score: $score",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -236,7 +237,7 @@ class _ExperienceState extends State<Experience> {
               if (widget.title == "Honors Classes")
                 !editable
                     ? Text(
-                        grade,
+                        "Grade: $grade",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
@@ -253,29 +254,33 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               !editable
-                ? _image == null ? Text("No files selected") : Image.file(_image!)
-                : Column(
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      child: FloatingActionButton(
-                        onPressed: () => getImage(ImageSource.gallery),
-                        tooltip: 'Pick Image',
-                        child: const Icon(Icons.add_a_photo),
-                      ),
+                  ? _image == null
+                      ? Text("No files selected",
+                          style: Theme.of(context).textTheme.bodyMedium)
+                      : Image.file(_image!)
+                  : Column(
+                      children: [
+                        SizedBox(
+                          width: 50,
+                          child: FloatingActionButton(
+                            onPressed: () => getImage(ImageSource.gallery),
+                            tooltip: 'Pick Image',
+                            child: const Icon(Icons.add_a_photo),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: FloatingActionButton(
+                            onPressed: () => getImage(ImageSource.camera),
+                            tooltip: 'Capture Image',
+                            child: const Icon(Icons.camera),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 50,
-                      child: FloatingActionButton(
-                         onPressed: () => getImage(ImageSource.camera),
-                         tooltip: 'Capture Image',
-                         child: const Icon(Icons.camera),
-                      ),
-                    ),
-                  ],
-                )
             ],
           ),
+          subtitle: SizedBox(width: 5),
           trailing: TextButton(
               child: Icon(
                 (!editable) ? Icons.edit : Icons.check,
@@ -295,18 +300,18 @@ class _ExperienceState extends State<Experience> {
       ),
     ]);
   }
+
   Future getImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(
       source: source,
       maxHeight: 150,
       maxWidth: 150,
     );
-    if (image == null){
+    if (image == null) {
       return;
     }
-    setState((){
+    setState(() {
       _image = File(image.path);
-      
     });
   }
 }

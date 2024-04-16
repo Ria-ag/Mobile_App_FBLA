@@ -68,19 +68,15 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (_selectedIndex) {
       case 0:
         page = const Placeholder();
-        icon = const MainIconButton();
         break;
       case 1:
         page = const ProfilePage();
-        icon = const ProfileIconButton();
         break;
       case 2:
         page = const Placeholder();
-        icon = const MainIconButton();
         break;
       case 3:
         page = const SettingsPage();
-        icon = const MainIconButton();
         break;
       default:
         throw UnimplementedError();
@@ -105,16 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: 'Share Profile',
-            onPressed: () {
-              //PLACEHOLDER
-            },
-          ),
-          icon,
-        ],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: _onItemTapped,
@@ -139,41 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: page,
-    );
-  }
-}
-
-class MainIconButton extends StatelessWidget {
-  const MainIconButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.smart_button),
-      tooltip: 'Show Snackbar',
-      onPressed: () {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('This is a snackbar')));
-      },
-    );
-  }
-}
-
-class ProfileIconButton extends StatelessWidget {
-  const ProfileIconButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.add),
-      tooltip: 'Add',
-      onPressed: () {
-        //PLACEHOLDER
-      },
     );
   }
 }
