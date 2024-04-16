@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/icon_tile.dart';
 import 'package:mobileapp/main.dart';
 import 'package:mobileapp/text_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyProfileState extends ChangeNotifier {
   List<Widget> widgetList = [];
@@ -30,8 +32,16 @@ class MyProfileState extends ChangeNotifier {
   // }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  bool showButton = false;
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -87,18 +97,47 @@ class ProfilePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/user.png'),
+                   MouseRegion(
+                    onEnter: (_) => setState(() {
+                      showButton = true;
+                    }),
+                    onExit: (_) => setState(() {
+                      showButton = false;
+                    }),
+                    child: Stack(
+                      alignment: Alignment.center,
+                       children: [
+                        Center(
+                          child: _image == null ? 
+                          const Icon(Icons.supervised_user_circle, size: 150) : 
+                          Image.file(_image!),
                         ),
-                      ),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 250),
+                          child: showButton ? Column(
+                            children: [
+                              SizedBox(
+                                width: 50,
+                                child: FloatingActionButton(
+                                  onPressed: () => getImage(ImageSource.gallery),
+                                  tooltip: 'Pick Image',
+                                  child: const Icon(Icons.add_a_photo),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 50,
+                                child: FloatingActionButton(
+                                  onPressed: () => getImage(ImageSource.camera),
+                                  tooltip: 'Capture Image',
+                                  child: const Icon(Icons.camera),
+                                ),
+                              ),
+                            ],
+                            ) : const SizedBox.shrink(),
+                        )
+                      ],
                     ),
+                  ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -144,6 +183,21 @@ class ProfilePage extends StatelessWidget {
         onPressed: () => _dialogBuilder(context),
       ),
     );
+  }
+
+ Future getImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(
+      source: source,
+      maxHeight: 150,
+      maxWidth: 150,
+    );
+    if (image == null){
+      return;
+    }
+    setState((){
+      _image = File(image.path);
+      
+    });
   }
 
   Future<void> _dialogBuilder(BuildContext context) {
