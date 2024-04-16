@@ -20,8 +20,9 @@ class IconTile extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
+          const SizedBox(height: 5),
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
@@ -32,10 +33,17 @@ class IconTile extends StatelessWidget {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Center(child: Icon(icon, size: 50)),
+                child: Center(child: Icon(icon, size: 60)),
               ),
             ),
           ),
