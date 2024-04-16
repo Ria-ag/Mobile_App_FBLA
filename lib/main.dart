@@ -4,7 +4,6 @@ import 'profile_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());

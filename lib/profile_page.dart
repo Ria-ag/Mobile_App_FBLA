@@ -97,47 +97,55 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   MouseRegion(
-                    onEnter: (_) => setState(() {
-                      showButton = true;
-                    }),
-                    onExit: (_) => setState(() {
-                      showButton = false;
-                    }),
-                    child: Stack(
-                      alignment: Alignment.center,
-                       children: [
-                        Center(
-                          child: _image == null ? 
-                          const Icon(Icons.supervised_user_circle, size: 150) : 
-                          Image.file(_image!),
-                        ),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 250),
-                          child: showButton ? Column(
-                            children: [
-                              SizedBox(
-                                width: 50,
-                                child: FloatingActionButton(
-                                  onPressed: () => getImage(ImageSource.gallery),
-                                  tooltip: 'Pick Image',
-                                  child: const Icon(Icons.add_a_photo),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                child: FloatingActionButton(
-                                  onPressed: () => getImage(ImageSource.camera),
-                                  tooltip: 'Capture Image',
-                                  child: const Icon(Icons.camera),
-                                ),
-                              ),
-                            ],
-                            ) : const SizedBox.shrink(),
-                        )
-                      ],
+                    MouseRegion(
+                      onEnter: (_) => setState(() {
+                        showButton = true;
+                      }),
+                      onExit: (_) => setState(() {
+                        showButton = false;
+                      }),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Center(
+                            child: _image == null
+                                ? const Icon(Icons.supervised_user_circle,
+                                    size: 150)
+                                : Image.file(_image!),
+                          ),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            child: showButton
+                                ? Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: FloatingActionButton(
+                                          onPressed: () =>
+                                              getImage(ImageSource.gallery),
+                                          tooltip: 'Pick Image',
+                                          child: const Icon(Icons.add_a_photo),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20, height: 20),
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: FloatingActionButton(
+                                          onPressed: () =>
+                                              getImage(ImageSource.camera),
+                                          tooltip: 'Capture Image',
+                                          child: const Icon(Icons.camera),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -185,18 +193,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
- Future getImage(ImageSource source) async {
+  Future getImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(
       source: source,
       maxHeight: 150,
       maxWidth: 150,
     );
-    if (image == null){
+    if (image == null) {
       return;
     }
-    setState((){
+    setState(() {
       _image = File(image.path);
-      
     });
   }
 
