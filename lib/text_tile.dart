@@ -6,11 +6,11 @@ class TextTile extends StatelessWidget {
       {super.key,
       required this.name,
       required this.title,
-      required this.index});
+      required this.tileIndex});
 
   final String name;
   final String title;
-  final int index;
+  final int tileIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class TextTile extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context, title, index);
+                modalSheet(context, title, tileIndex);
               },
               child: Container(
                 height: 50,

@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class MyExperiences extends ChangeNotifier {
-  List<List<Widget>> xpList = [[], [], [], [], [], [], [], []];
+  List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
 
-  void add(Experience xp, int index) {
-    xpList[index].add(xp);
+  void add(String title, int tileIndex) {
+    xpList[tileIndex].add(Experience(
+        title: title, xpID: xpList[tileIndex].length, tileIndex: tileIndex));
+    notifyListeners();
+  }
+
+  void remove(int id, int tileIndex) {
+    xpList[tileIndex]
+        .remove(xpList[tileIndex].firstWhere((xp) => xp.xpID == id));
     notifyListeners();
   }
 }
 
 class Experience extends StatefulWidget {
-  const Experience({
-    super.key,
-    required this.title,
-    // required this.remove,
-    // required this.index
-  });
-  // final void Function(int) remove;
+  Experience(
+      {super.key,
+      required this.title,
+      required this.xpID,
+      required this.tileIndex});
   final String title;
-  // final int index;
+  final int tileIndex;
+  int xpID;
 
-  @override
-  State<Experience> createState() => _ExperienceState();
-}
-
-class _ExperienceState extends State<Experience> {
-  //TODO: Change tips
   String name = "";
   String date = "";
   String description = "";
@@ -41,24 +42,18 @@ class _ExperienceState extends State<Experience> {
   File? _image;
 
   @override
+  State<Experience> createState() => _ExperienceState();
+}
+
+class _ExperienceState extends State<Experience> {
+  //TODO: Change tips
+  @override
   Widget build(BuildContext context) {
     return Column(children: [
       const Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: Divider(),
       ),
-      // Row(
-      //   children: [
-      //     Text(widget.title),
-      //     const Spacer(),
-      //     TextButton(
-      //       onPressed: () {
-      //         widget.remove(widget.index);
-      //       },
-      //       child: const Icon(Icons.remove, size: 20),
-      //     ),
-      //   ],
-      // ),
 
       //TODO: Clean up this code, probably decomposing
       Container(
@@ -80,17 +75,19 @@ class _ExperienceState extends State<Experience> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               widget.title != "Community Service"
-                  ? !editable
+                  ? !widget.editable
                       ? Text(
-                          "Name: $name",
+                          "Name: ${widget.name}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         )
                       : TextFormField(
-                          initialValue: name,
-                          onFieldSubmitted: (value) {
+                          initialValue: widget.name,
+                          onTapOutside: (tap) {
+                            widget.editable = false;
+                          },
+                          onChanged: (value) {
                             setState(() {
-                              editable = false;
-                              name = value;
+                              widget.name = value;
                             });
                           },
                           decoration: const InputDecoration(
@@ -98,17 +95,19 @@ class _ExperienceState extends State<Experience> {
                             labelText: "Name",
                           ),
                         )
-                  : !editable
+                  : !widget.editable
                       ? Text(
-                          "Location$location",
+                          "Location: ${widget.location}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         )
                       : TextFormField(
-                          initialValue: location,
-                          onFieldSubmitted: (value) {
+                          initialValue: widget.location,
+                          onTapOutside: (tap) {
+                            widget.editable = false;
+                          },
+                          onChanged: (value) {
                             setState(() {
-                              editable = false;
-                              location = value;
+                              widget.location = value;
                             });
                           },
                           decoration: const InputDecoration(
@@ -116,9 +115,9 @@ class _ExperienceState extends State<Experience> {
                             labelText: "Location",
                           ),
                         ),
-              !editable
+              !widget.editable
                   ? Text(
-                      "Start Date:$date",
+                      "Start Date: ${widget.date}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
                   : InputDatePickerFormField(
@@ -128,9 +127,9 @@ class _ExperienceState extends State<Experience> {
                       errorInvalidText: "invalid date",
                       fieldLabelText: "start date",
                     ),
-              !editable
+              !widget.editable
                   ? Text(
-                      "End Date: $date",
+                      "End Date: ${widget.date}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
                   : InputDatePickerFormField(
@@ -141,17 +140,19 @@ class _ExperienceState extends State<Experience> {
                       fieldLabelText: "end date",
                     ),
               if (widget.title == "Clubs/Organizations")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Role: $role",
+                        "Role: ${widget.role}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: role,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.role,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            role = value;
+                            widget.role = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -160,17 +161,19 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               if (widget.title == "Awards")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Award: $award",
+                        "Award: ${widget.award}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: award,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.award,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            award = value;
+                            widget.award = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -179,17 +182,19 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               if (widget.title != "Tests" && widget.title != "Honors Classes")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Description: $description",
+                        "Description: ${widget.description}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: description,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.description,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            description = value;
+                            widget.description = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -198,17 +203,19 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               if (widget.title == "Community Service")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Hours: $hours",
+                        "Hours: ${widget.hours}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: hours,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.hours,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            hours = value;
+                            widget.hours = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -217,17 +224,19 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               if (widget.title == "Tests")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Score: $score",
+                        "Score: ${widget.score}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: score,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.score,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            score = value;
+                            widget.score = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -236,17 +245,19 @@ class _ExperienceState extends State<Experience> {
                         ),
                       ),
               if (widget.title == "Honors Classes")
-                !editable
+                !widget.editable
                     ? Text(
-                        "Grade: $grade",
+                        "Grade: ${widget.grade}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: grade,
-                        onFieldSubmitted: (value) {
+                        initialValue: widget.grade,
+                        onTapOutside: (tap) {
+                          widget.editable = false;
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            editable = false;
-                            grade = value;
+                            widget.grade = value;
                           });
                         },
                         decoration: const InputDecoration(
@@ -254,11 +265,11 @@ class _ExperienceState extends State<Experience> {
                           labelText: "Grade",
                         ),
                       ),
-              !editable
-                  ? _image == null
+              !widget.editable
+                  ? widget._image == null
                       ? Text("No files selected",
                           style: Theme.of(context).textTheme.bodyMedium)
-                      : Image.file(_image!)
+                      : Image.file(widget._image!)
                   : Column(
                       children: [
                         SizedBox(
@@ -281,22 +292,39 @@ class _ExperienceState extends State<Experience> {
                     ),
             ],
           ),
-          subtitle: SizedBox(width: 5),
-          trailing: TextButton(
-              child: Icon(
-                (!editable) ? Icons.edit : Icons.check,
-                color: Colors.black,
-                size: 20,
-              ),
-              onPressed: () {
-                !editable
-                    ? setState(() {
-                        editable = true;
-                      })
-                    : setState(() {
-                        editable = false;
-                      });
-              }),
+          trailing: SizedBox(
+            width: 120,
+            height: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  child: Icon(
+                    (!widget.editable) ? Icons.edit : Icons.check,
+                    color: Colors.black,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    !widget.editable
+                        ? setState(() {
+                            widget.editable = true;
+                          })
+                        : setState(() {
+                            widget.editable = false;
+                          });
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    context
+                        .read<MyExperiences>()
+                        .remove(widget.xpID, widget.tileIndex);
+                  },
+                  child: const Icon(Icons.remove, size: 20),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     ]);
@@ -312,7 +340,7 @@ class _ExperienceState extends State<Experience> {
       return;
     }
     setState(() {
-      _image = File(image.path);
+      widget._image = File(image.path);
     });
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/experience.dart';
 import 'package:provider/provider.dart';
 
-Future<void> modalSheet(BuildContext context, title, index) {
+Future<void> modalSheet(BuildContext context, title, tileIndex) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -37,18 +37,18 @@ Future<void> modalSheet(BuildContext context, title, index) {
                         color: Colors.black,
                         size: 20,
                       ),
-                      onPressed: () => context
-                          .read<MyExperiences>()
-                          .add(Experience(title: title), index),
+                      onPressed: () =>
+                          context.read<MyExperiences>().add(title, tileIndex),
                     ),
                   ],
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 25,
-                  height: MediaQuery.of(context).size.width - 375,
+                  height: MediaQuery.of(context).size.height - 115,
                   child: SingleChildScrollView(
                     child: Column(
-                      children: context.watch<MyExperiences>().xpList[index],
+                      children:
+                          context.watch<MyExperiences>().xpList[tileIndex],
                     ),
                   ),
                 ),

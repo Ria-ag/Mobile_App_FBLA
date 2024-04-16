@@ -6,11 +6,11 @@ class IconTile extends StatelessWidget {
       {super.key,
       required this.icon,
       required this.title,
-      required this.index});
+      required this.tileIndex});
 
   final String title;
   final IconData icon;
-  final int index;
+  final int tileIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class IconTile extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context, title, index);
+                modalSheet(context, title, tileIndex);
               },
               child: Container(
                 width: 100,

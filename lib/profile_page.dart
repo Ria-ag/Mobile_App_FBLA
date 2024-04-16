@@ -46,18 +46,21 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     List<IconTile> ITs = [
-      const IconTile(title: "Athletics", icon: Icons.sports_tennis, index: 0),
       const IconTile(
-          title: "Performing Arts", icon: Icons.music_note, index: 1),
-      const IconTile(title: "Community Service", icon: Icons.help, index: 2),
-      const IconTile(title: "Awards", icon: Icons.star, index: 3),
+          title: "Athletics", icon: Icons.sports_tennis, tileIndex: 0),
+      const IconTile(
+          title: "Performing Arts", icon: Icons.music_note, tileIndex: 1),
+      const IconTile(
+          title: "Community Service", icon: Icons.help, tileIndex: 2),
+      const IconTile(title: "Awards", icon: Icons.star, tileIndex: 3),
     ];
 
     List<TextTile> TTs = [
-      const TextTile(name: "Class name", title: "Honors Classes", index: 4),
-      const TextTile(name: "Club name", title: "Clubs/Organizations", index: 5),
-      const TextTile(name: "Project name", title: "Projects", index: 6),
-      const TextTile(name: "Test name", title: "Tests", index: 7),
+      const TextTile(name: "Class name", title: "Honors Classes", tileIndex: 4),
+      const TextTile(
+          name: "Club name", title: "Clubs/Organizations", tileIndex: 5),
+      const TextTile(name: "Project name", title: "Projects", tileIndex: 6),
+      const TextTile(name: "Test name", title: "Tests", tileIndex: 7),
     ];
 
     List<Widget> displayITs = [
