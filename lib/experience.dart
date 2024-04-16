@@ -59,15 +59,25 @@ class _ExperienceState extends State<Experience> {
       //TODO: Clean up this code, probably decomposing
       Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.background,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 2,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           title: widget.title != "Community Service"
               ? !editable
-                  ? Text(name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15))
+                  ? Text(
+                      name,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    )
                   : TextFormField(
                       initialValue: name,
                       onFieldSubmitted: (value) {
@@ -82,9 +92,10 @@ class _ExperienceState extends State<Experience> {
                       ),
                     )
               : !editable
-                  ? Text(location,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15))
+                  ? Text(
+                      location,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    )
                   : TextFormField(
                       initialValue: location,
                       onFieldSubmitted: (value) {
@@ -101,7 +112,10 @@ class _ExperienceState extends State<Experience> {
           subtitle: Column(
             children: [
               !editable
-                  ? Text(date, style: const TextStyle(fontSize: 10.0))
+                  ? Text(
+                      date,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    )
                   : InputDatePickerFormField(
                       initialDate: DateTime.now(),
                       firstDate: DateTime(1900),
@@ -110,7 +124,10 @@ class _ExperienceState extends State<Experience> {
                       fieldLabelText: "start date",
                     ),
               !editable
-                  ? Text(date, style: const TextStyle(fontSize: 10.0))
+                  ? Text(
+                      date,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    )
                   : InputDatePickerFormField(
                       initialDate: DateTime.now(),
                       firstDate: DateTime(1900),
@@ -120,10 +137,10 @@ class _ExperienceState extends State<Experience> {
                     ),
               if (widget.title == "Clubs/Organizations")
                 !editable
-                    ? Text(role,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        role,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: role,
                         onFieldSubmitted: (value) {
@@ -139,10 +156,10 @@ class _ExperienceState extends State<Experience> {
                       ),
               if (widget.title == "Awards")
                 !editable
-                    ? Text(award,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        award,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: award,
                         onFieldSubmitted: (value) {
@@ -158,10 +175,10 @@ class _ExperienceState extends State<Experience> {
                       ),
               if (widget.title != "Tests" && widget.title != "Honors Classes")
                 !editable
-                    ? Text(description,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: description,
                         onFieldSubmitted: (value) {
@@ -177,10 +194,10 @@ class _ExperienceState extends State<Experience> {
                       ),
               if (widget.title == "Community Service")
                 !editable
-                    ? Text(hours,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        hours,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: hours,
                         onFieldSubmitted: (value) {
@@ -196,10 +213,10 @@ class _ExperienceState extends State<Experience> {
                       ),
               if (widget.title == "Tests")
                 !editable
-                    ? Text(score,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        score,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: score,
                         onFieldSubmitted: (value) {
@@ -215,10 +232,10 @@ class _ExperienceState extends State<Experience> {
                       ),
               if (widget.title == "Honors Classes")
                 !editable
-                    ? Text(grade,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ))
+                    ? Text(
+                        grade,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     : TextFormField(
                         initialValue: grade,
                         onFieldSubmitted: (value) {

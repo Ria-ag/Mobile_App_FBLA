@@ -21,8 +21,9 @@ class TextTile extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
+          const SizedBox(height: 5),
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
@@ -33,10 +34,21 @@ class TextTile extends StatelessWidget {
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.secondary,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Center(child: Text(name)),
+                child: Center(
+                    child: Text(
+                  name,
+                  style: const TextStyle(color: Colors.white),
+                )),
               ),
             ),
           ),
@@ -45,5 +57,3 @@ class TextTile extends StatelessWidget {
     );
   }
 }
-
-

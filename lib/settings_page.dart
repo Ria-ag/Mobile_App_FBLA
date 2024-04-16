@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key,});
+  const SettingsPage({
+    super.key,
+  });
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -29,8 +31,8 @@ class _SettingsPageState extends State<SettingsPage> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: _image == null
-                  ? const Text('No image selected')
-                  : Image.file(_image!),
+                    ? const Text('No image selected')
+                    : Image.file(_image!),
               ),
             ),
             Padding(
@@ -52,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () => getImage(ImageSource.camera),
                   tooltip: 'Capture Image',
                   child: const Icon(Icons.camera),
-                           ),
+                ),
               ),
             ),
           ],
@@ -63,12 +65,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future getImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
-    if (image == null){
+    if (image == null) {
       return;
     }
-    setState((){
+    setState(() {
       _image = File(image.path);
-      
     });
   }
 }

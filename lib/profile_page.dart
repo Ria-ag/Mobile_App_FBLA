@@ -76,10 +76,10 @@ class ProfilePage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               Padding(
@@ -103,23 +103,19 @@ class ProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         padding: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          color: Theme.of(context).primaryColorLight,
-                        ),
+                        color: Theme.of(context).colorScheme.background,
                         child: Column(
                           children: [
                             Text(
                                 context.watch<MyAppState>().nameController.text,
-                                style: const TextStyle(fontSize: 40.0)),
-                            const Text('Woodinville High School',
-                                style: TextStyle(fontSize: 20.0)),
-                            const Text('Class of 2025',
-                                style: TextStyle(fontSize: 20.0)),
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge),
+                            Text('Woodinville High School',
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge),
+                            Text('Class of 2025',
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge),
                           ],
                         ),
                       ),
@@ -127,6 +123,7 @@ class ProfilePage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 30),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -134,6 +131,7 @@ class ProfilePage extends StatelessWidget {
                   children: displayITs,
                 ),
               ),
+              const SizedBox(height: 30),
               ...displayTTs,
               ...context.watch<MyProfileState>().widgetList,
             ],
@@ -141,6 +139,7 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
         onPressed: () => _dialogBuilder(context),
       ),
