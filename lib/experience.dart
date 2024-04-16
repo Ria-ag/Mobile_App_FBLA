@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class MyExperiences extends ChangeNotifier {
   List<List<Widget>> xpList = [[], [], [], [], [], [], [], []];
@@ -35,6 +37,7 @@ class _ExperienceState extends State<Experience> {
   String award = "Woodinville High School";
   String location = "Hopelink";
   bool editable = false;
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +235,28 @@ class _ExperienceState extends State<Experience> {
                           labelText: "Grade",
                         ),
                       ),
+              !editable
+                ? _image == null ? Text("No files selected") : Image.file(_image!)
+                : Column(
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      child: FloatingActionButton(
+                        onPressed: () => getImage(ImageSource.gallery),
+                        tooltip: 'Pick Image',
+                        child: const Icon(Icons.add_a_photo),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: FloatingActionButton(
+                         onPressed: () => getImage(ImageSource.camera),
+                         tooltip: 'Capture Image',
+                         child: const Icon(Icons.camera),
+                      ),
+                    ),
+                  ],
+                )
             ],
           ),
           trailing: TextButton(
@@ -252,5 +277,19 @@ class _ExperienceState extends State<Experience> {
         ),
       ),
     ]);
+  }
+  Future getImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(
+      source: source,
+      maxHeight: 150,
+      maxWidth: 150,
+    );
+    if (image == null){
+      return;
+    }
+    setState((){
+      _image = File(image.path);
+      
+    });
   }
 }
