@@ -1,26 +1,35 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/icon_tile.dart';
-import 'package:mobileapp/main.dart';
-import 'package:mobileapp/text_tile.dart';
+import 'icon_tile.dart';
+import 'main.dart';
+import 'text_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MyProfileState extends ChangeNotifier {
   List<Widget> widgetList = [];
-  List<bool> isChecked = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+
+  List<bool> isChecked = (prefs.getString("isChecked") == null)
+      ? [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+        ]
+      : prefs
+          .getString("isChecked")!
+          .split(',')
+          .map((s) => s == 'true')
+          .toList();
 
   onChange(bool value, int index) {
     isChecked[index] = value;
+    String isCheckedStr = isChecked.map((b) => b.toString()).join(',');
+    prefs.setString("isChecked", isCheckedStr);
     notifyListeners();
   }
 
@@ -277,9 +286,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           title: Text(blocks[index]),
                           value:
                               context.watch<MyProfileState>().isChecked[index],
-                          onChanged: (value) => context
-                              .read<MyProfileState>()
-                              .onChange(value!, index),
+                          onChanged: (value) {
+                            context
+                                .read<MyProfileState>()
+                                .onChange(value!, index);
+                          },
                         );
                       },
                     ),

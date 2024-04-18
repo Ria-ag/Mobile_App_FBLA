@@ -4,10 +4,13 @@ import 'profile_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+late SharedPreferences prefs;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -61,6 +64,35 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<SharedPreferences>? myFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future<SharedPreferences> getSP() {
+      return SharedPreferences.getInstance().then(
+        (value) {
+          prefs = value;
+          for (int i = 0; i < 8; i++) {
+            List<String>? xps = prefs.getStringList('$i');
+            if (xps != null) {
+              for (String xpString in xps) {
+                context
+                    .read<MyExperiences>()
+                    .xpList[i]
+                    .add(Experience.fromJsonString(xpString));
+              }
+            }
+          }
+          return Future.value(value);
+        },
+      );
+    }
+
+    myFuture = getSP();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -81,49 +113,61 @@ class _MyHomePageState extends State<MyHomePage> {
         throw UnimplementedError();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            const Image(
-              image: AssetImage('assets/progress.png'),
-              // PLACEHOLDER ICON
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text(
-                'App Name',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: _onItemTapped,
-        selectedIndex: _selectedIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.checklist),
-            label: 'Goals',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-      body: page,
-    );
+    return FutureBuilder(
+        future: myFuture,
+        builder: (context, snapshot) {
+          return (!snapshot.hasData)
+              ? const Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    title: Row(
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/progress.png'),
+                          // PLACEHOLDER ICON
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Text(
+                            'App Name',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  bottomNavigationBar: NavigationBar(
+                    onDestinationSelected: _onItemTapped,
+                    selectedIndex: _selectedIndex,
+                    destinations: const <Widget>[
+                      NavigationDestination(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.account_circle),
+                        label: 'Profile',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.checklist),
+                        label: 'Goals',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.settings),
+                        label: 'Settings',
+                      ),
+                    ],
+                  ),
+                  body: page,
+                );
+        });
   }
 }
