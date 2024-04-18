@@ -102,10 +102,9 @@ class Experience extends StatefulWidget {
     exp.location = json['location'];
     exp.editable = json['editable'] as bool;
 
-    File? image;
     if (json['image'] != null) {
       Uint8List bytes = base64.decode(json['image']);
-      image = File.fromRawPath(bytes);
+      exp._image = File.fromRawPath(bytes);
     }
 
     exp._image = json['image'];
