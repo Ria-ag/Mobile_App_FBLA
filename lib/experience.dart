@@ -19,6 +19,7 @@ class MyExperiences extends ChangeNotifier {
   }
 }
 
+//ignore: must_be_immutable
 class Experience extends StatefulWidget {
   Experience(
       {super.key,
