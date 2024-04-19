@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import "main.dart";
+import 'dart:convert';
 
 class MyExperiences extends ChangeNotifier {
   List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
@@ -17,8 +21,17 @@ class MyExperiences extends ChangeNotifier {
         .remove(xpList[tileIndex].firstWhere((xp) => xp.xpID == id));
     notifyListeners();
   }
+
+  void saveXP(int tileIndex) {
+    List<String> xps = [];
+    for (Experience xp in xpList[tileIndex]) {
+      xps.add(xp.toJsonString());
+    }
+    prefs.setStringList('$tileIndex', xps);
+  }
 }
 
+//ignore: must_be_immutable
 class Experience extends StatefulWidget {
   Experience(
       {super.key,
@@ -40,6 +53,63 @@ class Experience extends StatefulWidget {
   String location = "";
   bool editable = false;
   File? _image;
+
+// Convert an Experience object into a JSON string
+  String toJsonString() {
+    String? base64String;
+    late Uint8List bytes;
+
+    if (_image != null) {
+      _image!.readAsBytes().then((value) => bytes = value);
+      base64String = base64.encode(bytes);
+    }
+
+    final Map<String, dynamic> data = {
+      'title': title,
+      'tileIndex': tileIndex,
+      'xpID': xpID,
+      'name': name,
+      'date': date,
+      'description': description,
+      'score': score,
+      'grade': grade,
+      'role': role,
+      'hours': hours,
+      'award': award,
+      'location': location,
+      'editable': editable,
+      'image': base64String,
+    };
+    return jsonEncode(data);
+  }
+
+  // Create an Experience object from a JSON string
+  static Experience fromJsonString(String jsonString) {
+    Map<String, dynamic> json = jsonDecode(jsonString);
+    Experience exp = Experience(
+      title: json['title'],
+      xpID: json['xpID'],
+      tileIndex: json['tileIndex'],
+    );
+    exp.name = json['name'];
+    exp.date = json['date'];
+    exp.description = json['description'];
+    exp.score = json['score'];
+    exp.grade = json['grade'];
+    exp.role = json['role'];
+    exp.hours = json['hours'];
+    exp.award = json['award'];
+    exp.location = json['location'];
+    exp.editable = json['editable'] as bool;
+
+    if (json['image'] != null) {
+      Uint8List bytes = base64.decode(json['image']);
+      exp._image = File.fromRawPath(bytes);
+    }
+
+    exp._image = json['image'];
+    return exp;
+  }
 
   @override
   State<Experience> createState() => _ExperienceState();
@@ -82,9 +152,6 @@ class _ExperienceState extends State<Experience> {
                         )
                       : TextFormField(
                           initialValue: widget.name,
-                          onTapOutside: (tap) {
-                            widget.editable = false;
-                          },
                           onChanged: (value) {
                             setState(() {
                               widget.name = value;
@@ -102,9 +169,6 @@ class _ExperienceState extends State<Experience> {
                         )
                       : TextFormField(
                           initialValue: widget.location,
-                          onTapOutside: (tap) {
-                            widget.editable = false;
-                          },
                           onChanged: (value) {
                             setState(() {
                               widget.location = value;
@@ -147,9 +211,6 @@ class _ExperienceState extends State<Experience> {
                       )
                     : TextFormField(
                         initialValue: widget.role,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.role = value;
@@ -168,9 +229,6 @@ class _ExperienceState extends State<Experience> {
                       )
                     : TextFormField(
                         initialValue: widget.award,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.award = value;
@@ -189,9 +247,6 @@ class _ExperienceState extends State<Experience> {
                       )
                     : TextFormField(
                         initialValue: widget.description,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.description = value;
@@ -210,9 +265,6 @@ class _ExperienceState extends State<Experience> {
                       )
                     : TextFormField(
                         initialValue: widget.hours,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.hours = value;
@@ -231,9 +283,6 @@ class _ExperienceState extends State<Experience> {
                       )
                     : TextFormField(
                         initialValue: widget.score,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.score = value;
@@ -251,10 +300,6 @@ class _ExperienceState extends State<Experience> {
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : TextFormField(
-                        initialValue: widget.grade,
-                        onTapOutside: (tap) {
-                          widget.editable = false;
-                        },
                         onChanged: (value) {
                           setState(() {
                             widget.grade = value;
@@ -311,6 +356,9 @@ class _ExperienceState extends State<Experience> {
                           })
                         : setState(() {
                             widget.editable = false;
+                            context
+                                .read<MyExperiences>()
+                                .saveXP(widget.tileIndex);
                           });
                   },
                 ),
