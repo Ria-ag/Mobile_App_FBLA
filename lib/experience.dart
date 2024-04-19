@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -56,13 +54,13 @@ class Experience extends StatefulWidget {
 
 // Convert an Experience object into a JSON string
   String toJsonString() {
-    String? base64String;
-    late Uint8List bytes;
+    // String? base64String;
+    // late Uint8List bytes;
 
-    if (_image != null) {
-      _image!.readAsBytes().then((value) => bytes = value);
-      base64String = base64.encode(bytes);
-    }
+    // if (_image != null) {
+    //   _image!.readAsBytes().then((value) => bytes = value);
+    //   base64String = base64.encode(bytes);
+    // }
 
     final Map<String, dynamic> data = {
       'title': title,
@@ -78,7 +76,7 @@ class Experience extends StatefulWidget {
       'award': award,
       'location': location,
       'editable': editable,
-      'image': base64String,
+      //'image': base64String,
     };
     return jsonEncode(data);
   }
@@ -102,12 +100,12 @@ class Experience extends StatefulWidget {
     exp.location = json['location'];
     exp.editable = json['editable'] as bool;
 
-    if (json['image'] != null) {
-      Uint8List bytes = base64.decode(json['image']);
-      exp._image = File.fromRawPath(bytes);
-    }
+    // if (json['image'] != null) {
+    //   Uint8List bytes = base64.decode(json['image']);
+    //   exp._image = File.fromRawPath(bytes);
+    // }
+    // exp._image = json['image'];
 
-    exp._image = json['image'];
     return exp;
   }
 
