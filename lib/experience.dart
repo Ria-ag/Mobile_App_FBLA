@@ -336,7 +336,7 @@ class _ExperienceState extends State<Experience> {
             ],
           ),
           trailing: SizedBox(
-            width: 120,
+            width: MediaQuery.of(context).size.width - 250,
             height: 200,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
