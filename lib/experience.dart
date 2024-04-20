@@ -95,7 +95,6 @@ class Experience extends StatefulWidget {
     exp.award = json['award'];
     exp.location = json['location'];
     exp.editable = json['editable'] as bool;
-
     return exp;
   }
 

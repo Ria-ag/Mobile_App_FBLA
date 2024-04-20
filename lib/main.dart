@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/home.dart';
 import 'experience.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (_selectedIndex) {
       case 0:
-        page = const Placeholder();
+        page = HomePage();
         break;
       case 1:
         page = const ProfilePage();
