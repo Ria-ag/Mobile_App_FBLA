@@ -338,7 +338,7 @@ class _ExperienceState extends State<Experience> {
             ],
           ),
           trailing: SizedBox(
-            width: 120,
+            width: 200,
             height: 200,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
