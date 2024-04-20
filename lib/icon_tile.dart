@@ -9,45 +9,52 @@ class IconTile extends StatelessWidget {
       required this.tileIndex});
 
   final String title;
-  final IconData icon;
+  final dynamic icon;
   final int tileIndex;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const SizedBox(height: 5),
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () {
-                modalSheet(context, title, tileIndex);
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+      padding: const EdgeInsets.all(5),
+      child: SizedBox(
+        width: 200,
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 5),
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  modalSheet(context, title, tileIndex);
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: (icon.runtimeType == IconData)
+                      ? Center(child: Icon(icon, size: 60))
+                      : const Center(
+                          child: Text("data"),
+                        ),
                 ),
-                child: Center(child: Icon(icon, size: 60)),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
