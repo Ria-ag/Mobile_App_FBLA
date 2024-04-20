@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mobileapp/home.dart';
 import 'experience.dart';
 import 'profile_page.dart';
@@ -6,6 +9,7 @@ import 'settings_page.dart';
 import 'theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +34,8 @@ class MyApp extends StatelessWidget {
         title: 'FBLA Mobile App',
         debugShowCheckedModeBanner: false,
         theme: theme,
-        home: const MyHomePage(title: 'FBLA Mobile App Home Page'),
+        home: Splash(),
+        // const MyHomePage(title: 'FBLA Mobile App Home Page'),
       ),
     );
   }
@@ -131,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: Row(
                       children: [
                         const Image(
-                          image: AssetImage('assets/progress.png'),
+                          image: AssetImage('assets/logo.png'),
                           // PLACEHOLDER ICON
                           height: 30,
                         ),
@@ -170,5 +175,133 @@ class _MyHomePageState extends State<MyHomePage> {
                   body: page,
                 );
         });
+  }
+}
+
+class Splash extends StatefulWidget{
+  @override
+  SplashState createState() => new SplashState();
+}
+
+class SplashState extends State<Splash> {
+  final delay = 3;
+
+  Future checkSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool seen = (prefs.getBool('seen') ?? false);
+
+    if (seen){
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',) )
+      );
+    } else {
+        await prefs.setBool('seen', true);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const IntroScreen())
+        );
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+
+    loadWidget();
+  }
+
+  loadWidget() async {
+    var duration = Duration(seconds: delay);
+    return Timer(duration, checkSeen);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Row(
+          children: [
+            Image(image: AssetImage("assets/loading.gif")),
+            Text("ise", style: TextStyle(fontSize: 20)),
+          ],
+        ),
+        
+      ),
+    );
+  }
+}
+
+class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
+
+  @override
+  State<IntroScreen> createState() => _IntroScreenState();
+}
+
+class _IntroScreenState extends State<IntroScreen> {
+  String name = "";
+  String school = "";
+  String year = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Rise'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Text('Welcome to Rise'),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Please enter your name:"),
+            ),
+            TextFormField(
+              onChanged: (value) => setState(() => name = value),
+              decoration: const InputDecoration(
+                hintText: ("First, Last"),
+              )
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Please enter your school's name:"),
+            ),
+            TextFormField(
+              onChanged: (value) => school = value,
+              decoration: const InputDecoration(
+                hintText: ("ex. Woodinville High School"),
+              )
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Please enter your year of graduation:"),
+            ),
+            TextFormField(
+              onChanged: (value) => year = value,
+              decoration: const InputDecoration(
+                hintText: ("ex. 2025"),
+              )
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {save(context, name, school, year);});
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',)),
+                );
+              },
+              child: const Text("continue"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void save(BuildContext context, String name, String school, String year) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("name", name);
+    await prefs.setString("school", school);
+    await prefs.setString("year", year);
   }
 }
