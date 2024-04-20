@@ -54,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: non_constant_identifier_names
     List<IconTile> ITs = [
       const IconTile(
           title: "Athletics", icon: Icons.sports_tennis, tileIndex: 0),
@@ -64,6 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
       const IconTile(title: "Awards", icon: Icons.star, tileIndex: 3),
     ];
 
+    // ignore: non_constant_identifier_names
     List<TextTile> TTs = [
       const TextTile(name: "Class name", title: "Honors Classes", tileIndex: 4),
       const TextTile(

@@ -44,7 +44,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 25,
-                  height: MediaQuery.of(context).size.height - 135,
+                  height: MediaQuery.of(context).size.height - 130,
                   child: SingleChildScrollView(
                     child: Column(
                       children:

@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import "main.dart";
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class MyExperiences extends ChangeNotifier {
   List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
@@ -41,7 +42,8 @@ class Experience extends StatefulWidget {
   int xpID;
 
   String name = "";
-  String date = "";
+  String startDate = "";
+  String endDate = "";
   String description = "";
   String score = "";
   String grade = "";
@@ -49,25 +51,19 @@ class Experience extends StatefulWidget {
   String hours = "";
   String award = "";
   String location = "";
-  bool editable = false;
+  bool editable = true;
   File? _image;
+  final _formKey = GlobalKey<FormState>();
 
 // Convert an Experience object into a JSON string
   String toJsonString() {
-    // String? base64String;
-    // late Uint8List bytes;
-
-    // if (_image != null) {
-    //   _image!.readAsBytes().then((value) => bytes = value);
-    //   base64String = base64.encode(bytes);
-    // }
-
     final Map<String, dynamic> data = {
       'title': title,
       'tileIndex': tileIndex,
       'xpID': xpID,
       'name': name,
-      'date': date,
+      'startDate': startDate,
+      'endDate': endDate,
       'description': description,
       'score': score,
       'grade': grade,
@@ -76,7 +72,6 @@ class Experience extends StatefulWidget {
       'award': award,
       'location': location,
       'editable': editable,
-      //'image': base64String,
     };
     return jsonEncode(data);
   }
@@ -90,7 +85,8 @@ class Experience extends StatefulWidget {
       tileIndex: json['tileIndex'],
     );
     exp.name = json['name'];
-    exp.date = json['date'];
+    exp.startDate = json['startDate'];
+    exp.endDate = json['endDate'];
     exp.description = json['description'];
     exp.score = json['score'];
     exp.grade = json['grade'];
@@ -99,13 +95,6 @@ class Experience extends StatefulWidget {
     exp.award = json['award'];
     exp.location = json['location'];
     exp.editable = json['editable'] as bool;
-
-    // if (json['image'] != null) {
-    //   Uint8List bytes = base64.decode(json['image']);
-    //   exp._image = File.fromRawPath(bytes);
-    // }
-    // exp._image = json['image'];
-
     return exp;
   }
 
@@ -117,14 +106,9 @@ class _ExperienceState extends State<Experience> {
   //TODO: Change tips
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      const Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Divider(),
-      ),
-
-      //TODO: Clean up this code, probably decomposing
-      Container(
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(10),
@@ -136,244 +120,415 @@ class _ExperienceState extends State<Experience> {
             ),
           ],
         ),
-        child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              widget.title != "Community Service"
-                  ? !widget.editable
-                      ? Text(
-                          "Name: ${widget.name}",
-                          style: Theme.of(context).textTheme.bodyMedium,
+        child: Form(
+          key: widget._formKey,
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.title != "Community Service")
+                  (!widget.editable)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                            ),
+                            Divider(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ],
                         )
                       : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
                           initialValue: widget.name,
                           onChanged: (value) {
                             setState(() {
                               widget.name = value;
                             });
                           },
-                          decoration: const InputDecoration(
-                            hintText: "ex. FBLA",
-                            labelText: "Name",
-                          ),
+                          decoration: underlineInputDecoration(
+                              context, "ex. FBLA", "Name"),
                         )
-                  : !widget.editable
-                      ? Text(
-                          "Location: ${widget.location}",
-                          style: Theme.of(context).textTheme.bodyMedium,
+                else
+                  (!widget.editable)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Community Service at ${widget.location}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                            ),
+                            Divider(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ],
                         )
                       : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
                           initialValue: widget.location,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
                           onChanged: (value) {
                             setState(() {
                               widget.location = value;
                             });
                           },
-                          decoration: const InputDecoration(
-                            hintText: "ex. Hopelink",
-                            labelText: "Location",
-                          ),
+                          decoration: underlineInputDecoration(
+                              context, "ex. Hopelink", "Location"),
                         ),
-              !widget.editable
-                  ? Text(
-                      "Start Date: ${widget.date}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )
-                  : InputDatePickerFormField(
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2025),
-                      errorInvalidText: "invalid date",
-                      fieldLabelText: "start date",
-                    ),
-              !widget.editable
-                  ? Text(
-                      "End Date: ${widget.date}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )
-                  : InputDatePickerFormField(
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2025),
-                      errorInvalidText: "invalid date",
-                      fieldLabelText: "end date",
-                    ),
-              if (widget.title == "Clubs/Organizations")
-                !widget.editable
-                    ? Text(
-                        "Role: ${widget.role}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
+                (!widget.editable)
+                    ? buildRichText(context, "Start Date: ", widget.startDate,
+                        Theme.of(context).textTheme.bodyMedium)
                     : TextFormField(
-                        initialValue: widget.role,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.role = value;
-                          });
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Field cannot be empty";
+                          } else if (widget.endDate.isNotEmpty) {
+                            DateTime endDate =
+                                DateFormat("MM/dd/yyyy").parse(widget.endDate);
+                            DateTime startDate =
+                                DateFormat("MM/dd/yyyy").parse(value);
+                            if (startDate.compareTo(endDate) > 0) {
+                              return "Start date should be before end date";
+                            }
+                          }
+                          return null;
                         },
-                        decoration: const InputDecoration(
-                          hintText: "ex. President",
-                          labelText: "Role",
-                        ),
-                      ),
-              if (widget.title == "Awards")
-                !widget.editable
-                    ? Text(
-                        "Award: ${widget.award}",
                         style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : TextFormField(
-                        initialValue: widget.award,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.award = value;
-                          });
+                        controller:
+                            TextEditingController(text: widget.startDate),
+                        readOnly: true, // Prevents manual editing
+                        decoration: underlineInputDecoration(
+                            context, "ex. 4/24/2024", "Start Date"),
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now()
+                                .subtract(const Duration(days: 365 * 25)),
+                            lastDate:
+                                DateTime.now().add(const Duration(days: 365)),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              widget.startDate = formatDate(
+                                  pickedDate.toString().substring(0, 10));
+                            });
+                          }
                         },
-                        decoration: const InputDecoration(
-                          hintText: "ex. Woodinville High School",
-                          labelText: "Issuer",
-                        ),
                       ),
-              if (widget.title != "Tests" && widget.title != "Honors Classes")
-                !widget.editable
-                    ? Text(
-                        "Description: ${widget.description}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : TextFormField(
-                        initialValue: widget.description,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.description = value;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "ex. In this I...",
-                          labelText: "Description",
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 7.5),
+                  child: (!widget.editable)
+                      ? buildRichText(context, "End Date: ", widget.endDate,
+                          Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          controller:
+                              TextEditingController(text: widget.endDate),
+                          readOnly: true,
+                          decoration: underlineInputDecoration(
+                              context, "ex. 4/27/2024", "End Date"),
+                          onTap: () async {
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now()
+                                  .subtract(const Duration(days: 365 * 25)),
+                              lastDate:
+                                  DateTime.now().add(const Duration(days: 365)),
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                widget.endDate = formatDate(
+                                    pickedDate.toString().substring(0, 10));
+                              });
+                            }
+                          },
                         ),
-                      ),
-              if (widget.title == "Community Service")
-                !widget.editable
-                    ? Text(
-                        "Hours: ${widget.hours}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : TextFormField(
-                        initialValue: widget.hours,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.hours = value;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "ex. 10",
-                          labelText: "Hours",
-                        ),
-                      ),
-              if (widget.title == "Tests")
-                !widget.editable
-                    ? Text(
-                        "Score: ${widget.score}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : TextFormField(
-                        initialValue: widget.score,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.score = value;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "ex. In this I...",
-                          labelText: "Description",
-                        ),
-                      ),
-              if (widget.title == "Honors Classes")
-                !widget.editable
-                    ? Text(
-                        "Grade: ${widget.grade}",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            widget.grade = value;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "ex. A",
-                          labelText: "Grade",
-                        ),
-                      ),
-              !widget.editable
-                  ? widget._image == null
-                      ? Text("No files selected",
-                          style: Theme.of(context).textTheme.bodyMedium)
-                      : Image.file(widget._image!)
-                  : Column(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          child: FloatingActionButton(
-                            onPressed: () => getImage(ImageSource.gallery),
-                            tooltip: 'Pick Image',
-                            child: const Icon(Icons.add_a_photo),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 50,
-                          child: FloatingActionButton(
-                            onPressed: () => getImage(ImageSource.camera),
-                            tooltip: 'Capture Image',
-                            child: const Icon(Icons.camera),
-                          ),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
-          trailing: SizedBox(
-            width: MediaQuery.of(context).size.width - 250,
-            height: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  child: Icon(
-                    (!widget.editable) ? Icons.edit : Icons.check,
-                    color: Colors.black,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    !widget.editable
-                        ? setState(() {
-                            widget.editable = true;
-                          })
-                        : setState(() {
-                            widget.editable = false;
-                            context
-                                .read<MyExperiences>()
-                                .saveXP(widget.tileIndex);
-                          });
-                  },
                 ),
-                TextButton(
-                  onPressed: () {
-                    context
-                        .read<MyExperiences>()
-                        .remove(widget.xpID, widget.tileIndex);
-                  },
-                  child: const Icon(Icons.remove, size: 20),
-                ),
+                const SizedBox(width: 10),
+                if (widget.title == "Clubs/Organizations")
+                  (!widget.editable)
+                      ? buildRichText(context, "Role: ", widget.role,
+                          Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          initialValue: widget.role,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.role = value;
+                            });
+                          },
+                          decoration: underlineInputDecoration(
+                              context, "ex. President", "Role"),
+                        ),
+                if (widget.title == "Awards")
+                  (!widget.editable)
+                      ? (widget.award.isEmpty)
+                          ? Text("No issuer",
+                              style: Theme.of(context).textTheme.bodyMedium)
+                          : buildRichText(context, "Issuer: ", widget.award,
+                              Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          initialValue: widget.award,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.award = value;
+                            });
+                          },
+                          decoration: underlineInputDecoration(context,
+                              "ex. Woodinville High School", "Issuer")),
+                if (widget.title == "Community Service")
+                  (!widget.editable)
+                      ? buildRichText(context, "Hours: ", widget.hours,
+                          Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          initialValue: widget.hours,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.hours = value;
+                              widget._formKey.currentState!.validate();
+                            });
+                          },
+                          decoration: underlineInputDecoration(
+                            context,
+                            "ex. 10",
+                            "Hours",
+                          ),
+                          validator: (value) {
+                            if (value != null) {
+                              final double? numVal = double.tryParse(value);
+                              if (numVal == null || numVal <= 0) {
+                                return "Enter a positive number";
+                              }
+                            } else if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                if (widget.title == "Tests")
+                  (!widget.editable)
+                      ? buildRichText(context, "Score: ", widget.score,
+                          Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value != null) {
+                              final double? numVal = double.tryParse(value);
+                              if (numVal == null || numVal < 0) {
+                                return "Enter a non-negative number";
+                              }
+                            } else if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          initialValue: widget.score,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.score = value;
+                            });
+                          },
+                          decoration: underlineInputDecoration(
+                              context, "ex. 1320", "Score"),
+                        ),
+                if (widget.title == "Honors Classes")
+                  (!widget.editable)
+                      ? buildRichText(context, "Grade: ", widget.grade,
+                          Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              widget.grade = value;
+                            });
+                          },
+                          decoration: underlineInputDecoration(
+                              context, "ex. A", "Grade"),
+                        ),
+                if (widget.title != "Tests" && widget.title != "Honors Classes")
+                  (!widget.editable)
+                      ? (widget.description.isEmpty)
+                          ? Text("No description",
+                              style: Theme.of(context).textTheme.bodyMedium)
+                          : buildRichText(
+                              context,
+                              "Description:\n",
+                              widget.description,
+                              Theme.of(context).textTheme.bodyMedium)
+                      : TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          minLines: 1,
+                          maxLines: 4,
+                          initialValue: widget.description,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.description = value;
+                            });
+                          },
+                          decoration: underlineInputDecoration(
+                              context, "ex. In this I...", "Description"),
+                        ),
+                (!widget.editable)
+                    ? widget._image == null
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 7.5),
+                            child: Text("No images selected",
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          )
+                        : Image.file(widget._image!)
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            const Text("Add image:"),
+                            const SizedBox(width: 10),
+                            SizedBox(
+                              width: 50,
+                              child: FloatingActionButton(
+                                onPressed: () => getImage(ImageSource.gallery),
+                                tooltip: 'Pick Image',
+                                child: const Icon(Icons.add_a_photo),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            SizedBox(
+                              width: 50,
+                              child: FloatingActionButton(
+                                onPressed: () => getImage(ImageSource.camera),
+                                tooltip: 'Capture Image',
+                                child: const Icon(Icons.camera),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ],
+            ),
+            trailing: SizedBox(
+              width: 175,
+              height: 175,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: (!widget.editable)
+                        ? () => setState(() {
+                              widget.editable = true;
+                            })
+                        : () {
+                            final formState = widget._formKey.currentState;
+                            if (formState == null) return;
+
+                            bool hasErrors = false;
+                            formState.save();
+
+                            setState(() {
+                              hasErrors = !formState.validate();
+                              if (!hasErrors) {
+                                widget.editable = false;
+                                context
+                                    .read<MyExperiences>()
+                                    .saveXP(widget.tileIndex);
+                              }
+                            });
+                          },
+                    child: Icon(
+                      (!widget.editable) ? Icons.edit : Icons.check,
+                      size: 20,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<MyExperiences>()
+                          .remove(widget.xpID, widget.tileIndex);
+                      context.read<MyExperiences>().saveXP(widget.tileIndex);
+                    },
+                    child: const Icon(Icons.remove, size: 20),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ]);
+    );
+  }
+
+  InputDecoration underlineInputDecoration(
+      BuildContext context, String hint, String label,
+      {String? errorText}) {
+    return InputDecoration(
+      hintText: hint,
+      labelText: label,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      // enabledBorder: const UnderlineInputBorder(
+      //     borderSide: BorderSide(color: Colors.blueGrey)),
+      //labelStyle: TextStyle(color: Colors.blueGrey, fontSize: 13),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
+      focusedErrorBorder:
+          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+      floatingLabelStyle:
+          MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
+        final Color color = states.contains(MaterialState.focused)
+            ? (states.contains(MaterialState.error)
+                ? Colors.red
+                : Theme.of(context).colorScheme.secondary)
+            : Colors.black;
+        return TextStyle(color: color);
+      }),
+    );
   }
 
   Future getImage(ImageSource source) async {
@@ -388,5 +543,28 @@ class _ExperienceState extends State<Experience> {
     setState(() {
       widget._image = File(image.path);
     });
+  }
+
+  Widget buildRichText(
+      BuildContext context, String label, String value, TextStyle? style) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: label,
+            style: style?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: value,
+            style: style,
+          ),
+        ],
+      ),
+    );
+  }
+
+  String formatDate(String date) {
+    List<String> parts = date.split('-');
+    return '${parts[1]}/${parts[2]}/${parts[0]}';
   }
 }
