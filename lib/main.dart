@@ -220,9 +220,18 @@ class SplashState extends State<Splash> {
       body: Center(
         child: Row(
           children: [
-            Image(image: AssetImage("assets/loading.gif")),
-            Text("ise", style: TextStyle(fontSize: 20)),
-          ],
+            Center(
+              child: SizedBox(
+                width: 500,
+                height: 270,
+                child: Image(
+                  image: AssetImage("assets/loading.gif"),
+                  fit: BoxFit.cover,
+                  ),
+              ),
+            ),
+            Center(child: Text("ise", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold))),
+          ]
         ),
         
       ),
