@@ -69,7 +69,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool showButton = false;
-  File? _image;
   String name = "name";
   String school = "school";
   String year = "year";

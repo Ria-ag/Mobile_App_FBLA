@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     super.key,
@@ -12,7 +11,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
+// ignore: must_be_immutable
 class Security extends StatefulWidget {
   Security({super.key});
   bool nameEditable = false;
@@ -76,7 +75,7 @@ class _SecurityState extends State<Security> {
     getData();
   }
 
-  Future<void> getData() async{
+  Future<void> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? tempName = prefs.getString('name');
     String? tempSchool = prefs.getString('school');
@@ -97,101 +96,101 @@ class _SecurityState extends State<Security> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-                setState(() {save(context, name, school, year);});
-                Navigator.pop(context);
-              },
+            setState(() {
+              save(context, name, school, year);
+            });
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Column(
-          children: [
-            const Text("Settings", style: TextStyle(fontSize: 40)),
-            ListTile(
-              title: const Text('Name: '),
-              subtitle: !widget.nameEditable ?
-                Text(name)
+        children: [
+          const Text("Settings", style: TextStyle(fontSize: 40)),
+          ListTile(
+            title: const Text('Name: '),
+            subtitle: !widget.nameEditable
+                ? Text(name)
                 : TextFormField(
-                  onChanged: (value) => setState(() => name = value),
-                  decoration: const InputDecoration(
-                    hintText: ("First, Last"),
-                  )
-                ),
-              trailing:TextButton(
-                child: Icon(
-                  (!widget.nameEditable) ? Icons.edit : Icons.check,
-                    color: Colors.black,
-                    size: 20,
-                ),
-                onPressed: () {
-                  !widget.nameEditable
-                  ? setState(() {
-                    widget.nameEditable = true;
-                  })
-                  : setState(() {
-                    widget.nameEditable = false;
-                  });
-                },
+                    onChanged: (value) => setState(() => name = value),
+                    decoration: const InputDecoration(
+                      hintText: ("First, Last"),
+                    )),
+            trailing: TextButton(
+              child: Icon(
+                (!widget.nameEditable) ? Icons.edit : Icons.check,
+                color: Colors.black,
+                size: 20,
               ),
+              onPressed: () {
+                !widget.nameEditable
+                    ? setState(() {
+                        widget.nameEditable = true;
+                      })
+                    : setState(() {
+                        widget.nameEditable = false;
+                      });
+              },
             ),
-            ListTile(
-              title: const Text('School: '),
-              subtitle: !widget.schoolEditable ?
-                Text(school)
+          ),
+          ListTile(
+            title: const Text('School: '),
+            subtitle: !widget.schoolEditable
+                ? Text(school)
                 : TextFormField(
-                  onChanged: (value) => setState(() => year = value),
-                  decoration: const InputDecoration(
-                    hintText: ("ex. Woodinville High School"),
-                  )
-                ),
-              trailing:TextButton(
-                child: Icon(
-                  (!widget.schoolEditable) ? Icons.edit : Icons.check,
-                    color: Colors.black,
-                    size: 20,
-                ),
-                onPressed: () {
-                  !widget.schoolEditable
-                  ? setState(() {
-                    widget.schoolEditable = true;
-                  })
-                  : setState(() {
-                    widget.schoolEditable = false;
-                  });
-                },
+                    onChanged: (value) => setState(() => year = value),
+                    decoration: const InputDecoration(
+                      hintText: ("ex. Woodinville High School"),
+                    )),
+            trailing: TextButton(
+              child: Icon(
+                (!widget.schoolEditable) ? Icons.edit : Icons.check,
+                color: Colors.black,
+                size: 20,
               ),
+              onPressed: () {
+                !widget.schoolEditable
+                    ? setState(() {
+                        widget.schoolEditable = true;
+                      })
+                    : setState(() {
+                        widget.schoolEditable = false;
+                      });
+              },
             ),
-           ListTile(
-              title: const Text('Year: '),
-              subtitle: !widget.yearEditable ?
-                Text(year)
+          ),
+          ListTile(
+            title: const Text('Year: '),
+            subtitle: !widget.yearEditable
+                ? Text(year)
                 : TextFormField(
-                  onChanged: (value) => setState(() => year = value),
-                  decoration: const InputDecoration(
-                    hintText: ("ex. 2025"),
-                  )
-                ),
-              trailing:TextButton(
-                child: Icon(
-                  (!widget.yearEditable) ? Icons.edit : Icons.check,
-                    color: Colors.black,
-                    size: 20,
-                ),
-                onPressed: () {
-                  !widget.yearEditable
-                  ? setState(() {
-                    widget.yearEditable = true;
-                  })
-                  : setState(() {
-                    widget.yearEditable = false;
-                  });
-                },
+                    onChanged: (value) => setState(() => year = value),
+                    decoration: const InputDecoration(
+                      hintText: ("ex. 2025"),
+                    )),
+            trailing: TextButton(
+              child: Icon(
+                (!widget.yearEditable) ? Icons.edit : Icons.check,
+                color: Colors.black,
+                size: 20,
               ),
+              onPressed: () {
+                !widget.yearEditable
+                    ? setState(() {
+                        widget.yearEditable = true;
+                      })
+                    : setState(() {
+                        widget.yearEditable = false;
+                      });
+              },
             ),
-          ],
+          ),
+        ],
       ),
     );
   }
 
-  void save(BuildContext context, String name, String school, String year) async{
+  void save(
+      BuildContext context, String name, String school, String year) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("name", name);
     await prefs.setString("school", school);
@@ -199,7 +198,7 @@ class _SecurityState extends State<Security> {
   }
 }
 
-class Terms extends StatelessWidget{
+class Terms extends StatelessWidget {
   const Terms({super.key});
 
   @override
@@ -209,8 +208,8 @@ class Terms extends StatelessWidget{
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-                Navigator.pop(context);
-              },
+            Navigator.pop(context);
+          },
         ),
       ),
       body: const Column(

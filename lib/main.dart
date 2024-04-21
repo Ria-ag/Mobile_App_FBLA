@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const ProfilePage();
         break;
       case 2:
-        page = const GoalsAnalyticsPage();
+        page = GoalsAnalyticsPage();
         break;
       case 3:
         page = const SettingsPage();
@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Splash extends StatefulWidget{
+class Splash extends StatefulWidget {
   const Splash({super.key});
 
   @override
@@ -192,20 +192,20 @@ class SplashState extends State<Splash> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool seen = (prefs.getBool('seen') ?? false);
 
-    if (seen){
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',) )
-      );
+    if (seen) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const MyHomePage(
+                title: 'Rise',
+              )));
     } else {
-        await prefs.setBool('seen', true);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const IntroScreen())
-        );
+      await prefs.setBool('seen', true);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const IntroScreen()));
     }
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     loadWidget();
@@ -220,20 +220,18 @@ class SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Row(
-          children: 
-             [Center(
-                child: SizedBox(
-                  width: 500,
-                  height: 270,
-                  child: Image(
-                    image: AssetImage("assets/loading.gif"),
-                    fit: BoxFit.cover,
-                    ),
-                ),
+        child: Row(children: [
+          Center(
+            child: SizedBox(
+              width: 500,
+              height: 270,
+              child: Image(
+                image: AssetImage("assets/loading.gif"),
+                fit: BoxFit.cover,
               ),
-          ]
-        ),
+            ),
+          ),
+        ]),
       ),
     );
   }
@@ -270,11 +268,10 @@ class _IntroScreenState extends State<IntroScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
-                onChanged: (value) => setState(() => name = value),
-                decoration: const InputDecoration(
-                  hintText: ("First, Last"),
-                )
-              ),
+                  onChanged: (value) => setState(() => name = value),
+                  decoration: const InputDecoration(
+                    hintText: ("First, Last"),
+                  )),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -283,11 +280,10 @@ class _IntroScreenState extends State<IntroScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
-                onChanged: (value) => school = value,
-                decoration: const InputDecoration(
-                  hintText: ("ex. Woodinville High School"),
-                )
-              ),
+                  onChanged: (value) => school = value,
+                  decoration: const InputDecoration(
+                    hintText: ("ex. Woodinville High School"),
+                  )),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -296,11 +292,10 @@ class _IntroScreenState extends State<IntroScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
-                onChanged: (value) => year = value,
-                decoration: const InputDecoration(
-                  hintText: ("ex. 2025"),
-                )
-              ),
+                  onChanged: (value) => year = value,
+                  decoration: const InputDecoration(
+                    hintText: ("ex. 2025"),
+                  )),
             ),
             const Text("Terms & Conditions:", style: TextStyle(fontSize: 15)),
             const Text("This app is only to be used for the purpose of FBLA"),
@@ -316,12 +311,21 @@ class _IntroScreenState extends State<IntroScreen> {
               width: 50,
               child: FloatingActionButton(
                 onPressed: () {
-                  setState(() {save(context, name, school, year, isChecked);});
-                  isChecked == false ? setState(() {warning = "You must accept terms and conditions to continue";})
-                  : Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',)),
-                  );
+                  setState(() {
+                    save(context, name, school, year, isChecked);
+                  });
+                  isChecked == false
+                      ? setState(() {
+                          warning =
+                              "You must accept terms and conditions to continue";
+                        })
+                      : Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyHomePage(
+                                    title: 'Rise',
+                                  )),
+                        );
                 },
                 child: const Text("continue"),
               ),
@@ -333,7 +337,8 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-  void save(BuildContext context, String name, String school, String year, bool isChecked) async{
+  void save(BuildContext context, String name, String school, String year,
+      bool isChecked) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("name", name);
     await prefs.setString("school", school);

@@ -89,7 +89,7 @@ class Experience extends StatefulWidget {
       'award': award,
       'location': location,
       'editable': editable,
-      'updateTime' : updateTime.toIso8601String(),
+      'updateTime': updateTime.toIso8601String(),
       'image': imagePath,
     };
     return jsonEncode(data);
@@ -115,8 +115,8 @@ class Experience extends StatefulWidget {
     exp.location = json['location'];
     exp.imagePath = json['image'] ?? "";
     exp.editable = json['editable'] as bool;
-    exp.updateTime = DateTime.parse(json['updateTime']);
-    
+    exp.updateTime = DateTime.tryParse(json['updateTime']) ?? DateTime.now();
+
     exp._image =
         (exp.imagePath.isEmpty) ? null : File(prefs.getString('image')!);
     return exp;
@@ -502,7 +502,7 @@ class _ExperienceState extends State<Experience> {
                         hasErrors = !formState.validate();
                         if (!hasErrors) {
                           widget.editable = false;
-                           widget.updateTime = DateTime.now();
+                          widget.updateTime = DateTime.now();
                           context
                               .read<MyExperiences>()
                               .saveXP(widget.tileIndex);

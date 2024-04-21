@@ -25,7 +25,9 @@ final theme = ThemeData(
     labelMedium: GoogleFonts.merriweather(fontSize: 10.5),
     labelLarge: GoogleFonts.merriweather(),
   ),
-  iconTheme: const IconThemeData(color: Color.fromARGB(255, 77, 145, 214),),
+  iconTheme: const IconThemeData(
+    color: Color.fromARGB(255, 77, 145, 214),
+  ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Color.fromARGB(255, 218, 124, 96)),
   useMaterial3: true,
