@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                       ? ListTile(
                           title: Text(recent!.title, style: const TextStyle(color: Colors.white)),
                           subtitle: Text(recent!.name, style: const TextStyle(color: Colors.white)),
-                          trailing: Text(recent!.date, style: const TextStyle(color: Colors.white)),
+                          trailing: Text("${recent!.startDate} - ${recent!.endDate}", style: const TextStyle(color: Colors.white)),
                           tileColor: const Color.fromARGB(255, 218, 124, 96),
                       )
                     : const Text("Add an experience in the profile page to get started", style: TextStyle(color: Colors.white)),
@@ -156,7 +156,7 @@ void createPdf(context) async{
                   pw.Column(
                     children: [
                       pw.Text(experience.name),
-                      pw.Text(experience.date),
+                      pw.Text("${experience.startDate} - ${experience.endDate}"),
                       i != 7 && i != 4 ? pw.Text(experience.description) : pw.SizedBox(),
                       i == 4 ? pw.Text(experience.grade) : pw.SizedBox(),
                       i == 5 ? pw.Text(experience.role) : pw.SizedBox(),
