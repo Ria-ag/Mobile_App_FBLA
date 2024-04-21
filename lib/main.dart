@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: theme,
         home: const Splash(),
-        // const MyHomePage(title: 'FBLA Mobile App Home Page'),
       ),
     );
   }
@@ -252,6 +251,7 @@ class _IntroScreenState extends State<IntroScreen> {
   String name = "";
   String school = "";
   String year = "";
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -302,15 +302,29 @@ class _IntroScreenState extends State<IntroScreen> {
                 )
               ),
             ),
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {save(context, name, school, year);});
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',)),
-                );
+            const Text("Terms & Conditions:", style: TextStyle(fontSize: 15)),
+            const Text("This app is only to be used for the purpose of FBLA"),
+            Checkbox(
+              value: isChecked,
+              onChanged: (value) {
+                setState(() {
+                  isChecked = value!;
+                });
               },
-              child: const Text("continue"),
+            ),
+            SizedBox(
+              width: 50,
+              child: FloatingActionButton(
+                onPressed: () {
+                  isChecked == false ? const Text("You must accept the terms and conditions to continue") 
+                  : setState(() {save(context, name, school, year, isChecked);});
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',)),
+                  );
+                },
+                child: const Text("continue"),
+              ),
             ),
           ],
         ),
@@ -318,10 +332,11 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-  void save(BuildContext context, String name, String school, String year) async{
+  void save(BuildContext context, String name, String school, String year, bool isChecked) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("name", name);
     await prefs.setString("school", school);
     await prefs.setString("year", year);
+    await prefs.setBool("checked", isChecked);
   }
 }
