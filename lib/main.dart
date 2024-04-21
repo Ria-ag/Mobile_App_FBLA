@@ -217,10 +217,8 @@ class SplashState extends State<Splash> {
     return const Scaffold(
       body: Center(
         child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left:50),
-              child: Center(
+          children: 
+             [Center(
                 child: SizedBox(
                   width: 500,
                   height: 270,
@@ -230,11 +228,8 @@ class SplashState extends State<Splash> {
                     ),
                 ),
               ),
-            ),
-            Center(child: Text("ise", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold))),
           ]
         ),
-        
       ),
     );
   }
@@ -252,6 +247,7 @@ class _IntroScreenState extends State<IntroScreen> {
   String school = "";
   String year = "";
   bool isChecked = false;
+  String warning = "";
 
   @override
   Widget build(BuildContext context) {
@@ -316,9 +312,9 @@ class _IntroScreenState extends State<IntroScreen> {
               width: 50,
               child: FloatingActionButton(
                 onPressed: () {
-                  isChecked == false ? const Text("You must accept the terms and conditions to continue") 
-                  : setState(() {save(context, name, school, year, isChecked);});
-                  Navigator.pushReplacement(
+                  setState(() {save(context, name, school, year, isChecked);});
+                  isChecked == false ? setState(() {warning = "You must accept terms and conditions to continue";})
+                  : Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Rise',)),
                   );
@@ -326,6 +322,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 child: const Text("continue"),
               ),
             ),
+            Text(warning),
           ],
         ),
       ),

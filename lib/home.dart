@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(top: 130, bottom: 10),
+                      padding: EdgeInsets.only(top: 150, bottom: 10),
                       child: Text("Share your profile with the world", style: TextStyle(color: Colors.white)),
                     ),
                     SizedBox(
