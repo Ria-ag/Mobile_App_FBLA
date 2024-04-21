@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/home.dart';
 import 'experience.dart';
+import 'goals_analytics_page.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
@@ -87,6 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             }
           }
+
+          context.read<MyExperiences>().addHrs();
+
           return Future.value(value);
         },
       );
@@ -106,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const ProfilePage();
         break;
       case 2:
-        page = const Placeholder();
+        page = const GoalsAnalyticsPage();
         break;
       case 3:
         page = const SettingsPage();

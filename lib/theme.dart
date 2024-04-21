@@ -5,31 +5,25 @@ final theme = ThemeData(
   primaryColor: const Color.fromARGB(255, 218, 124, 96),
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
     secondary: const Color.fromARGB(255, 77, 145, 214),
+    primary: const Color.fromARGB(255, 218, 124, 96),
     background: Colors.white,
   ),
   textTheme: TextTheme(
-    headlineLarge: GoogleFonts.urbanist(
-      fontWeight: FontWeight.bold,
-      fontSize: 24,
-    ),
-    headlineMedium: GoogleFonts.urbanist(
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-    ),
-    headlineSmall: GoogleFonts.urbanist(
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-    ),
-    bodyLarge: GoogleFonts.merriweather(
-      fontSize: 16,
-    ),
-    bodyMedium: GoogleFonts.merriweather(
-      fontSize: 14,
-    ),
-    bodySmall: GoogleFonts.merriweather(
-      fontSize: 12,
-    ),
+    displayLarge:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 32),
+    displaySmall:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 16),
+    headlineLarge:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 24),
+    headlineMedium:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 20),
+    headlineSmall:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 18),
+    bodyLarge: GoogleFonts.merriweather(fontSize: 16),
+    bodyMedium: GoogleFonts.merriweather(fontSize: 14),
+    bodySmall: GoogleFonts.merriweather(fontSize: 12),
     labelMedium: GoogleFonts.merriweather(fontSize: 10.5),
+    labelLarge: GoogleFonts.merriweather(),
   ),
   iconTheme: const IconThemeData(color: Color.fromARGB(255, 77, 145, 214),),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -47,5 +41,14 @@ final theme = ThemeData(
   navigationBarTheme: const NavigationBarThemeData(
     surfaceTintColor: Color.fromARGB(255, 218, 124, 96),
     indicatorColor: Color.fromARGB(190, 218, 124, 96),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle: TextStyle(
+        fontFamily: GoogleFonts.merriweather().fontFamily, fontSize: 13),
+  ),
+  textButtonTheme: const TextButtonThemeData(
+    style: ButtonStyle(
+      iconColor: MaterialStatePropertyAll(Colors.black),
+    ),
   ),
 );

@@ -23,15 +23,6 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                         style: Theme.of(context).textTheme.headlineSmall),
                     const Spacer(),
                     TextButton(
-                        child: const Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                    TextButton(
                       child: const Icon(
                         Icons.add,
                         color: Colors.black,
@@ -40,17 +31,36 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                       onPressed: () =>
                           context.read<MyExperiences>().add(title, tileIndex),
                     ),
+                    TextButton(
+                        child: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
                   ],
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 25,
-                  height: MediaQuery.of(context).size.height - 115,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children:
-                          context.watch<MyExperiences>().xpList[tileIndex],
-                    ),
-                  ),
+                  height: MediaQuery.of(context).size.height - 130,
+                  child: (context
+                          .watch<MyExperiences>()
+                          .xpList[tileIndex]
+                          .isNotEmpty)
+                      ? SingleChildScrollView(
+                          child: Column(
+                            children: context
+                                .watch<MyExperiences>()
+                                .xpList[tileIndex],
+                          ),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                              "Looks a little empty in here. Click on the add button at the top to get started!"),
+                        ),
                 ),
               ],
             ),
