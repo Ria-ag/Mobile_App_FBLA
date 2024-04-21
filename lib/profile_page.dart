@@ -1,13 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'experience.dart';
 import 'icon_tile.dart';
 import 'main.dart';
 import 'text_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class MyProfileState extends ChangeNotifier {
   List<Widget> widgetList = [];
+  File? pfp = (prefs.getString('image') != null)
+      ? File(prefs.getString('image')!)
+      : null;
 
   List<bool> isChecked = (prefs.getString("isChecked") == null)
       ? [
@@ -33,12 +39,24 @@ class MyProfileState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: Implement this method to add new tiles
-  // void addItem() {
-  //   widgetList
-  //       .add(const TextTile(name: "Class name", title: "Clubs/Organizations"));
-  //   notifyListeners();
-  // }
+  Future getImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().pickImage(
+      source: source,
+      maxHeight: 150,
+      maxWidth: 150,
+    );
+    if (pickedImage == null) {
+      return;
+    }
+    pfp = File(pickedImage.path);
+    notifyListeners();
+
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String path = directory.path;
+
+    await pfp!.copy('$path/${basename(pickedImage.path)}');
+    prefs.setString('image', pfp!.path);
+  }
 }
 
 class ProfilePage extends StatefulWidget {
@@ -50,7 +68,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool showButton = false;
-  File? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -60,18 +77,19 @@ class _ProfilePageState extends State<ProfilePage> {
           title: "Athletics", icon: Icons.sports_tennis, tileIndex: 0),
       const IconTile(
           title: "Performing Arts", icon: Icons.music_note, tileIndex: 1),
-      const IconTile(
-          title: "Community Service", icon: Icons.help, tileIndex: 2),
+      IconTile(
+          title: "Community Service",
+          icon: context.watch<MyExperiences>().serviceHrs,
+          tileIndex: 2),
       const IconTile(title: "Awards", icon: Icons.star, tileIndex: 3),
     ];
 
     // ignore: non_constant_identifier_names
     List<TextTile> TTs = [
-      const TextTile(name: "Class name", title: "Honors Classes", tileIndex: 4),
-      const TextTile(
-          name: "Club name", title: "Clubs/Organizations", tileIndex: 5),
-      const TextTile(name: "Project name", title: "Projects", tileIndex: 6),
-      const TextTile(name: "Test name", title: "Tests", tileIndex: 7),
+      const TextTile(title: "Honors Classes", tileIndex: 4),
+      const TextTile(title: "Clubs/Organizations", tileIndex: 5),
+      const TextTile(title: "Projects", tileIndex: 6),
+      const TextTile(title: "Tests", tileIndex: 7),
     ];
 
     List<Widget> displayITs = [
@@ -99,6 +117,15 @@ class _ProfilePageState extends State<ProfilePage> {
           : Container();
     }
 
+    Widget introText =
+        (!context.watch<MyProfileState>().isChecked.contains(true))
+            ? const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                    "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
+              )
+            : Container();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
@@ -111,54 +138,57 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MouseRegion(
-                      onEnter: (_) => setState(() {
-                        showButton = true;
-                      }),
-                      onExit: (_) => setState(() {
-                        showButton = false;
-                      }),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Center(
-                            child: _image == null
-                                ? const Icon(Icons.supervised_user_circle,
-                                    size: 150)
-                                : Image.file(_image!),
-                          ),
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            child: showButton
-                                ? Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: FloatingActionButton(
-                                          onPressed: () =>
-                                              getImage(ImageSource.gallery),
-                                          tooltip: 'Pick Image',
-                                          child: const Icon(Icons.add_a_photo),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20, height: 20),
-                                      SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: FloatingActionButton(
-                                          onPressed: () =>
-                                              getImage(ImageSource.camera),
-                                          tooltip: 'Capture Image',
-                                          child: const Icon(Icons.camera),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
-                          )
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        context.watch<MyProfileState>().pfp == null
+                            ? const Icon(Icons.supervised_user_circle,
+                                size: 150)
+                            : Container(
+                                padding:
+                                    const EdgeInsets.all(6), // Border width
+                                decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    shape: BoxShape.circle),
+                                child: ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(
+                                        60), // Image radius
+                                    child: Image.file(
+                                        context.watch<MyProfileState>().pfp!,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                              ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: FloatingActionButton(
+                                onPressed: () => context
+                                    .read<MyProfileState>()
+                                    .getImage(ImageSource.gallery),
+                                tooltip: 'Pick Image',
+                                child: const Icon(
+                                    Icons.add_photo_alternate_rounded),
+                              ),
+                            ),
+                            const SizedBox(width: 20, height: 20),
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: FloatingActionButton(
+                                onPressed: () => context
+                                    .read<MyProfileState>()
+                                    .getImage(ImageSource.camera),
+                                tooltip: 'Capture Image',
+                                child: const Icon(Icons.add_a_photo),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -202,6 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 30),
+              introText,
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -222,20 +253,6 @@ class _ProfilePageState extends State<ProfilePage> {
         onPressed: () => _dialogBuilder(context),
       ),
     );
-  }
-
-  Future getImage(ImageSource source) async {
-    final image = await ImagePicker().pickImage(
-      source: source,
-      maxHeight: 150,
-      maxWidth: 150,
-    );
-    if (image == null) {
-      return;
-    }
-    setState(() {
-      _image = File(image.path);
-    });
   }
 
   Future<void> _dialogBuilder(BuildContext context) {
@@ -285,6 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemCount: blocks.length,
                       itemBuilder: (context, index) {
                         return CheckboxListTile(
+                          activeColor: Theme.of(context).colorScheme.secondary,
                           title: Text(blocks[index]),
                           value:
                               context.watch<MyProfileState>().isChecked[index],

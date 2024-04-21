@@ -86,6 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             }
           }
+
+          context.read<MyExperiences>().addHrs();
+
           return Future.value(value);
         },
       );

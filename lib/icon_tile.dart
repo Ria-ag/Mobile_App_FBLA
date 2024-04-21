@@ -7,7 +7,6 @@ class IconTile extends StatelessWidget {
       required this.icon,
       required this.title,
       required this.tileIndex});
-
   final String title;
   final dynamic icon;
   final int tileIndex;
@@ -15,7 +14,7 @@ class IconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.symmetric(vertical: 2.5),
       child: SizedBox(
         width: 200,
         child: Column(
@@ -45,11 +44,33 @@ class IconTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: (icon.runtimeType == IconData)
-                      ? Center(child: Icon(icon, size: 60))
-                      : const Center(
-                          child: Text("data"),
-                        ),
+                  child: Center(
+                    child: (icon.runtimeType == IconData)
+                        ? Icon(icon, size: 60)
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "$icon",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                              ),
+                              Text("hours",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary))
+                            ],
+                          ),
+                  ),
                 ),
               ),
             ),

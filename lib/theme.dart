@@ -9,6 +9,10 @@ final theme = ThemeData(
     background: Colors.white,
   ),
   textTheme: TextTheme(
+    displayLarge:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 32),
+    displaySmall:
+        GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 16),
     headlineLarge:
         GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 24),
     headlineMedium:
