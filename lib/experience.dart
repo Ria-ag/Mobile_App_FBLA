@@ -52,6 +52,7 @@ class Experience extends StatefulWidget {
   String location = "";
   bool editable = false;
   File? _image;
+  DateTime updateTime = DateTime.now();
 
 // Convert an Experience object into a JSON string
   String toJsonString() {
@@ -78,6 +79,7 @@ class Experience extends StatefulWidget {
       'location': location,
       'editable': editable,
       'image': base64String,
+      'updateTime' : updateTime,
     };
     return jsonEncode(data);
   }
@@ -355,6 +357,7 @@ class _ExperienceState extends State<Experience> {
                           })
                         : setState(() {
                             widget.editable = false;
+                            widget.updateTime = DateTime.now();
                             context
                                 .read<MyExperiences>()
                                 .saveXP(widget.tileIndex);

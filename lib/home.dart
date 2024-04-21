@@ -13,12 +13,14 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  String recent = "";
+  Experience? recent;
+  String name = "name";
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
+    getName();
   }
 
   Future<void> _initSharedPreferences() async {
@@ -27,59 +29,95 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getRecent(prefs) async {
-    final String data = prefs.getString('recent_data') ?? '';
-    final int timestamp = prefs.getInt('timestamp_data') ?? 0;
-
-    // Compare timestamps to determine most recent
-    if (timestamp > 0) {
+    DateTime mostRecentUpdateTime = DateTime.utc(0);
+    Experience? mostRecent;
+    for (int i = 0; i < 8; i++){
+      List<String>? xps = prefs.getStringList('$i');
+      if (xps != null) {
+        for (String xpString in xps) {
+          Experience tempExperience = Experience.fromJsonString(xpString);
+          if (mostRecentUpdateTime.isBefore(tempExperience.updateTime))
+          {
+            mostRecentUpdateTime = tempExperience.updateTime;
+            mostRecent = tempExperience;
+          }
+        }
+      }
+    }
+    if (mostRecent != null) {
       setState(() {
-        recent = data;
+         recent = mostRecent!;
+      });
+    }
+  }
+
+  Future<void> getName() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tempName = prefs.getString('name');
+    if (tempName != null) {
+      setState(() {
+        name = tempName;
       });
     }
   }
 
  @override
   Widget build(BuildContext context) {
-    Experience? recent = context.watch<MyExperiences>().xpList.isNotEmpty 
-    ? context.watch<MyExperiences>().xpList.last.last
-      : null;
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         body:
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const Row(
+          Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/background.png'), fit: BoxFit.cover,),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
                   children: [
-                    Icon(Icons.star),
-                    Text("Welcome, name", style: TextStyle(fontSize: 40)),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 250, top: 50, right: 30),
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            child: const Image(image: AssetImage('assets/logo.png'), height: 100)
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: Center(child: Text('Welcome, $name', style: const TextStyle(fontSize: 40))),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 100),
+                    const Text("Share your profile with the world"),
+                    SizedBox(
+                      width: 200,
+                      child: FloatingActionButton(
+                        onPressed: () => createPdf(context),
+                        child: const Text("Create and share pdf"),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text("Most recently added experience:"),
+                    ),
+                    recent != null
+                      ? Column(
+                        children: [
+                          Text(recent!.title),
+                          Text(recent!.name),
+                        ],
+                      )
+                    : const Text("Add an experience in the profile page to get started"),
                   ],
                 ),
-                SizedBox(
-                  width: 200,
-                  child: FloatingActionButton(
-                    onPressed: () => createPdf(context),
-                    child: const Text("Create and share pdf"),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text("Most recently added experience:"),
-                ),
-                recent != null
-                  ? Column(
-                    children: [
-                      Text(recent.title),
-                      Text(recent.name),
-                    ],
-                  )
-                : const Text("Add an experience in the profile page to get started"),
-              ],
-            ),
+              ),
+            ],
           ),
-      ),
     );
   }
 
@@ -92,9 +130,8 @@ void createPdf(context) async{
     
     final pdf = pw.Document();
 
-    for (int i = 0; i < myExperiences.xpList.length; i++) {
+    for (int i = 0; i < 8; i++) {
       List<Experience> experiences = myExperiences.xpList[i];
-      var xp = experiences[i];
 
       pdf.addPage(
         pw.Page(
@@ -105,20 +142,19 @@ void createPdf(context) async{
                 pw.Text(school!, style: const pw.TextStyle(fontSize: 20)),
                 pw.Text("Class of ${year!}", style: const pw.TextStyle(fontSize: 20)),
                 pw.SizedBox(width: 100),
-                if (experiences.isNotEmpty)pw.Text(xp.title),
+                if (experiences.isNotEmpty)pw.Text(experiences[i].title),
                 for (var experience in experiences)
                   pw.Column(
                     children: [
                       pw.Text(experience.name),
                       pw.Text(experience.date),
-                      pw.Text(experience.description),
-                      pw.Text(experience.grade),
-                      pw.Text(experience.role),
-                      pw.Text(experience.score),
-                      pw.Text(experience.hours),
-                      pw.Text(experience.score),
-                      pw.Text(experience.award),
-                      pw.Text(experience.location),
+                      i != 7 && i != 4 ? pw.Text(experience.description) : pw.SizedBox(),
+                      i == 4 ? pw.Text(experience.grade) : pw.SizedBox(),
+                      i == 5 ? pw.Text(experience.role) : pw.SizedBox(),
+                      i ==2 ? pw.Text(experience.hours) : pw.SizedBox(),
+                      i == 7 ? pw.Text(experience.score) : pw.SizedBox(),
+                      i == 3 ? pw.Text(experience.award) : pw.SizedBox(),
+                      i == 2 ? pw.Text(experience.location) : pw.SizedBox(),
                     ],
                   ),
               ],

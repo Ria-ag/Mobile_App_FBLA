@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'icon_tile.dart';
 import 'main.dart';
 import 'text_tile.dart';
@@ -51,6 +52,29 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool showButton = false;
   File? _image;
+  String name = "name";
+  String school = "school";
+  String year = "year";
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tempName = prefs.getString('name');
+    String? tempSchool = prefs.getString('school');
+    String? tempYear = prefs.getString('year');
+    if (tempName != null && tempSchool != null && tempYear != null) {
+      setState(() {
+        name = tempName;
+        school = tempSchool;
+        year = tempYear;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               Text(
-                                context.watch<MyAppState>().nameController.text,
+                                name,
                                 style:
                                     Theme.of(context).textTheme.headlineLarge,
                                 softWrap: true,
@@ -177,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Woodinville High School',
+                                school,
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,
@@ -185,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Class of 2025',
+                                'Class of $year',
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,

@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:mobileapp/home.dart';
 import 'experience.dart';
 import 'profile_page.dart';
@@ -9,7 +7,6 @@ import 'settings_page.dart';
 import 'theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +31,7 @@ class MyApp extends StatelessWidget {
         title: 'FBLA Mobile App',
         debugShowCheckedModeBanner: false,
         theme: theme,
-        home: Splash(),
+        home: const Splash(),
         // const MyHomePage(title: 'FBLA Mobile App Home Page'),
       ),
     );
@@ -104,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (_selectedIndex) {
       case 0:
-        page = HomePage();
+        page = const HomePage();
         break;
       case 1:
         page = const ProfilePage();
@@ -143,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Text(
-                            'App Name',
+                            'Rise',
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                         )
@@ -179,8 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Splash extends StatefulWidget{
+  const Splash({super.key});
+
   @override
-  SplashState createState() => new SplashState();
+  SplashState createState() => SplashState();
 }
 
 class SplashState extends State<Splash> {
@@ -220,14 +219,17 @@ class SplashState extends State<Splash> {
       body: Center(
         child: Row(
           children: [
-            Center(
-              child: SizedBox(
-                width: 500,
-                height: 270,
-                child: Image(
-                  image: AssetImage("assets/loading.gif"),
-                  fit: BoxFit.cover,
-                  ),
+            Padding(
+              padding: EdgeInsets.only(left:350),
+              child: Center(
+                child: SizedBox(
+                  width: 500,
+                  height: 270,
+                  child: Image(
+                    image: AssetImage("assets/loading.gif"),
+                    fit: BoxFit.cover,
+                    ),
+                ),
               ),
             ),
             Center(child: Text("ise", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold))),
@@ -265,31 +267,40 @@ class _IntroScreenState extends State<IntroScreen> {
               padding: EdgeInsets.all(8.0),
               child: Text("Please enter your name:"),
             ),
-            TextFormField(
-              onChanged: (value) => setState(() => name = value),
-              decoration: const InputDecoration(
-                hintText: ("First, Last"),
-              )
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: TextFormField(
+                onChanged: (value) => setState(() => name = value),
+                decoration: const InputDecoration(
+                  hintText: ("First, Last"),
+                )
+              ),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text("Please enter your school's name:"),
             ),
-            TextFormField(
-              onChanged: (value) => school = value,
-              decoration: const InputDecoration(
-                hintText: ("ex. Woodinville High School"),
-              )
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: TextFormField(
+                onChanged: (value) => school = value,
+                decoration: const InputDecoration(
+                  hintText: ("ex. Woodinville High School"),
+                )
+              ),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text("Please enter your year of graduation:"),
             ),
-            TextFormField(
-              onChanged: (value) => year = value,
-              decoration: const InputDecoration(
-                hintText: ("ex. 2025"),
-              )
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: TextFormField(
+                onChanged: (value) => year = value,
+                decoration: const InputDecoration(
+                  hintText: ("ex. 2025"),
+                )
+              ),
             ),
             FloatingActionButton(
               onPressed: () {
