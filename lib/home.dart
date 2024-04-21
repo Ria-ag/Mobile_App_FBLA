@@ -51,6 +51,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initSharedPreferences();
+  }
+
   Future<void> getName() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? tempName = prefs.getString('name');
@@ -63,6 +69,7 @@ class _HomePageState extends State<HomePage> {
 
  @override
   Widget build(BuildContext context) {
+    debugPrint("main build called");
 
     return Scaffold(
         body:
@@ -80,20 +87,22 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 250, top: 50, right: 30),
+                          padding: const EdgeInsets.only(left: 30, top: 30, right: 30),
                           child: Container(
                             alignment: Alignment.topLeft,
                             child: const Image(image: AssetImage('assets/logo.png'), height: 100)
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: Center(child: Text('Welcome, $name', style: const TextStyle(fontSize: 40))),
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Center(child: Text('Welcome,\n $name', style: const TextStyle(fontSize: 40))),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 100),
-                    const Text("Share your profile with the world"),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 130, bottom: 10),
+                      child: Text("Share your profile with the world", style: TextStyle(color: Colors.white)),
+                    ),
                     SizedBox(
                       width: 200,
                       child: FloatingActionButton(
@@ -102,17 +111,17 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text("Most recently added experience:"),
+                      padding: EdgeInsets.only(top: 25, bottom: 10),
+                      child: Text("Most recently added experience:", style: TextStyle(color: Colors.white)),
                     ),
                     recent != null
-                      ? Column(
-                        children: [
-                          Text(recent!.title),
-                          Text(recent!.name),
-                        ],
+                      ? ListTile(
+                          title: Text(recent!.title, style: const TextStyle(color: Colors.white)),
+                          subtitle: Text(recent!.name, style: const TextStyle(color: Colors.white)),
+                          trailing: Text(recent!.date, style: const TextStyle(color: Colors.white)),
+                          tileColor: const Color.fromARGB(255, 218, 124, 96),
                       )
-                    : const Text("Add an experience in the profile page to get started"),
+                    : const Text("Add an experience in the profile page to get started", style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ),
@@ -142,7 +151,7 @@ void createPdf(context) async{
                 pw.Text(school!, style: const pw.TextStyle(fontSize: 20)),
                 pw.Text("Class of ${year!}", style: const pw.TextStyle(fontSize: 20)),
                 pw.SizedBox(width: 100),
-                if (experiences.isNotEmpty)pw.Text(experiences[i].title),
+                if (experiences.isNotEmpty)pw.Text(experiences[0].title),
                 for (var experience in experiences)
                   pw.Column(
                     children: [

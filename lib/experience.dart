@@ -79,7 +79,7 @@ class Experience extends StatefulWidget {
       'location': location,
       'editable': editable,
       'image': base64String,
-      'updateTime' : updateTime,
+      'updateTime' : updateTime.toIso8601String(),
     };
     return jsonEncode(data);
   }
@@ -102,6 +102,7 @@ class Experience extends StatefulWidget {
     exp.award = json['award'];
     exp.location = json['location'];
     exp.editable = json['editable'] as bool;
+    exp.updateTime = DateTime.parse(json['updateTime']);
 
     if (json['image'] != null) {
       Uint8List bytes = base64.decode(json['image']);

@@ -220,7 +220,7 @@ class SplashState extends State<Splash> {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left:350),
+              padding: EdgeInsets.only(left:50),
               child: Center(
                 child: SizedBox(
                   width: 500,

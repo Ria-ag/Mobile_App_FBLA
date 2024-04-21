@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 final theme = ThemeData(
   primaryColor: const Color.fromARGB(255, 218, 124, 96),
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
-    secondary: Colors.blue[900],
+    secondary: const Color.fromARGB(255, 77, 145, 214),
     background: Colors.white,
   ),
   textTheme: TextTheme(
@@ -31,7 +31,7 @@ final theme = ThemeData(
     ),
     labelMedium: GoogleFonts.merriweather(fontSize: 10.5),
   ),
-  iconTheme: IconThemeData(color: Colors.blue[900]),
+  iconTheme: const IconThemeData(color: Color.fromARGB(255, 77, 145, 214),),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Color.fromARGB(255, 218, 124, 96)),
   useMaterial3: true,
