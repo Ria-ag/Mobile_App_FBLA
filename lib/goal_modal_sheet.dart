@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<void> goalModalSheet(BuildContext context, title, progressValue) {
   bool editable = false;
+  String category = "";
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -39,6 +40,17 @@ Future<void> goalModalSheet(BuildContext context, title, progressValue) {
                 ],
               ),
               const Text("Category:"),
+              !editable
+              ? Text(category)
+              : DropdownButton<String>(
+                value: category,
+                onChanged: (newValue) {
+                  category = newValue!;
+                },
+                items: <String>["Athletics", "Performing Arts", "Community Service", "Awards"
+                "Honors Classes", "Clubs/Organizations", "Projects", "Tests"].map<DropdownMenuItem<String>>
+                ((String value) {return DropdownMenuItem<String>(value: value, child: Text(value),);}).toList(),
+              ),
               const Text("Deadline:"),
               const Text("Description:"),
               const Text("Tasks"),
