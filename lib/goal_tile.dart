@@ -23,6 +23,12 @@ class GoalTile extends StatelessWidget {
             backgroundColor: Colors.grey[200],
             valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 77, 145, 214)),
           ),
+          trailing: TextButton(
+              onPressed: () {
+                Provider.of<MyGoals>(context, listen: false).remove(title);
+              },
+              child: const Icon(Icons.remove, size: 20),
+            ),
           onTap: () {
             showModalBottomSheet(
               context: context,

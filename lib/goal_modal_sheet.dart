@@ -12,6 +12,11 @@ class MyGoals extends ChangeNotifier {
     notifyListeners();
   }
 
+  void remove(String title){
+    goals.remove(goals.firstWhere((goal) => goal.title == title));
+    notifyListeners();
+  }
+
   double calculateProgress() {
     if (totalTasks == 0) {
       return 0.0;
@@ -29,36 +34,35 @@ class MyGoals extends ChangeNotifier {
   }
 }
 
-// ignore: must_be_immutable
 class GoalModalSheet extends StatefulWidget {
-  GoalModalSheet({super.key, required this.title});
+  const GoalModalSheet({super.key, required this.title});
   final String title;
-
-  String category = "Athletics";
-  String date = "";
-  String description = "";
-  List<Task> tasks = [];
-  bool editable = false;
-  List<String> items = ["Athletics", "Performing Arts", "Community Service", "Awards",
-                "Honors Classes", "Clubs/Organizations", "Projects", "Tests", "Other"];
-  TextEditingController taskController = TextEditingController();
 
   @override
   GoalModalSheetState createState() => GoalModalSheetState();
 }
 
 class GoalModalSheetState extends State<GoalModalSheet> {
+  bool editable = false;
+  List<String> items = ["Athletics", "Performing Arts", "Community Service", "Awards",
+                "Honors Classes", "Clubs/Organizations", "Projects", "Tests", "Other"];
+  String category = "Athletics";
+  String date = "";
+  String description = "";
+  List<Task> tasks = [];
+  TextEditingController taskController = TextEditingController();
+
   void addTask(String task) {
     setState(() {
-      widget.tasks.add(Task(task: task, isChecked: false));
+      tasks.add(Task(task: task, isChecked: false));
     });
     Provider.of<MyGoals>(context, listen: false).addTotalTasks();
-    widget.taskController.clear();
+    taskController.clear();
   }
 
   void removeTask(int index) {
     setState(() {
-      widget.tasks.removeAt(index);
+      tasks.removeAt(index);
     });
     Provider.of<MyGoals>(context, listen: false).addCompletedTasks();
   }
@@ -81,16 +85,16 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       const Spacer(),
                       TextButton(
                         onPressed: () {
-                          !widget.editable
+                          !editable
                           ? setState(() {
-                              widget.editable = true;
+                              editable = true;
                           })
                           : setState(() {
-                              widget.editable = false;
+                              editable = false;
                           });
                         },
                         child: Icon(
-                          (!widget.editable) ? Icons.edit : Icons.check,
+                          (!editable) ? Icons.edit : Icons.check,
                           size: 20,
                         ),
                       ),
@@ -105,28 +109,28 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       }),
                     ],
                   ),
-                  !widget.editable
-                  ? buildRichText(context, "Category: ", widget.category, Theme.of(context).textTheme.bodyMedium)
+                  !editable
+                  ? buildRichText(context, "Category: ", category, Theme.of(context).textTheme.bodyMedium)
                   : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Category", style: Theme.of(context).textTheme.bodyMedium),
                       DropdownButton<String>(
-                        value: widget.category,
-                        items: widget.items
+                        value: category,
+                        items: items
                           .map((item) => DropdownMenuItem<String>(value: item, child: Text(item)))
                           .toList(),
-                        onChanged: (item) {setState(() {widget.category = item!;});},
+                        onChanged: (item) => setState(() => category = item!),
                       ),
                     ],
                   ),
-                  (!widget.editable)
+                  (!editable)
                   ? Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: buildRichText(context, "Deadline: ", widget.date, Theme.of(context).textTheme.bodyMedium),
+                    child: buildRichText(context, "Deadline: ", date, Theme.of(context).textTheme.bodyMedium),
                   )
-                  : (!widget.editable)
-                  ? buildRichText(context, "Deadline", widget.date,
+                  : (!editable)
+                  ? buildRichText(context, "Deadline", date,
                     Theme.of(context).textTheme.bodyMedium)
                   : TextFormField(
                     validator: (value) {
@@ -136,7 +140,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       return null;
                     },
                     style: Theme.of(context).textTheme.bodyMedium,
-                    controller: TextEditingController(text: widget.date),
+                    controller: TextEditingController(text: date),
                     readOnly: true, // Prevents manual editing
                     decoration: underlineInputDecoration(
                         context, "ex. 4/24/2024", "Deadline"),
@@ -150,31 +154,31 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          widget.date = formatDate(pickedDate.toString().substring(0, 10));
+                          date = formatDate(pickedDate.toString().substring(0, 10));
                         });
                       }
                     },
                   ),
-                  (!widget.editable)
+                  (!editable)
                   ? Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: (widget.description.isEmpty)
+                    child: (description.isEmpty)
                         ? Text("No description",
                             style: Theme.of(context).textTheme.bodyMedium)
                         : buildRichText(
                             context,
                             "Description:\n",
-                            widget.description,
+                            description,
                             Theme.of(context).textTheme.bodyMedium),
                   )
                   : TextFormField(
                       style: Theme.of(context).textTheme.bodyMedium,
                       minLines: 1,
                       maxLines: 4,
-                      initialValue: widget.description,
+                      initialValue: description,
                       onChanged: (value) {
                         setState(() {
-                          widget.description = value;
+                          description = value;
                         });
                       },
                       decoration: underlineInputDecoration(
@@ -189,7 +193,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                     ),
                   Text("Tasks", style: Theme.of(context).textTheme.headlineSmall),
                   TextField(
-                    controller: widget.taskController,
+                    controller: taskController,
                     decoration: const InputDecoration( labelText: 'Enter Task',),
                     onSubmitted: (value) {
                       addTask(value);
@@ -198,14 +202,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView.builder(
-                    itemCount: widget.tasks.length,
+                    itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       return CheckboxListTile(
-                        title: Text(widget.tasks[index].task),
-                        value: widget.tasks[index].isChecked,
+                        title: Text(tasks[index].task),
+                        value: tasks[index].isChecked,
                         onChanged: (value) {
                           setState(() {
-                            widget.tasks[index].isChecked = value!;
+                            tasks[index].isChecked = value!;
                             removeTask(index);
                           });
                         },
