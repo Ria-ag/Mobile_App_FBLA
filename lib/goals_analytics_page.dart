@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class GoalsAnalyticsPage extends StatelessWidget {
   GoalsAnalyticsPage({super.key});
