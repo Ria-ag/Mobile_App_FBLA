@@ -86,9 +86,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
-                      child: Center(
-                          child: Text('Welcome,\n $name',
-                              style: const TextStyle(fontSize: 40))),
+                      child: SizedBox(
+                        width: 200,
+                        child: Text(
+                          'Welcome,\n${name.substring(0, name.indexOf(" "))}',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 40),
+                        ),
+                      ),
                     ),
                   ],
                 ),
