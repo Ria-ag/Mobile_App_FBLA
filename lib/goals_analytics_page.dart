@@ -1,14 +1,62 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import 'package:mobileapp/goal_tile.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
+
+import 'chart_modal_sheet.dart';
+
+class ChartDataState extends ChangeNotifier {
+  String chartName = "";
+  String xLabel = "";
+  String yLabel = "";
+  List<DataRow> rows = [];
+  List<FlSpot> spots = [];
+
+  void removeRow() {
+    rows.removeAt(rows.length - 1);
+    notifyListeners();
+  }
+
+  void addRow(DataRow row) {
+    rows.add(row);
+    notifyListeners();
+  }
+
+  void clearChart() {
+    rows = [];
+    spots = [];
+    notifyListeners();
+  }
+
+  void updateChartName(String value) {
+    chartName = value;
+    notifyListeners();
+  }
+
+  void updateChartData(List<DataRow> rows) {
+    List<FlSpot> newSpots = [];
+
+    for (var row in rows) {
+      var cells = row.cells;
+      double? x =
+          double.tryParse((cells[0].child as TextField).controller!.text);
+      double? y =
+          double.tryParse((cells[1].child as TextField).controller!.text);
+      if (x != null && y != null) {
+        newSpots.add(FlSpot(x, y));
+      }
+    }
+    spots = newSpots;
+    notifyListeners();
+  }
+}
 
 class GoalsAnalyticsPage extends StatefulWidget {
   const GoalsAnalyticsPage({super.key});
-
+  
   @override
   State<GoalsAnalyticsPage> createState() => _GoalsAnalyticsPageState();
 }
@@ -79,11 +127,47 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                           ),
                   ),
               const Text("Analytics"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: (context.watch<ChartDataState>().rows.isEmpty)
+                    ? []
+                    : [
+                        Text(context.watch<ChartDataState>().chartName),
+                        TextButton(
+                          onPressed: () =>
+                              chartModalSheet(context, "Sample Chart"),
+                          child: const Icon(Icons.edit),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.read<ChartDataState>().clearChart();
+                          },
+                          child: const Icon(Icons.remove),
+                        )
+                      ],
+              ),
+              Center(
+                child: (context.watch<ChartDataState>().rows.isEmpty)
+                    ? Container()
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width - 50,
+                        height: 200,
+                        child: Container(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 20, 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            ),
+                            child: const CustomLineChart())),
+              ),
             ],
           ),
         ),
+      ),
         floatingActionButton: ExpandableFab(
-          distance: 112,
+          distance: 60,
           children: [
             ActionButton(
               onPressed: () => debugPrint("add method"),
@@ -308,24 +392,41 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-@immutable
-class FakeItem extends StatelessWidget {
-  const FakeItem({
-    super.key,
-    required this.isBig,
-  });
-
-  final bool isBig;
+class CustomLineChart extends StatelessWidget {
+  const CustomLineChart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-      height: isBig ? 128 : 36,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-        color: Colors.grey.shade300,
+    var chartData = LineChartData(
+      lineBarsData: [
+        LineChartBarData(
+            spots: context.watch<ChartDataState>().spots,
+            isCurved: true,
+            color: Colors.blue),
+      ],
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(color: Colors.black),
+          left: BorderSide(color: Colors.black),
+        ),
+      ),
+      gridData: FlGridData(
+        show: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        drawHorizontalLine: true,
+        drawVerticalLine: true,
+        getDrawingHorizontalLine: (value) =>
+            const FlLine(color: Colors.grey, dashArray: [5, 5]),
+        getDrawingVerticalLine: (value) =>
+            const FlLine(color: Colors.grey, dashArray: [5, 5]),
+      ),
+      titlesData: const FlTitlesData(
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
     );
+    return LineChart(chartData);
   }
 }

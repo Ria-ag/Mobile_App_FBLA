@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
             create: (context) => MyProfileState()),
         ChangeNotifierProvider<MyExperiences>(
             create: (context) => MyExperiences()),
+        ChangeNotifierProvider<ChartDataState>(
+            create: (context) => ChartDataState())
         ChangeNotifierProvider<MyGoals>(
             create: (context) => MyGoals())
       ],
@@ -106,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const ProfilePage();
         break;
       case 2:
-        page = GoalsAnalyticsPage();
+        page = const GoalsAnalyticsPage();
         break;
       case 3:
         page = const SettingsPage();
