@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<MyExperiences>(
             create: (context) => MyExperiences()),
         ChangeNotifierProvider<ChartDataState>(
-            create: (context) => ChartDataState())
+            create: (context) => ChartDataState()),
         ChangeNotifierProvider<MyGoals>(
             create: (context) => MyGoals())
       ],

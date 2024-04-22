@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class GoalTile extends StatelessWidget {
   final String title;
+  String category = "Athletics";
+  String date = "";
+  String description = "";
+  List<Task> tasks = [];
 
-  const GoalTile(
+  GoalTile(
       {super.key,
       required this.title,
   });
+
+  void addTask(task){}
 
   @override
   Widget build(BuildContext context) {

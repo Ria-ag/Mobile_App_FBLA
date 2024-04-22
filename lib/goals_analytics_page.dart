@@ -112,7 +112,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               const Text("Goals"),
               SizedBox(
                     width: MediaQuery.of(context).size.width - 25,
-                    height: MediaQuery.of(context).size.height - 130,
+                    height: 400,
                     child: (context.watch<MyGoals>().goals.isNotEmpty)
                         ? SingleChildScrollView(
                             child: Column(
@@ -165,12 +165,11 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
             ],
           ),
         ),
-      ),
         floatingActionButton: ExpandableFab(
           distance: 60,
           children: [
             ActionButton(
-              onPressed: () => debugPrint("add method"),
+              onPressed: () => chartModalSheet(context, "Sample Quiz"),
               icon: const Icon(Icons.addchart),
             ),
             ActionButton(
@@ -178,7 +177,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               icon: const Icon(Icons.checklist),
             ),
           ],
-        ),
+        )
       ),
     );
   }
