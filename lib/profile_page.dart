@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'experience.dart';
 import 'icon_tile.dart';
 import 'main.dart';
@@ -69,9 +68,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool showButton = false;
-  String name = "name";
-  String school = "school";
-  String year = "year";
+  String name = "";
+  String school = "";
+  String year = "";
 
   @override
   void initState() {
@@ -79,8 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
     getData();
   }
 
-  Future<void> getData() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  void getData() {
     String? tempName = prefs.getString('name');
     String? tempSchool = prefs.getString('school');
     String? tempYear = prefs.getString('year');

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:mobileapp/goal_tile.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 @immutable
 class GoalsAnalyticsPage extends StatelessWidget {
