@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
+import 'package:mobileapp/goal_tile.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class GoalsAnalyticsPage extends StatefulWidget {
   const GoalsAnalyticsPage({super.key});

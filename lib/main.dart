@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
-import 'package:mobileapp/home.dart';
+import 'home_page.dart';
 import 'experience.dart';
 import 'goals_analytics_page.dart';
 import 'profile_page.dart';
@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
         ChangeNotifierProvider<MyProfileState>(
             create: (context) => MyProfileState()),
         ChangeNotifierProvider<MyExperiences>(
@@ -36,19 +35,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: theme,
         home: const Splash(),
+        initialRoute: "/",
+        routes: {
+          "/splash": (context) => const Splash(),
+          "/profile": (context) => const ProfilePage(),
+        },
       ),
     );
-  }
-}
-
-class MyAppState extends ChangeNotifier {
-  final nameController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    nameController.dispose();
-    super.dispose();
   }
 }
 
@@ -118,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         page = const SettingsPage();
         break;
+      case 4:
+        page = const Splash();
       default:
         throw UnimplementedError();
     }
@@ -128,31 +123,16 @@ class _MyHomePageState extends State<MyHomePage> {
           return (!snapshot.hasData)
               ? const Center(
                   child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(),
+                    width: 300,
+                    height: 200,
+                    child: Image(
+                      image: AssetImage("assets/loading.gif"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
               : Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Colors.white,
-                    title: Row(
-                      children: [
-                        const Image(
-                          image: AssetImage('assets/logo.png'),
-                          // PLACEHOLDER ICON
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Text(
-                            'Rise',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  appBar: appBar,
                   bottomNavigationBar: NavigationBar(
                     onDestinationSelected: _onItemTapped,
                     selectedIndex: _selectedIndex,
@@ -196,12 +176,14 @@ class SplashState extends State<Splash> {
     bool seen = (prefs.getBool('seen') ?? false);
 
     if (seen) {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => const MyHomePage(
                 title: 'Rise',
               )));
     } else {
       await prefs.setBool('seen', true);
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const IntroScreen()));
     }
@@ -211,30 +193,22 @@ class SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    loadWidget();
-  }
-
-  loadWidget() async {
     var duration = Duration(seconds: delay);
-    return Timer(duration, checkSeen);
+    Timer(duration, checkSeen);
   }
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Row(children: [
-          Center(
-            child: SizedBox(
-              width: 500,
-              height: 270,
-              child: Image(
-                image: AssetImage("assets/loading.gif"),
-                fit: BoxFit.cover,
-              ),
-            ),
+        child: SizedBox(
+          width: 300,
+          height: 200,
+          child: Image(
+            image: AssetImage("assets/loading.gif"),
+            fit: BoxFit.cover,
           ),
-        ]),
+        ),
       ),
     );
   }
@@ -253,90 +227,165 @@ class _IntroScreenState extends State<IntroScreen> {
   String year = "";
   bool isChecked = false;
   String warning = "";
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rise'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text('Welcome to Rise'),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Please enter your name:"),
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Welcome to Rise!',
+                  style: Theme.of(context).textTheme.displayLarge,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'A portfolio app for high school success',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+                Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                    thickness: 2),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Please enter your full name:",
+                  ),
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Field cannot be empty";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => setState(() {
+                    name = value;
+                  }),
+                  decoration: underlineInputDecoration(
+                      context, "ex. Alexander T. Graham"),
+                  initialValue: name,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Please enter your school's name:",
+                  ),
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Field cannot be empty";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => setState(() => school = value),
+                  initialValue: school,
+                  decoration: underlineInputDecoration(
+                      context, "ex. Woodinville High School"),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Please enter your year of graduation:",
+                  ),
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value != null) {
+                      final int? numVal = int.tryParse(value);
+                      if (numVal == null ||
+                          numVal <= 1900 ||
+                          numVal >= DateTime.now().year + 50) {
+                        return "Enter a valid year";
+                      }
+                    } else if (value == null || value.isEmpty) {
+                      return "Field cannot be empty";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => setState(() => year = value),
+                  initialValue: year,
+                  decoration: underlineInputDecoration(context, "ex. 2025"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: Text("Terms & Conditions:",
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+                const Text(
+                    "This app is only to be used for the purpose of FBLA"),
+                CheckboxListTile(
+                  value: isChecked,
+                  onChanged: (value) {
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },
+                  title: Text(
+                    "I accept the terms and conditions",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        save(context, name, school, year, isChecked);
+                      });
+                      isChecked == false
+                          ? ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Please accept the terms and conditions to continue'),
+                              ),
+                            )
+                          : (_formKey.currentState!.validate())
+                              ? Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MyHomePage(
+                                            title: 'Rise',
+                                          )),
+                                )
+                              : ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Please fix the errors before continuing'),
+                                  ),
+                                );
+                    },
+                    child: const Text("Continue"),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextFormField(
-                  onChanged: (value) => setState(() => name = value),
-                  decoration: const InputDecoration(
-                    hintText: ("First, Last"),
-                  )),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Please enter your school's name:"),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextFormField(
-                  onChanged: (value) => school = value,
-                  decoration: const InputDecoration(
-                    hintText: ("ex. Woodinville High School"),
-                  )),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Please enter your year of graduation:"),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextFormField(
-                  onChanged: (value) => year = value,
-                  decoration: const InputDecoration(
-                    hintText: ("ex. 2025"),
-                  )),
-            ),
-            const Text("Terms & Conditions:", style: TextStyle(fontSize: 15)),
-            const Text("This app is only to be used for the purpose of FBLA"),
-            Checkbox(
-              value: isChecked,
-              onChanged: (value) {
-                setState(() {
-                  isChecked = value!;
-                });
-              },
-            ),
-            SizedBox(
-              width: 50,
-              child: FloatingActionButton(
-                onPressed: () {
-                  setState(() {
-                    save(context, name, school, year, isChecked);
-                  });
-                  isChecked == false
-                      ? setState(() {
-                          warning =
-                              "You must accept terms and conditions to continue";
-                        })
-                      : Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyHomePage(
-                                    title: 'Rise',
-                                  )),
-                        );
-                },
-                child: const Text("continue"),
-              ),
-            ),
-            Text(warning),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  InputDecoration underlineInputDecoration(BuildContext context, String hint) {
+    return InputDecoration(
+      hintText: hint,
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.secondary,
+          width: 2,
+        ),
+      ),
+      focusedErrorBorder:
+          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
     );
   }
 

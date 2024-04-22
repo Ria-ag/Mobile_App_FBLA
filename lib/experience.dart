@@ -388,7 +388,6 @@ class _ExperienceState extends State<Experience> {
                     onChanged: (value) {
                       setState(() {
                         widget.hours = value;
-                        widget._formKey.currentState!.validate();
                       });
                     },
                     decoration: underlineInputDecoration(
@@ -530,15 +529,11 @@ class _ExperienceState extends State<Experience> {
   }
 
   InputDecoration underlineInputDecoration(
-      BuildContext context, String hint, String label,
-      {String? errorText}) {
+      BuildContext context, String hint, String label) {
     return InputDecoration(
       hintText: hint,
       labelText: label,
       floatingLabelBehavior: FloatingLabelBehavior.always,
-      // enabledBorder: const UnderlineInputBorder(
-      //     borderSide: BorderSide(color: Colors.blueGrey)),
-      //labelStyle: TextStyle(color: Colors.blueGrey, fontSize: 13),
       focusedBorder: UnderlineInputBorder(
         borderSide: BorderSide(
           color: Theme.of(context).colorScheme.secondary,
