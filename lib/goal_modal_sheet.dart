@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Future<void> goalModalSheet(BuildContext context, title, progressValue) {
+  bool editable = false;
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -18,6 +19,15 @@ Future<void> goalModalSheet(BuildContext context, title, progressValue) {
                   Text(title),
                   const Spacer(),
                   TextButton(
+                    onPressed: () => (!editable)
+                    ? editable = true
+                    : editable = false,
+                    child: Icon(
+                      (!editable) ? Icons.edit : Icons.check,
+                      size: 20,
+                    ),
+                  ),
+                  TextButton(
                     child: const Icon(
                       Icons.cancel,
                       color: Colors.red,
@@ -28,6 +38,10 @@ Future<void> goalModalSheet(BuildContext context, title, progressValue) {
                   }),
                 ],
               ),
+              const Text("Category:"),
+              const Text("Deadline:"),
+              const Text("Description:"),
+              const Text("Tasks"),
             ],
           ),
         ),

@@ -17,6 +17,8 @@ class GoalsAnalyticsPage extends StatelessWidget {
             Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
             Text("Goals"),
             GoalTile(title: "Finish this app", progressValue: 0.75),
+            SizedBox(height: 15),
+            Text("Analytics"),
           ],
         ),
       ),
