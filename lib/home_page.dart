@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       child: SizedBox(
                         width: 200,
                         child: Text(
-                          'Welcome,\n${name.substring(0, name.indexOf(" "))}',
+                          'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 40),
                         ),
