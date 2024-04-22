@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
 import 'package:mobileapp/goal_tile.dart';
 
 @immutable
@@ -17,7 +16,7 @@ class GoalsAnalyticsPage extends StatelessWidget {
           children:[ 
             Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
             Text("Goals"),
-            GoalTile(title:Text("Finish this app"), progressValue: 0.75),
+            GoalTile(title: "Finish this app", progressValue: 0.75),
           ],
         ),
       ),

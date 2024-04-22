@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 
 class GoalTile extends StatelessWidget {
-  final Widget title;
+  final String title;
   final double progressValue;
 
 const GoalTile(
@@ -14,7 +14,7 @@ const GoalTile(
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: title,
+      title: Text(title),
       subtitle: LinearProgressIndicator(
         value: progressValue,
         backgroundColor: Colors.grey[200],
