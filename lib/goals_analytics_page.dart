@@ -1,41 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
+import 'package:provider/provider.dart';
 import 'package:mobileapp/goal_tile.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-@immutable
-class GoalsAnalyticsPage extends StatelessWidget {
+class GoalsAnalyticsPage extends StatefulWidget {
   const GoalsAnalyticsPage({super.key});
 
+  @override
+  State<GoalsAnalyticsPage> createState() => _GoalsAnalyticsPageState();
+}
+
+class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
+  String title = "";
+
+  Future<void> addGoalDialog() async {
+   await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Set a Goal'),
+          content: TextField(
+            onChanged: (value) {
+              title = value;
+            },
+            decoration: const InputDecoration(labelText: 'Name of goal'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                debugPrint("clicked");
+                if (title.isNotEmpty) {
+                  Provider.of<MyGoals>(context, listen: false).add(title);
+                }
+                Navigator.of(context).pop(title);
+              },
+              child: const Text('Add Goal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child:  Column(
-          children:[ 
-            Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
-            Text("Goals"),
-            GoalTile(title: "Finish this app", progressValue: 0.75),
-            SizedBox(height: 15),
-            Text("Analytics"),
+    return ChangeNotifierProvider.value(
+      value: context.read<MyGoals>(),
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child:  Column(
+            children:[ 
+              const Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
+              const Text("Goals"),
+              SizedBox(
+                    width: MediaQuery.of(context).size.width - 25,
+                    height: MediaQuery.of(context).size.height - 130,
+                    child: (context.watch<MyGoals>().goals.isNotEmpty)
+                        ? SingleChildScrollView(
+                            child: Column(
+                              children: context
+                                  .watch<MyGoals>().goals,
+                            ),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                                "Looks a little empty in here. Click on the edit button in the bottom right to get started!"),
+                          ),
+                  ),
+              const Text("Analytics"),
+            ],
+          ),
+        ),
+        floatingActionButton: ExpandableFab(
+          distance: 112,
+          children: [
+            ActionButton(
+              onPressed: () => debugPrint("add method"),
+              icon: const Icon(Icons.addchart),
+            ),
+            ActionButton(
+              onPressed: () => addGoalDialog(),
+              icon: const Icon(Icons.checklist),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: ExpandableFab(
-        distance: 112,
-        children: [
-          ActionButton(
-            onPressed: () => debugPrint("add method"),
-            icon: const Icon(Icons.addchart),
-          ),
-          ActionButton(
-            onPressed: () => debugPrint("add method"),
-            icon: const Icon(Icons.checklist),
-          ),
-        ],
       ),
     );
   }
