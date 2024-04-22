@@ -1,28 +1,38 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
+import 'package:provider/provider.dart';
 
 class GoalTile extends StatelessWidget {
   final String title;
-  final double progressValue;
 
-const GoalTile(
+  const GoalTile(
       {super.key,
       required this.title,
-      required this.progressValue});
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: LinearProgressIndicator(
-        value: progressValue,
-        backgroundColor: Colors.grey[200],
-        valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 77, 145, 214)),
-      ),
-      onTap: () {
-        goalModalSheet(context, title, progressValue);
-      },
+    return Consumer<MyGoals>(
+      builder: (context, taskManager, _) {
+        double progressValue = Provider.of<MyGoals>(context, listen: false).calculateProgress();
+
+        return ListTile(
+          title: Text(title),
+          subtitle: LinearProgressIndicator(
+            value: progressValue,
+            backgroundColor: Colors.grey[200],
+            valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 77, 145, 214)),
+          ),
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return GoalModalSheet(title: title);
+              },
+            );
+          },
+        );
+      }
     );
   }
 }

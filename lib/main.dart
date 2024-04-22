@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goal_modal_sheet.dart';
 import 'package:mobileapp/home.dart';
 import 'experience.dart';
 import 'goals_analytics_page.dart';
@@ -26,7 +27,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<MyProfileState>(
             create: (context) => MyProfileState()),
         ChangeNotifierProvider<MyExperiences>(
-            create: (context) => MyExperiences())
+            create: (context) => MyExperiences()),
+        ChangeNotifierProvider<MyGoals>(
+            create: (context) => MyGoals())
       ],
       child: MaterialApp(
         title: 'FBLA Mobile App',
