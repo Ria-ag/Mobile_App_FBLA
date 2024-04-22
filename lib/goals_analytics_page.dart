@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:mobileapp/goal_tile.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 @immutable
 class GoalsAnalyticsPage extends StatelessWidget {
   const GoalsAnalyticsPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: const Padding(
         padding: EdgeInsets.all(16.0),
-        child:  Column(
-          children:[ 
+        child: Column(
+          children: [
             Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
             Text("Goals"),
             GoalTile(title: "Finish this app", progressValue: 0.75),
