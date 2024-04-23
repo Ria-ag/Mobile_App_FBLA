@@ -35,13 +35,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                             style: Theme.of(context).textTheme.headlineSmall),
                         const Spacer(),
                         TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Save",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ),
-                        TextButton(
                             child: const Icon(
                               Icons.cancel,
                               color: Colors.red,
@@ -52,55 +45,52 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                             }),
                       ],
                     ),
-                    SizedBox(
-                      width: 200,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
-                            initialValue: chartTile.chartName,
-                            onChanged: (value) =>
-                                readChartState.updateName(value, index),
-                            decoration: underlineInputDecoration(context,
-                                "ex. Tasks Completed Last Month", "Chart Name"),
-                          ),
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
-                            initialValue: chartTile.xLabel,
-                            onChanged: (value) =>
-                                readChartState.updateXLabel(value, index),
-                            decoration: underlineInputDecoration(context,
-                                "ex. Days Since Jan 1st", "X-Axis Label"),
-                          ),
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
-                            initialValue: chartTile.yLabel,
-                            onChanged: (value) =>
-                                readChartState.updateYLabel(value, index),
-                            decoration: underlineInputDecoration(
-                                context, "ex. # of Tasks", "Y-Axis Label"),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          initialValue: chartTile.chartName,
+                          onChanged: (value) =>
+                              readChartState.updateName(value, index),
+                          decoration: underlineInputDecoration(context,
+                              "ex. Tasks Completed Last Month", "Chart Name"),
+                        ),
+                        TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          initialValue: chartTile.xLabel,
+                          onChanged: (value) =>
+                              readChartState.updateXLabel(value, index),
+                          decoration: underlineInputDecoration(context,
+                              "ex. Days Since Jan 1st", "X-Axis Label"),
+                        ),
+                        TextFormField(
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Field cannot be empty";
+                            }
+                            return null;
+                          },
+                          initialValue: chartTile.yLabel,
+                          onChanged: (value) =>
+                              readChartState.updateYLabel(value, index),
+                          decoration: underlineInputDecoration(
+                              context, "ex. # of Tasks", "Y-Axis Label"),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20),
                     ChartDataInputWidget(chartTile: chartTile),
@@ -126,8 +116,8 @@ InputDecoration underlineInputDecoration(
         color: Theme.of(context).colorScheme.secondary,
       ),
     ),
-    enabledBorder:
-        const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+    enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent)),
     focusedErrorBorder:
         const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
     floatingLabelStyle:
@@ -241,10 +231,22 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                 ),
               ],
             ),
-            TextButton(
-              onPressed: () => readChartState.updateChartData(rows, index),
-              child: Text('Save Chart',
-                  style: Theme.of(context).textTheme.displaySmall),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      Theme.of(context).colorScheme.secondary),
+                ),
+                onPressed: () => readChartState.updateChartData(rows, index),
+                child: Text(
+                  'Save Chart',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),

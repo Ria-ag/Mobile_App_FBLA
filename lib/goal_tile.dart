@@ -12,46 +12,46 @@ class GoalTile extends StatelessWidget {
   int totalTasks = 0;
   int completedTasks = 0;
 
-  GoalTile(
-      {super.key,
-      required this.title,
+  GoalTile({
+    super.key,
+    required this.title,
   });
 
-  void addTask(task, context){
+  void addTask(task, context) {
     tasks.add(Task(task: task, isChecked: false));
     Provider.of<MyGoals>(context, listen: false).addTotalTasks(title);
   }
 
   void removeTask(int index, context) {
-      tasks.removeAt(index);
-      Provider.of<MyGoals>(context, listen: false).addCompletedTasks(title);
+    tasks.removeAt(index);
+    Provider.of<MyGoals>(context, listen: false).addCompletedTasks(title);
   }
 
-  String getCategory(){
+  String getCategory() {
     return category;
   }
 
-  void changeCategory(category){
+  void changeCategory(category) {
     this.category = category;
   }
 
-  String getDate(){
+  String getDate() {
     return date;
   }
 
-  void changeDate(date){
+  void changeDate(date) {
     this.date = date;
   }
 
-  String getDescription(){
+  String getDescription() {
     return description;
   }
 
-  void changeDescription(description){
+  void changeDescription(description) {
     this.description = description;
   }
 
- List<Task> getTasks(){
+  List<Task> getTasks() {
     return tasks;
   }
 
@@ -59,31 +59,46 @@ class GoalTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MyGoals>(
       builder: (context, taskManager, _) {
-        double progressValue = Provider.of<MyGoals>(context, listen: true).calculateProgress(title);
+        double progressValue = Provider.of<MyGoals>(context, listen: true)
+            .calculateProgress(title);
 
-        return ListTile(
-          title: Text(title),
-          subtitle: LinearProgressIndicator(
-            value: progressValue,
-            backgroundColor: Colors.grey[200],
-            valueColor: const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 77, 145, 214)),
-          ),
-          trailing: TextButton(
-              onPressed: () {
-                Provider.of<MyGoals>(context, listen: false).remove(title);
-              },
-              child: const Icon(Icons.remove, size: 20),
+        return Column(
+          children: [
+            ListTile(
+              title: Row(
+                children: [
+                  Text(title, style: Theme.of(context).textTheme.headlineSmall),
+                  const Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return GoalModalSheet(title: title);
+                          },
+                        );
+                      },
+                      child: const Icon(Icons.edit)),
+                  TextButton(
+                    onPressed: () {
+                      Provider.of<MyGoals>(context, listen: false)
+                          .remove(title);
+                    },
+                    child: const Icon(Icons.remove),
+                  ),
+                ],
+              ),
             ),
-          onTap: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return GoalModalSheet(title: title);
-              },
-            );
-          },
+            LinearProgressIndicator(
+              value: progressValue,
+              backgroundColor: Colors.grey[200],
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color.fromARGB(255, 77, 145, 214)),
+            ),
+          ],
         );
-      }
+      },
     );
   }
 }
