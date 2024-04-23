@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'chart_tile.dart';
 import 'home_page.dart';
@@ -323,8 +325,12 @@ class _IntroScreenState extends State<IntroScreen> {
                   child: Text("Terms & Conditions:",
                       style: Theme.of(context).textTheme.headlineSmall),
                 ),
-                const Text(
-                    "This app is only to be used for the purpose of FBLA"),
+                ElevatedButton(
+                  onPressed: () {
+                    showTermsAndConditionsDialog(context);
+                  },
+                  child: const Text('View Terms and Conditions'),
+                ),
                 CheckboxListTile(
                   value: isChecked,
                   onChanged: (value) {
@@ -374,6 +380,28 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void showTermsAndConditionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Terms and Conditions'),
+          content: SingleChildScrollView(
+            child: termsConditions,
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 

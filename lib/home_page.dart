@@ -9,7 +9,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -74,119 +73,123 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 30, top: 30, right: 30),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: const Image(
-                            image: AssetImage('assets/logo.png'), height: 100),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: SizedBox(
-                        width: 200,
-                        child: Text(
-                          'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 40),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 30, top: 30, right: 30),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: const Image(
+                              image: AssetImage('assets/logo.png'),
+                              height: 100),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 200, bottom: 10),
-                  child: Text(
-                    "Share your profile with the world!",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: FloatingActionButton(
-                    heroTag: "button 1",
-                    onPressed: () => createPdf(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "Create and share a pdf version of profile",
-                        textAlign: TextAlign.center,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: SizedBox(
+                          width: 200,
+                          child: Text(
+                            'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 40),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: 200,
-                  child: FloatingActionButton(
-                    heroTag: "button 1",
-                    onPressed: () => instaPdf(),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "Share to instagram",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25, bottom: 10),
-                  child: Text("Most recently updated:",
+                  Padding(
+                    padding: const EdgeInsets.only(top: 200, bottom: 10),
+                    child: Text(
+                      "Share your profile with the world!",
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
-                          .copyWith(color: Colors.white)),
-                ),
-                SizedBox(
-                  width: 400,
-                  child: FloatingActionButton(
-                    heroTag: "button 2",
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
-                      child: (recent != null)
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(recent!.title,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                      Text(recent!.name,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                    ],
-                                  ),
-                                  Text(
-                                      "${recent!.startDate} - ${recent!.endDate}",
-                                      style:
-                                          const TextStyle(color: Colors.white)),
-                                ])
-                          : const Text(
-                              "Add an experience in the profile page to get started.",
-                              style: TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
+                          .copyWith(color: Colors.white),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 200,
+                    child: FloatingActionButton(
+                      heroTag: "button 1",
+                      onPressed: () => createPdf(context),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          "Create and share a .pdf version of the profile",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 200,
+                    child: FloatingActionButton(
+                      heroTag: "button 1",
+                      onPressed: () => instaPdf(),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "Share profile to social media as images",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25, bottom: 10),
+                    child: Text("Most recently updated:",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(color: Colors.white)),
+                  ),
+                  SizedBox(
+                    width: 400,
+                    child: FloatingActionButton(
+                      heroTag: "button 2",
+                      onPressed: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
+                        child: (recent != null)
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(recent!.title,
+                                            style: const TextStyle(
+                                                color: Colors.white)),
+                                        Text(recent!.name,
+                                            style: const TextStyle(
+                                                color: Colors.white)),
+                                      ],
+                                    ),
+                                    Text(
+                                        "${recent!.startDate} - ${recent!.endDate}",
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ])
+                            : const Text(
+                                "Add an experience in the profile page to get started.",
+                                style: TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -194,7 +197,78 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- Future<File> makePdf() async{
+  void addPage(
+    pw.Document pdf,
+    String? name,
+    String? school,
+    String? year,
+    List<Experience> experiences,
+    int i,
+  ) {
+    return pdf.addPage(
+      pw.Page(
+        build: (context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Header section
+              pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 10.0),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      name!,
+                      style: pw.TextStyle(
+                        fontSize: 24,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.Text(
+                      '$school - Class of $year',
+                      style: const pw.TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+              // Experiences section
+              for (var experience in experiences) ...[
+                pw.Container(
+                  margin: const pw.EdgeInsets.only(bottom: 10.0),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        experience.title,
+                        style: pw.TextStyle(
+                          fontSize: 18,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.Text(
+                        '${experience.startDate} - ${experience.endDate}',
+                        style: const pw.TextStyle(fontSize: 16),
+                      ),
+                      pw.SizedBox(height: 5),
+                      if (i != 7 && i != 4) pw.Text(experience.description),
+                      if (i == 4) pw.Text("Grade: ${experience.grade}"),
+                      if (i == 5) pw.Text("Role: ${experience.role}"),
+                      if (i == 2) pw.Text("Hours: ${experience.hours}"),
+                      if (i == 7) pw.Text("Score: ${experience.score}"),
+                      if (i == 3) pw.Text("Issuer: ${experience.award}"),
+                      if (i == 2) pw.Text("Location: ${experience.location}"),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Future<File> makePdf() async {
     MyExperiences myExperiences =
         Provider.of<MyExperiences>(context, listen: false);
     String? name = prefs.getString('name');
@@ -206,39 +280,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < 8; i++) {
       List<Experience> experiences = myExperiences.xpList[i];
 
-      pdf.addPage(
-        pw.Page(
-          build: (context) {
-            return pw.Column(
-              children: [
-                pw.Text(name!, style: const pw.TextStyle(fontSize: 24)),
-                pw.Text(school!, style: const pw.TextStyle(fontSize: 20)),
-                pw.Text("Class of ${year!}",
-                    style: const pw.TextStyle(fontSize: 20)),
-                pw.SizedBox(width: 100),
-                if (experiences.isNotEmpty) pw.Text(experiences[0].title),
-                for (var experience in experiences)
-                  pw.Column(
-                    children: [
-                      pw.Text(experience.name),
-                      pw.Text(
-                          "${experience.startDate} - ${experience.endDate}"),
-                      i != 7 && i != 4
-                          ? pw.Text(experience.description)
-                          : pw.SizedBox(),
-                      i == 4 ? pw.Text(experience.grade) : pw.SizedBox(),
-                      i == 5 ? pw.Text(experience.role) : pw.SizedBox(),
-                      i == 2 ? pw.Text(experience.hours) : pw.SizedBox(),
-                      i == 7 ? pw.Text(experience.score) : pw.SizedBox(),
-                      i == 3 ? pw.Text(experience.award) : pw.SizedBox(),
-                      i == 2 ? pw.Text(experience.location) : pw.SizedBox(),
-                    ],
-                  ),
-              ],
-            );
-          },
-        ),
-      );
+      addPage(pdf, name, school, year, experiences, i);
     }
     final tempDir = await getTemporaryDirectory();
     final tempPath = tempDir.path;
@@ -255,7 +297,10 @@ class _HomePageState extends State<HomePage> {
     final document = await pd.PdfDocument.openFile(pdf.path);
     for (int i = 1; i <= document.pagesCount; i++) {
       final page = await document.getPage(i);
-      final pageImage = await page.render(width: page.width, height: page.height, format: pd.PdfPageImageFormat.jpeg);
+      final pageImage = await page.render(
+          width: page.width,
+          height: page.height,
+          format: pd.PdfPageImageFormat.jpeg);
       final tempDir = await getTemporaryDirectory();
       final tempPath = tempDir.path;
       final tempFile = File('$tempPath/temp_$i.jpeg');
@@ -278,39 +323,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < 8; i++) {
       List<Experience> experiences = myExperiences.xpList[i];
 
-      pdf.addPage(
-        pw.Page(
-          build: (context) {
-            return pw.Column(
-              children: [
-                pw.Text(name!, style: const pw.TextStyle(fontSize: 24)),
-                pw.Text(school!, style: const pw.TextStyle(fontSize: 20)),
-                pw.Text("Class of ${year!}",
-                    style: const pw.TextStyle(fontSize: 20)),
-                pw.SizedBox(width: 100),
-                if (experiences.isNotEmpty) pw.Text(experiences[0].title),
-                for (var experience in experiences)
-                  pw.Column(
-                    children: [
-                      pw.Text(experience.name),
-                      pw.Text(
-                          "${experience.startDate} - ${experience.endDate}"),
-                      i != 7 && i != 4
-                          ? pw.Text(experience.description)
-                          : pw.SizedBox(),
-                      i == 4 ? pw.Text(experience.grade) : pw.SizedBox(),
-                      i == 5 ? pw.Text(experience.role) : pw.SizedBox(),
-                      i == 2 ? pw.Text(experience.hours) : pw.SizedBox(),
-                      i == 7 ? pw.Text(experience.score) : pw.SizedBox(),
-                      i == 3 ? pw.Text(experience.award) : pw.SizedBox(),
-                      i == 2 ? pw.Text(experience.location) : pw.SizedBox(),
-                    ],
-                  ),
-              ],
-            );
-          },
-        ),
-      );
+      addPage(pdf, name, school, year, experiences, i);
     }
     await Printing.sharePdf(bytes: await pdf.save(), filename: 'MyRise.pdf');
   }

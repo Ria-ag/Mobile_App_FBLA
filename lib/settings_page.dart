@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'theme.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -287,30 +288,30 @@ class Terms extends StatelessWidget {
           },
         ),
       ),
-      body: Column(
-        children: [
-          Text(
-            "Settings",
-            style: Theme.of(context).textTheme.displayLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 25),
-          Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Column(
-              children: [
-                Text("Review Terms and Conditions",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 10),
-                //TODO: Better Terms and Conditions
-                const Text(
-                    "This app is only to be used for the purpose of FBLA.",
-                    textAlign: TextAlign.start),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              "Settings",
+              style: Theme.of(context).textTheme.displayLarge,
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            const SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                children: [
+                  Text("Review Terms and Conditions",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 10),
+                  //TODO: Better Terms and Conditions
+                  termsConditions,
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
