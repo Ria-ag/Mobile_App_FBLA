@@ -14,7 +14,9 @@ class MyExperiences extends ChangeNotifier {
 
   void add(String title, int tileIndex) {
     xpList[tileIndex].add(Experience(
-        title: title, xpID: xpList[tileIndex].length, tileIndex: tileIndex));
+        title: title,
+        xpID: DateTime.now().microsecondsSinceEpoch,
+        tileIndex: tileIndex));
     notifyListeners();
   }
 

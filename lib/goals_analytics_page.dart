@@ -1,62 +1,12 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
-import 'package:mobileapp/goal_tile.dart';
-import 'package:provider/provider.dart';
-
-import 'chart_modal_sheet.dart';
-
-class ChartDataState extends ChangeNotifier {
-  String chartName = "";
-  String xLabel = "";
-  String yLabel = "";
-  List<DataRow> rows = [];
-  List<FlSpot> spots = [];
-
-  void removeRow() {
-    rows.removeAt(rows.length - 1);
-    notifyListeners();
-  }
-
-  void addRow(DataRow row) {
-    rows.add(row);
-    notifyListeners();
-  }
-
-  void clearChart() {
-    rows = [];
-    spots = [];
-    notifyListeners();
-  }
-
-  void updateChartName(String value) {
-    chartName = value;
-    notifyListeners();
-  }
-
-  void updateChartData(List<DataRow> rows) {
-    List<FlSpot> newSpots = [];
-
-    for (var row in rows) {
-      var cells = row.cells;
-      double? x =
-          double.tryParse((cells[0].child as TextField).controller!.text);
-      double? y =
-          double.tryParse((cells[1].child as TextField).controller!.text);
-      if (x != null && y != null) {
-        newSpots.add(FlSpot(x, y));
-      }
-    }
-    spots = newSpots;
-    notifyListeners();
-  }
-}
+import 'chart_tile.dart';
 
 class GoalsAnalyticsPage extends StatefulWidget {
   const GoalsAnalyticsPage({super.key});
-  
+
   @override
   State<GoalsAnalyticsPage> createState() => _GoalsAnalyticsPageState();
 }
@@ -64,17 +14,18 @@ class GoalsAnalyticsPage extends StatefulWidget {
 class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   String title = "";
 
-  Future<void> addGoalDialog() async {
-   await showDialog(
+  Future<void> addElementDialog(bool isGoal) async {
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Set a Goal'),
+          title: Text((isGoal) ? 'Set a Goal' : 'Create New Chart'),
           content: TextField(
             onChanged: (value) {
               title = value;
             },
-            decoration: const InputDecoration(labelText: 'Name of goal'),
+            decoration: InputDecoration(
+                labelText: (isGoal) ? 'Name of goal' : 'Name of chart'),
           ),
           actions: [
             TextButton(
@@ -85,13 +36,17 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                debugPrint("clicked");
                 if (title.isNotEmpty) {
-                  Provider.of<MyGoals>(context, listen: false).add(title);
+                  if (isGoal) {
+                    Provider.of<MyGoals>(context, listen: false).add(title);
+                  } else {
+                    Provider.of<ChartDataState>(context, listen: false)
+                        .addChart(title);
+                  }
                 }
                 Navigator.of(context).pop(title);
               },
-              child: const Text('Add Goal'),
+              child: Text((isGoal) ? 'Add Goal' : 'Add Chart'),
             ),
           ],
         );
@@ -101,83 +56,65 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: context.read<MyGoals>(),
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child:  Column(
-            children:[ 
-              const Text("Goals & Analytics", style: TextStyle(fontSize: 20)),
-              const Text("Goals"),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Text("Goals & Analytics",
+                  style: Theme.of(context).textTheme.displayLarge),
+              const SizedBox(height: 20),
+              Text("Goals", style: Theme.of(context).textTheme.displayMedium),
               SizedBox(
-                    width: MediaQuery.of(context).size.width - 25,
-                    height: 400,
-                    child: (context.watch<MyGoals>().goals.isNotEmpty)
-                        ? SingleChildScrollView(
-                            child: Column(
-                              children: context
-                                  .watch<MyGoals>().goals,
-                            ),
-                          )
-                        : const Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text(
-                                "Looks a little empty in here. Click on the edit button in the bottom right to get started!"),
-                          ),
-                  ),
-              const Text("Analytics"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: (context.watch<ChartDataState>().rows.isEmpty)
-                    ? []
-                    : [
-                        Text(context.watch<ChartDataState>().chartName),
-                        TextButton(
-                          onPressed: () =>
-                              chartModalSheet(context, "Sample Chart"),
-                          child: const Icon(Icons.edit),
+                width: MediaQuery.of(context).size.width - 25,
+                height: MediaQuery.of(context).size.height / 2 - 150,
+                child: (context.watch<MyGoals>().goals.isNotEmpty)
+                    ? SingleChildScrollView(
+                        child: Column(
+                          children: context.watch<MyGoals>().goals,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context.read<ChartDataState>().clearChart();
-                          },
-                          child: const Icon(Icons.remove),
-                        )
-                      ],
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          "Looks a little empty in here. Click on the add button in the bottom right to get started!",
+                        ),
+                      ),
               ),
-              Center(
-                child: (context.watch<ChartDataState>().rows.isEmpty)
-                    ? Container()
-                    : SizedBox(
-                        width: MediaQuery.of(context).size.width - 50,
-                        height: 200,
-                        child: Container(
-                            padding: const EdgeInsets.fromLTRB(0, 20, 20, 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                            ),
-                            child: const CustomLineChart())),
+              Text("Analytics",
+                  style: Theme.of(context).textTheme.displayMedium),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 25,
+                height: MediaQuery.of(context).size.height / 2 - 150,
+                child: (context.watch<ChartDataState>().charts.isNotEmpty)
+                    ? SingleChildScrollView(
+                        child: Column(
+                            children: context.watch<ChartDataState>().charts),
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          "Looks a little empty in here. Click on the add button in the bottom right to get started!",
+                        ),
+                      ),
               ),
             ],
           ),
         ),
-        floatingActionButton: ExpandableFab(
-          distance: 60,
-          children: [
-            ActionButton(
-              onPressed: () => chartModalSheet(context, "Sample Quiz"),
-              icon: const Icon(Icons.addchart),
-            ),
-            ActionButton(
-              onPressed: () => addGoalDialog(),
-              icon: const Icon(Icons.checklist),
-            ),
-          ],
-        )
+      ),
+      floatingActionButton: ExpandableFab(
+        distance: 60,
+        children: [
+          ActionButton(
+            onPressed: () => addElementDialog(false),
+            icon: const Icon(Icons.addchart),
+          ),
+          ActionButton(
+            onPressed: () => addElementDialog(true),
+            icon: const Icon(Icons.assignment_add),
+          ),
+        ],
       ),
     );
   }
@@ -315,7 +252,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
             onPressed: _toggle,
-            child: const Icon(Icons.create),
+            child: const Icon(Icons.add),
           ),
         ),
       ),
@@ -388,44 +325,5 @@ class ActionButton extends StatelessWidget {
         color: theme.colorScheme.onSecondary,
       ),
     );
-  }
-}
-
-class CustomLineChart extends StatelessWidget {
-  const CustomLineChart({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var chartData = LineChartData(
-      lineBarsData: [
-        LineChartBarData(
-            spots: context.watch<ChartDataState>().spots,
-            isCurved: true,
-            color: Colors.blue),
-      ],
-      borderData: FlBorderData(
-        show: true,
-        border: const Border(
-          bottom: BorderSide(color: Colors.black),
-          left: BorderSide(color: Colors.black),
-        ),
-      ),
-      gridData: FlGridData(
-        show: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        drawHorizontalLine: true,
-        drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) =>
-            const FlLine(color: Colors.grey, dashArray: [5, 5]),
-        getDrawingVerticalLine: (value) =>
-            const FlLine(color: Colors.grey, dashArray: [5, 5]),
-      ),
-      titlesData: const FlTitlesData(
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      ),
-    );
-    return LineChart(chartData);
   }
 }
