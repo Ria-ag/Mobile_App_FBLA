@@ -159,8 +159,10 @@ class _HomePageState extends State<HomePage> {
                                           const TextStyle(color: Colors.white)),
                                 ])
                           : const Text(
-                              "Add an experience in the profile page to get started",
-                              style: TextStyle(color: Colors.white)),
+                              "Add an experience in the profile page to get started.",
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                     ),
                   ),
                 ),
