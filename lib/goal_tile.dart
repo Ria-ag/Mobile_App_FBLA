@@ -9,19 +9,57 @@ class GoalTile extends StatelessWidget {
   String date = "";
   String description = "";
   List<Task> tasks = [];
+  int totalTasks = 0;
+  int completedTasks = 0;
 
   GoalTile(
       {super.key,
       required this.title,
   });
 
-  void addTask(task){}
+  void addTask(task, context){
+    tasks.add(Task(task: task, isChecked: false));
+    Provider.of<MyGoals>(context, listen: false).addTotalTasks(title);
+  }
+
+  void removeTask(int index, context) {
+      tasks.removeAt(index);
+      Provider.of<MyGoals>(context, listen: false).addCompletedTasks(title);
+  }
+
+  String getCategory(){
+    return category;
+  }
+
+  void changeCategory(category){
+    this.category = category;
+  }
+
+  String getDate(){
+    return date;
+  }
+
+  void changeDate(date){
+    this.date = date;
+  }
+
+  String getDescription(){
+    return description;
+  }
+
+  void changeDescription(description){
+    this.description = description;
+  }
+
+ List<Task> getTasks(){
+    return tasks;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MyGoals>(
       builder: (context, taskManager, _) {
-        double progressValue = Provider.of<MyGoals>(context, listen: false).calculateProgress();
+        double progressValue = Provider.of<MyGoals>(context, listen: true).calculateProgress(title);
 
         return ListTile(
           title: Text(title),

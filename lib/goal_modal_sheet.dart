@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 
 class MyGoals extends ChangeNotifier {
   List<GoalTile> goals = [];
-  int totalTasks = 0;
-  int completedTasks = 0;
 
   void add(String title) {
     goals.add(GoalTile(title: title));
@@ -17,25 +15,25 @@ class MyGoals extends ChangeNotifier {
     notifyListeners();
   }
 
-  double calculateProgress() {
-    if (totalTasks == 0) {
+  double calculateProgress(title) {
+    if (goals.firstWhere((goal) => goal.title == title).totalTasks == 0) {
       return 0.0;
     }
-    return completedTasks / totalTasks;
+    return goals.firstWhere((goal) => goal.title == title).completedTasks / goals.firstWhere((goal) => goal.title == title).totalTasks;
   }
-  void addTotalTasks() {
-    totalTasks++;
+  void addTotalTasks(title) {
+    goals.firstWhere((goal) => goal.title == title).totalTasks++;
     notifyListeners();
   }
 
-  void addCompletedTasks() {
-    completedTasks++;
+  void addCompletedTasks(title) {
+    goals.firstWhere((goal) => goal.title == title).completedTasks++;
     notifyListeners();
   }
 }
 
 class GoalModalSheet extends StatefulWidget {
-  const GoalModalSheet({super.key, required this.title, required});
+  const GoalModalSheet({super.key, required this.title,});
   final String title;
 
 
@@ -49,177 +47,166 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                 "Honors Classes", "Clubs/Organizations", "Projects", "Tests", "Other"];
   TextEditingController taskController = TextEditingController();
 
-  void addTask(String task) {
-    setState(() {
-      // tasks.add(Task(task: task, isChecked: false));
-    });
-    Provider.of<MyGoals>(context, listen: false).addTotalTasks();
-    taskController.clear();
-  }
-
-  void removeTask(int index) {
-    setState(() {
-      // tasks.removeAt(index);
-    });
-    Provider.of<MyGoals>(context, listen: false).addCompletedTasks();
-  }
-
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
-    // return SingleChildScrollView(
-    //   child: SizedBox(
-    //       // height: MediaQuery.of(context).size.height - 50,
-    //       // width: MediaQuery.of(context).size.width - 15,
-    //       // child: Padding(
-    //       //   padding: const EdgeInsets.all(16.0),
-            //child: Column(
-            //   crossAxisAlignment: CrossAxisAlignment.stretch,
-            //   mainAxisSize: MainAxisSize.min,
-            //     children: [
-            //       Row(
-            //         children: [
-            //           Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
-            //           const Spacer(),
-            //           TextButton(
-            //             onPressed: () {
-            //               !editable
-            //               ? setState(() {
-            //                   editable = true;
-            //               })
-            //               : setState(() {
-            //                   editable = false;
-            //               });
-            //             },
-            //             child: Icon(
-            //               (!editable) ? Icons.edit : Icons.check,
-            //               size: 20,
-            //             ),
-            //           ),
-            //           TextButton(
-            //             child: const Icon(
-            //               Icons.cancel,
-            //               color: Colors.red,
-            //               size: 20,
-            //             ),
-            //             onPressed: () {
-            //               Navigator.of(context).pop();
-            //           }),
-            //         ],
-            //       ),
-            //       !editable
-            //       ? buildRichText(context, "Category: ", category, Theme.of(context).textTheme.bodyMedium)
-            //       : Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Text("Category", style: Theme.of(context).textTheme.bodyMedium),
-            //           DropdownButton<String>(
-            //             value: category,
-            //             items: items
-            //               .map((item) => DropdownMenuItem<String>(value: item, child: Text(item)))
-            //               .toList(),
-            //             onChanged: (item) => setState(() => category = item!),
-            //           ),
-            //         ],
-            //       ),
-            //       (!editable)
-            //       ? Padding(
-            //         padding: const EdgeInsets.only(top: 10),
-            //         child: buildRichText(context, "Deadline: ", date, Theme.of(context).textTheme.bodyMedium),
-            //       )
-            //       : (!editable)
-            //       ? buildRichText(context, "Deadline", date,
-            //         Theme.of(context).textTheme.bodyMedium)
-            //       : TextFormField(
-            //         validator: (value) {
-            //           if (value == null || value.isEmpty) {
-            //             return "Field cannot be empty";
-            //           }
-            //           return null;
-            //         },
-            //         style: Theme.of(context).textTheme.bodyMedium,
-            //         controller: TextEditingController(text: date),
-            //         readOnly: true, // Prevents manual editing
-            //         decoration: underlineInputDecoration(
-            //             context, "ex. 4/24/2024", "Deadline"),
-            //         onTap: () async {
-            //           final pickedDate = await showDatePicker(
-            //             context: context,
-            //             initialDate: DateTime.now(),
-            //             firstDate: DateTime.now()
-            //                 .subtract(const Duration(days: 365 * 25)),
-            //             lastDate: DateTime.now().add(const Duration(days: 365)),
-            //           );
-            //           if (pickedDate != null) {
-            //             setState(() {
-            //               date = formatDate(pickedDate.toString().substring(0, 10));
-            //             });
-            //           }
-            //         },
-            //       ),
-            //       (!editable)
-            //       ? Padding(
-            //         padding: const EdgeInsets.only(top: 10),
-            //         child: (description.isEmpty)
-            //             ? Text("No description",
-            //                 style: Theme.of(context).textTheme.bodyMedium)
-            //             : buildRichText(
-            //                 context,
-            //                 "Description:\n",
-            //                 description,
-            //                 Theme.of(context).textTheme.bodyMedium),
-            //       )
-            //       : TextFormField(
-            //           style: Theme.of(context).textTheme.bodyMedium,
-            //           minLines: 1,
-            //           maxLines: 4,
-            //           initialValue: description,
-            //           onChanged: (value) {
-            //             setState(() {
-            //               description = value;
-            //             });
-            //           },
-            //           decoration: underlineInputDecoration(
-            //               context, "ex. In this I...", "Description"),
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.only(top: 10, bottom: 10),
-            //           child: Divider(
-            //                 color: Theme.of(context).colorScheme.secondary,
-            //                 thickness: 2,
-            //               ),
-            //         ),
-            //       Text("Tasks", style: Theme.of(context).textTheme.headlineSmall),
-            //       TextField(
-            //         controller: taskController,
-            //         decoration: const InputDecoration( labelText: 'Enter Task',),
-            //         onSubmitted: (value) {
-            //           addTask(value);
-            //         },
-            //       ),
-            //       const SizedBox(height: 10),
-            //       Expanded(
-            //         child: ListView.builder(
-            //         itemCount: tasks.length,
-            //         itemBuilder: (context, index) {
-            //           return CheckboxListTile(
-            //             title: Text(tasks[index].task),
-            //             value: tasks[index].isChecked,
-            //             onChanged: (value) {
-            //               setState(() {
-            //                 tasks[index].isChecked = value!;
-            //                 removeTask(index);
-            //               });
-            //             },
-            //           );
-            //         },
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          //);
-      //),
-    //);
+    return SingleChildScrollView(
+      child: SizedBox(
+          height: MediaQuery.of(context).size.height - 50,
+          width: MediaQuery.of(context).size.width - 15,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          !editable
+                          ? setState(() {
+                              editable = true;
+                          })
+                          : setState(() {
+                              editable = false;
+                          });
+                        },
+                        child: Icon(
+                          (!editable) ? Icons.edit : Icons.check,
+                          size: 20,
+                        ),
+                      ),
+                      TextButton(
+                        child: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                      }),
+                    ],
+                  ),
+                  !editable
+                  ? buildRichText(context, "Category: ", 
+                  Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getCategory(), 
+                  Theme.of(context).textTheme.bodyMedium)
+                  : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Category", style: Theme.of(context).textTheme.bodyMedium),
+                      DropdownButton<String>(
+                        value: Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getCategory(),
+                        items: items
+                          .map((item) => DropdownMenuItem<String>(value: item, child: Text(item)))
+                          .toList(),
+                        onChanged: (item) => setState(() => Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).changeCategory(item),),
+                      ),
+                    ],
+                  ),
+                  (!editable)
+                  ? Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: buildRichText(context, "Deadline: ", 
+                    Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDate(),
+                    Theme.of(context).textTheme.bodyMedium),
+                  )
+                  : (!editable)
+                  ? buildRichText(context, "Deadline", Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDate(),
+                    Theme.of(context).textTheme.bodyMedium)
+                  : TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Field cannot be empty";
+                      }
+                      return null;
+                    },
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    controller: TextEditingController(text: Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDate(),),
+                    readOnly: true, // Prevents manual editing
+                    decoration: underlineInputDecoration(
+                        context, "ex. 4/24/2024", "Deadline"),
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now()
+                            .subtract(const Duration(days: 365 * 25)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).changeDate(formatDate(pickedDate.toString().substring(0, 10)));
+                        });
+                      }
+                    },
+                  ),
+                  (!editable)
+                  ? Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: (Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDescription().isEmpty)
+                        ? Text("No description",
+                            style: Theme.of(context).textTheme.bodyMedium)
+                        : buildRichText(
+                            context,
+                            "Description:\n",
+                            Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDescription(),
+                            Theme.of(context).textTheme.bodyMedium),
+                  )
+                  : TextFormField(
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      minLines: 1,
+                      maxLines: 4,
+                      initialValue: Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getDescription(),
+                      onChanged: (value) {
+                        setState(() =>
+                          Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).changeDescription(value),
+                        );
+                      },
+                      decoration: underlineInputDecoration(
+                          context, "ex. In this I...", "Description"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Divider(
+                            color: Theme.of(context).colorScheme.secondary,
+                            thickness: 2,
+                          ),
+                    ),
+                  Text("Tasks", style: Theme.of(context).textTheme.headlineSmall),
+                  TextField(
+                    controller: taskController,
+                    decoration: const InputDecoration( labelText: 'Enter Task',),
+                    onSubmitted: (value) {
+                      Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).addTask(value, context);
+                      taskController.clear();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                    itemCount: Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).tasks.length,
+                    itemBuilder: (context, index) {
+                      return CheckboxListTile(
+                        title: Text(Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).tasks[index].task),
+                        value: Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).tasks[index].isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).tasks[index].isChecked = value!;
+                            Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).removeTask(index, context);
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ),
+    );
   }
 
   Widget buildRichText(
