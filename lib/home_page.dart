@@ -134,20 +134,34 @@ class _HomePageState extends State<HomePage> {
                   child: FloatingActionButton(
                     heroTag: "button 2",
                     onPressed: () {},
-                    child: (recent != null)
-                        ? ListTile(
-                            title: Text(recent!.title,
-                                style: const TextStyle(color: Colors.white)),
-                            subtitle: Text(recent!.name,
-                                style: const TextStyle(color: Colors.white)),
-                            trailing: Text(
-                                "${recent!.startDate} - ${recent!.endDate}",
-                                style: const TextStyle(color: Colors.white)),
-                            tileColor: const Color.fromARGB(255, 218, 124, 96),
-                          )
-                        : const Text(
-                            "Add an experience in the profile page to get started",
-                            style: TextStyle(color: Colors.white)),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
+                      child: (recent != null)
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(recent!.title,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                      Text(recent!.name,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ],
+                                  ),
+                                  Text(
+                                      "${recent!.startDate} - ${recent!.endDate}",
+                                      style:
+                                          const TextStyle(color: Colors.white)),
+                                ])
+                          : const Text(
+                              "Add an experience in the profile page to get started",
+                              style: TextStyle(color: Colors.white)),
+                    ),
                   ),
                 ),
               ],

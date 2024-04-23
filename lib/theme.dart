@@ -12,6 +12,7 @@ final theme = ThemeData(
     textTheme: TextTheme(
       displayLarge:
           GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 32),
+      displayMedium: GoogleFonts.merriweather(fontSize: 20),
       displaySmall:
           GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 16),
       headlineLarge:

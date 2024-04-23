@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
+import 'chart_tile.dart';
 import 'home_page.dart';
 import 'experience.dart';
 import 'goals_analytics_page.dart';
@@ -29,8 +30,7 @@ class MyApp extends StatelessWidget {
             create: (context) => MyExperiences()),
         ChangeNotifierProvider<ChartDataState>(
             create: (context) => ChartDataState()),
-        ChangeNotifierProvider<MyGoals>(
-            create: (context) => MyGoals())
+        ChangeNotifierProvider<MyGoals>(create: (context) => MyGoals())
       ],
       child: MaterialApp(
         title: 'FBLA Mobile App',
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       NavigationDestination(
                         icon: Icon(Icons.checklist),
-                        label: 'Goals',
+                        label: 'Goals & Data',
                       ),
                       NavigationDestination(
                         icon: Icon(Icons.settings),
