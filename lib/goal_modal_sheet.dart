@@ -4,6 +4,12 @@ import 'package:provider/provider.dart';
 
 class MyGoals extends ChangeNotifier {
   List<GoalTile> goals = [];
+  int totalCompletedTasks = 0;
+  String done = "";
+
+  List<String> items = ["Athletics", "Performing Arts", "Community Service", "Awards",
+                "Honors Classes", "Clubs/Organizations", "Projects", "Tests", "Other"];
+   List<double> numberOfItems = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   void add(String title) {
     goals.add(GoalTile(title: title));
@@ -28,8 +34,62 @@ class MyGoals extends ChangeNotifier {
 
   void addCompletedTasks(title) {
     goals.firstWhere((goal) => goal.title == title).completedTasks++;
+    totalCompletedTasks++;
+    done = totalCompletedTasks.toString();
     notifyListeners();
   }
+
+    void updatePiChart() {
+      debugPrint("called");
+      for (int i = 0; i < goals.length; i++){
+        if (goals[i].getCategory() == items[0]){
+          numberOfItems[0]++;
+        } else if (goals[i].getCategory() == items[1]){
+          numberOfItems[1]++;
+        } else if (goals[i].getCategory() == items[2]){
+          numberOfItems[2]++;
+        } else if (goals[i].getCategory() == items[3]){
+          numberOfItems[3]++;
+        } else if (goals[i].getCategory() == items[4]){
+          numberOfItems[4]++;
+        } else if (goals[i].getCategory() == items[5]){
+          numberOfItems[5]++;
+        } else if (goals[i].getCategory() == items[6]){
+          numberOfItems[6]++;
+        }else if (goals[i].getCategory() == items[7]){
+          numberOfItems[7]++;
+        } else{
+          numberOfItems[8]++;
+        }
+      }
+      notifyListeners();
+    }
+
+    void deletePiChart() {
+      debugPrint("called");
+      for (int i = 0; i < goals.length; i++){
+        if (goals[i].getCategory() == items[0]){
+          numberOfItems[0]--;
+        } else if (goals[i].getCategory() == items[1]){
+          numberOfItems[1]--;
+        } else if (goals[i].getCategory() == items[2]){
+          numberOfItems[2]--;
+        } else if (goals[i].getCategory() == items[3]){
+          numberOfItems[3]--;
+        } else if (goals[i].getCategory() == items[4]){
+          numberOfItems[4]--;
+        } else if (goals[i].getCategory() == items[5]){
+          numberOfItems[5]--;
+        } else if (goals[i].getCategory() == items[6]){
+          numberOfItems[6]--;
+        }else if (goals[i].getCategory() == items[7]){
+          numberOfItems[7]--;
+        } else{
+          numberOfItems[8]--;
+        }
+      }
+      notifyListeners();
+    }
 }
 
 class GoalModalSheet extends StatefulWidget {
@@ -71,6 +131,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           })
                           : setState(() {
                               editable = false;
+                               Provider.of<MyGoals>(context, listen: false).updatePiChart();
                           });
                         },
                         child: Icon(
@@ -102,7 +163,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                         items: items
                           .map((item) => DropdownMenuItem<String>(value: item, child: Text(item)))
                           .toList(),
-                        onChanged: (item) => setState(() => Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).changeCategory(item),),
+                        onChanged:(item) => setState(() {
+                          Provider.of<MyGoals>(context, listen: false).deletePiChart();
+                          Provider.of<MyGoals>(context, listen: false)
+                            .goals
+                            .firstWhere((goal) => goal.title == widget.title)
+                            .changeCategory(item);
+                          Provider.of<MyGoals>(context, listen: false).updatePiChart();
+                        }),
                       ),
                     ],
                   ),

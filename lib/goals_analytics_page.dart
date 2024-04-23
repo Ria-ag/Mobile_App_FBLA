@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
@@ -84,6 +85,64 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               ),
               Text("Analytics",
                   style: Theme.of(context).textTheme.displayMedium),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Total Completed Tasks: ",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(Provider.of<MyGoals>(context, listen: false).done,
+                              style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                  color: Theme.of(context)
+                                  .colorScheme
+                                  .secondary))
+                                ),
+                        ),
+                  ],
+                ),
+              ),
+              Consumer<MyGoals>(
+                builder: (context, myGoals, child) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width - 25,
+                    height: 200,
+                    child: PieChart(
+                      PieChartData(
+                        sections: List.generate(
+                        9,
+                        (i) => PieChartSectionData(
+                          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[i],
+                          title: Provider.of<MyGoals>(context, listen: false).items[i],
+                          radius: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 5),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 25,
                 height: MediaQuery.of(context).size.height / 2 - 150,
