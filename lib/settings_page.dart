@@ -305,7 +305,6 @@ class Terms extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineMedium,
                       textAlign: TextAlign.center),
                   const SizedBox(height: 10),
-                  //TODO: Better Terms and Conditions
                   termsConditions,
                 ],
               ),
