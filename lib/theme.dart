@@ -56,7 +56,9 @@ final theme = ThemeData(
       ),
     ),
     snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color.fromARGB(255, 77, 145, 214)));
+        backgroundColor: Color.fromARGB(255, 77, 145, 214)),
+    dropdownMenuTheme: DropdownMenuThemeData(
+        textStyle: GoogleFonts.merriweather(fontSize: 14)));
 
 final appBar = AppBar(
   automaticallyImplyLeading: false,

@@ -43,6 +43,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     Provider.of<ChartDataState>(context, listen: false)
                         .addChart(title);
                   }
+                  title = "";
                 }
                 Navigator.of(context).pop(title);
               },
@@ -68,7 +69,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               Text("Goals", style: Theme.of(context).textTheme.displayMedium),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 25,
-                height: MediaQuery.of(context).size.height / 2 - 150,
+                height: MediaQuery.of(context).size.height / 2 - 170,
                 child: (context.watch<MyGoals>().goals.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
@@ -86,7 +87,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   style: Theme.of(context).textTheme.displayMedium),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 25,
-                height: MediaQuery.of(context).size.height / 2 - 150,
+                height: MediaQuery.of(context).size.height / 2 - 160,
                 child: (context.watch<ChartDataState>().charts.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
