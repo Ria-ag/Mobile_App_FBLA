@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-// This is the method that creates the look of a pdf page that's shared
+// This is the method that creates the look of a pdf page that is shared
   void addPage(
     pw.Document pdf,
     String? name,
@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Header section
+              // This is the header section of the pdf resume
               pw.Container(
                 margin: const pw.EdgeInsets.only(bottom: 10.0),
                 child: pw.Column(
@@ -241,6 +241,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+
+              // Here is where all the experiences are displayed
               for (var experience in experiences) ...[
                 pw.Container(
                   margin: const pw.EdgeInsets.only(bottom: 10.0),
@@ -320,6 +322,7 @@ class _HomePageState extends State<HomePage> {
       await page.close();
       tempFiles.add(XFile(tempFile.path));
     }
+    // This is the custom message that is sent to the chosen social media app
     await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
   }
 

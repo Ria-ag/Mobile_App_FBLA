@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// This is the theme data used throughout the app
 final theme = ThemeData(
+    // This app adopts a color scheme of bronze, light pastel blue, black, and white
     primaryColor: const Color.fromARGB(255, 218, 124, 96),
     colorScheme:
         ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
@@ -9,6 +11,8 @@ final theme = ThemeData(
       primary: const Color.fromARGB(255, 218, 124, 96),
       background: Colors.white,
     ),
+    // These are the text styles in the app
+    // The primary fonts are Urbanist and Merriweather, retrieved from Google Fonts
     textTheme: TextTheme(
       displayLarge:
           GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 32),
@@ -27,6 +31,8 @@ final theme = ThemeData(
       labelMedium: GoogleFonts.merriweather(fontSize: 10.5),
       labelLarge: GoogleFonts.merriweather(),
     ),
+
+    // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
     iconTheme: const IconThemeData(
       color: Color.fromARGB(255, 77, 145, 214),
     ),
@@ -60,6 +66,8 @@ final theme = ThemeData(
     dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: GoogleFonts.merriweather(fontSize: 14)));
 
+// This is the app header bar used throughout the app
+// It contains the app logo and title
 final appBar = AppBar(
   automaticallyImplyLeading: false,
   backgroundColor: Colors.white,
@@ -81,6 +89,7 @@ final appBar = AppBar(
   ),
 );
 
+// These are the terms and conditions of the app, formatted with RichText
 final termsConditions = RichText(
   text: TextSpan(
     children: [

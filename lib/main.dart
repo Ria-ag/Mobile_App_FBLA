@@ -15,13 +15,16 @@ void main() {
   runApp(const MyApp());
 }
 
+// This SharePreferences instance is where app data is locally stored
 late SharedPreferences prefs;
 
+// This is the root of the app; everything runs from here
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // These are the providers used in the app for state management across widgets
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<MyProfileState>(
@@ -56,6 +59,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// This is the home page of the app
+// The user is taken here after the loading page and initial setup
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
@@ -66,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<SharedPreferences>? myFuture;
-
+// Here, the state of the app is initialized for the first time
+// Any data that exists in SharedPreferences is retrieved (including images)
   @override
   void initState() {
     super.initState();
@@ -99,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // The page variable updates based on navigation in the menu
     Widget page;
     switch (_selectedIndex) {
       case 0:
@@ -119,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         throw UnimplementedError();
     }
 
+    // A FutureBuilder is used for the app so that it rebuilds when loading is complete
     return FutureBuilder(
         future: myFuture,
         builder: (context, snapshot) {
@@ -135,6 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               : Scaffold(
                   appBar: appBar,
+                  // The bottomNavigationBar is the primary for of app navigation
                   bottomNavigationBar: NavigationBar(
                     onDestinationSelected: _onItemTapped,
                     selectedIndex: _selectedIndex,
@@ -170,6 +179,8 @@ class Splash extends StatefulWidget {
   SplashState createState() => SplashState();
 }
 
+// Here, the loading screen is deliberately displayed for 3 seconds
+// The class also manages logic for whether the introduction screen is shown
 class SplashState extends State<Splash> {
   final delay = 3;
 
@@ -179,10 +190,13 @@ class SplashState extends State<Splash> {
 
     if (seen) {
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
           builder: (context) => const MyHomePage(
-                title: 'Rise',
-              )));
+            title: 'Rise',
+          ),
+        ),
+      );
     } else {
       await prefs.setBool('seen', true);
       // ignore: use_build_context_synchronously
@@ -192,6 +206,8 @@ class SplashState extends State<Splash> {
   }
 
   @override
+  // When the app is initially built, the loading screen will display before the home page
+  // Here, the method to determine whether the introduction screen will be displayed is also called
   void initState() {
     super.initState();
 
@@ -200,6 +216,7 @@ class SplashState extends State<Splash> {
   }
 
   @override
+  // This where the loading screen is displayed
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
@@ -223,6 +240,8 @@ class IntroScreen extends StatefulWidget {
   State<IntroScreen> createState() => _IntroScreenState();
 }
 
+// The introduction screen is the screen shown to the users the first time they enter the app
+// It also shows every time a use resets the app data
 class _IntroScreenState extends State<IntroScreen> {
   String name = "";
   String school = "";
@@ -256,6 +275,8 @@ class _IntroScreenState extends State<IntroScreen> {
                 Divider(
                     color: Theme.of(context).colorScheme.secondary,
                     thickness: 2),
+
+                // Below are the various TextFormFields where users enter initial data
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
@@ -323,6 +344,9 @@ class _IntroScreenState extends State<IntroScreen> {
                   child: Text("Terms & Conditions:",
                       style: Theme.of(context).textTheme.headlineSmall),
                 ),
+
+                // The user is also required to accept the terms and conditions
+                // This can be seen in a dialog box
                 ElevatedButton(
                   onPressed: () {
                     showTermsAndConditionsDialog(context);
@@ -341,6 +365,9 @@ class _IntroScreenState extends State<IntroScreen> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
+
+                // This is the continue button
+                // The app will not continue until the user meets all requirements
                 SizedBox(
                   width: 20,
                   child: FloatingActionButton(
@@ -381,6 +408,7 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
+// In this dialog box, the terms and conditions are shown
   void showTermsAndConditionsDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -403,6 +431,7 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
+// This is the input decoration used for all the TextFormFields on this page
   InputDecoration underlineInputDecoration(BuildContext context, String hint) {
     return InputDecoration(
       hintText: hint,
@@ -417,12 +446,12 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
+// Upon continuing, the user data is stored locally
   void save(BuildContext context, String name, String school, String year,
-      bool isChecked) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("name", name);
-    await prefs.setString("school", school);
-    await prefs.setString("year", year);
-    await prefs.setBool("checked", isChecked);
+      bool isChecked) {
+    prefs.setString("name", name);
+    prefs.setString("school", school);
+    prefs.setString("year", year);
+    prefs.setBool("checked", isChecked);
   }
 }

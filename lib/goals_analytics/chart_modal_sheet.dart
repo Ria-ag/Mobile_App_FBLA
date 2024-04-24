@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'chart_tile.dart';
 
+// This is the modal sheet for displaying the chart editor
 Future<void> chartModalSheet(BuildContext context, String title, int id) {
   final formKey = GlobalKey<FormState>();
   ChartTile chartTile = context
@@ -9,6 +10,8 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
       .charts
       .firstWhere((chart) => chart.chartID == id);
 
+  // The modal sheet uses both a provider class and a stateful builder to manage states
+  // It manages its own state, as well as the state of the chart displayed on the goals and analytics page
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -28,6 +31,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
               child: Form(
                 key: formKey,
                 child: Column(
+                  // This is where the chart title and exit button are displayed
                   children: [
                     Row(
                       children: [
@@ -45,6 +49,9 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                             }),
                       ],
                     ),
+
+                    // Below are the various TextFormFields where the chart's name and labels can be edited
+                    // All the fields are validated semantically and syntactically
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -93,6 +100,8 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                       ],
                     ),
                     const SizedBox(height: 20),
+
+                    // This is a displayed widget that allows the user to change the chart's numerical data
                     ChartDataInputWidget(chartTile: chartTile),
                   ],
                 ),
@@ -105,6 +114,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
   );
 }
 
+// This is the text field decoration used throughout the app
 InputDecoration underlineInputDecoration(
     BuildContext context, String hint, String label) {
   return InputDecoration(
@@ -132,6 +142,7 @@ InputDecoration underlineInputDecoration(
   );
 }
 
+// This widget allows users to edit the points on a certain line chart
 // ignore: must_be_immutable
 class ChartDataInputWidget extends StatefulWidget {
   const ChartDataInputWidget({required this.chartTile, super.key});
@@ -145,6 +156,9 @@ class ChartDataInputWidget extends StatefulWidget {
 class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
   late List<DataRow> rows;
 
+  // The widget initially checks for pre-existing data and copies it into a local variable
+  // The table displays this local variable, and all widget data is stored there, too
+  // Data is transferred over after the user updates the chart
   @override
   void initState() {
     super.initState();
@@ -153,6 +167,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
     rows = List<DataRow>.from(chartState.charts[index].rows);
   }
 
+  // This method adds a row to the table
   void addRow() {
     setState(() {
       rows.add(
@@ -170,12 +185,14 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
     });
   }
 
+  // This method removes the last row of the table
   void removeRow() {
     setState(() {
       rows.removeAt(rows.length - 1);
     });
   }
 
+  // This is where the data table and buttons are displayed
   @override
   Widget build(BuildContext context) {
     var readChartState = context.read<ChartDataState>();
@@ -190,6 +207,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                // Here is the data table, which contains the columns "X" and "Y"
                 DataTable(
                   columnSpacing: 40,
                   horizontalMargin: 20,
@@ -204,6 +222,8 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                   rows: rows,
                 ),
                 const SizedBox(width: 10),
+
+                // These are the buttons that allow the user to update the table and chart
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -254,6 +274,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
     );
   }
 
+  // This is the decoration used by text field of this class
   InputDecoration underlineInputDecoration(BuildContext context) {
     return InputDecoration(
       focusedBorder: UnderlineInputBorder(
