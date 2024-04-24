@@ -12,9 +12,11 @@ class GoalsAnalyticsPage extends StatefulWidget {
   State<GoalsAnalyticsPage> createState() => _GoalsAnalyticsPageState();
 }
 
+// This class is where the goals and analytics are displayed
 class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   String title = "";
 
+  // This is the dialog box where a new chart or goal can be added
   Future<void> addElementDialog(bool isGoal) async {
     await showDialog(
       context: context,
@@ -35,6 +37,8 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               },
               child: const Text('Cancel'),
             ),
+
+            // The entered value for the name of the goal/chart cannot be empty
             ElevatedButton(
               onPressed: () {
                 if (title.isNotEmpty) {
@@ -57,6 +61,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   }
 
   @override
+  // This is where the pie chart showing analytics on goal categories is created as a variable
   Widget build(BuildContext context) {
     List<PieChartSectionData> pieChartSectionData = [
       PieChartSectionData(
@@ -109,6 +114,9 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
         titlePositionPercentageOffset: 1.6,
       ),
     ];
+
+    // Here is the main layout of the page
+    //The first section is on goals, and the second section is data andn analytics
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -125,6 +133,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 child: (context.watch<MyGoals>().goals.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
+                          // The all goals are displayed as list tiles here
                           children: context.watch<MyGoals>().goals,
                         ),
                       )
@@ -158,6 +167,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ],
                       ),
                       child: Center(
+                          // The first thing in the analtics page is the tital number of tasks completed
                           child: Column(
                         children: [
                           Text(
@@ -185,6 +195,8 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   ],
                 ),
               ),
+
+              // Afterwards, it shows the pie chart created previously with data from the MyGoals provider
               Consumer<MyGoals>(
                 builder: (context, myGoals, child) {
                   return Padding(
@@ -205,6 +217,8 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 },
               ),
               const SizedBox(height: 5),
+
+              // Finally, all the charts are displayed
               SizedBox(
                 width: MediaQuery.of(context).size.width - 25,
                 height: MediaQuery.of(context).size.height / 2 - 160,
@@ -224,6 +238,9 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
           ),
         ),
       ),
+
+      // The floating action button used on this page is a button that can be expanded into two others
+      // One is to create a new goal, the other is to create a new chart
       floatingActionButton: ExpandableFab(
         distance: 60,
         children: [
@@ -240,6 +257,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
     );
   }
 
+  // The method checks if any section of the pie chart data is empty
   bool checkIfEmpty() {
     for (double num
         in Provider.of<MyGoals>(context, listen: false).numberOfItems) {
@@ -253,6 +271,8 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   }
 }
 
+// Below, the expandable floating action button is created
+// It stores children buttons, whetherit should be open initially, and the distance of the children from itself
 @immutable
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
@@ -270,6 +290,8 @@ class ExpandableFab extends StatefulWidget {
   State<ExpandableFab> createState() => _ExpandableFabState();
 }
 
+// The expandable floating action button's display, state, and animations are managed here
+// The mixin allows for animation statemanagement
 class _ExpandableFabState extends State<ExpandableFab>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
@@ -277,6 +299,9 @@ class _ExpandableFabState extends State<ExpandableFab>
   bool _open = false;
 
   @override
+
+  // When the class's initial state is displayed, all the vairables are set to given values
+  // Tbe animation type is also set
   void initState() {
     super.initState();
     _open = widget.initialOpen ?? false;
@@ -292,12 +317,15 @@ class _ExpandableFabState extends State<ExpandableFab>
     );
   }
 
+  // This method is to dispose of the controller and widget after it is not needed
+  // It is called when this object is removed from the tree permanently.
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
+  // This method deals with toggling the expandable floating action button
   void _toggle() {
     setState(() {
       _open = !_open;
@@ -309,6 +337,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     });
   }
 
+  // THe floating action button setup is displayed here
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -324,6 +353,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     );
   }
 
+  // This widget is what the parent floating action button looks like when opened
   Widget _buildTapToCloseFab() {
     return SizedBox(
       width: 56,
@@ -348,6 +378,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     );
   }
 
+  // This widget is the where the children floating action buttons are added
   List<Widget> _buildExpandingActionButtons() {
     final children = <Widget>[];
     final count = widget.children.length;
@@ -367,6 +398,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     return children;
   }
 
+  // This widget is what the parent floating action button looks like when closed
   Widget _buildTapToOpenFab() {
     return IgnorePointer(
       ignoring: _open,
@@ -393,6 +425,8 @@ class _ExpandableFabState extends State<ExpandableFab>
   }
 }
 
+// The expanding action button is the class of the child floating action button
+// It stores the angle that the button goes out to, the animation, the max linear distance, and a child widget
 @immutable
 class _ExpandingActionButton extends StatelessWidget {
   const _ExpandingActionButton({
@@ -407,6 +441,7 @@ class _ExpandingActionButton extends StatelessWidget {
   final Animation<double> progress;
   final Widget child;
 
+  // Here, the widget is built, using offset to position the widget relative to the parent button
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -433,6 +468,8 @@ class _ExpandingActionButton extends StatelessWidget {
   }
 }
 
+// This is the actual layout and build of the children button of the floating action button
+// It takes an onPressed callback function and an icon
 @immutable
 class ActionButton extends StatelessWidget {
   const ActionButton({
