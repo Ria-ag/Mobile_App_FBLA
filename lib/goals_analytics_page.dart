@@ -144,39 +144,50 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               Text("Analytics",
                   style: Theme.of(context).textTheme.displayMedium),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    Text(
-                      "Total Completed Tasks: ",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
                     const SizedBox(height: 5),
                     Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(Provider.of<MyGoals>(context, listen: false).done,
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                      width: 200,
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                          child: Column(
+                        children: [
+                          Text(
+                              Provider.of<MyGoals>(context, listen: false).done,
                               style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary)),
+                          Text(
+                            "Total Completed Tasks",
+                            style: Theme.of(context)
                                 .textTheme
-                                .headlineSmall!
+                                .displaySmall!
                                 .copyWith(
-                                  color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary))
-                                ),
-                        ),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          )
+                        ],
+                      )),
+                    ),
                   ],
                 ),
               ),
@@ -233,6 +244,18 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
         ],
       ),
     );
+  }
+
+  bool checkIfEmpty() {
+    for (double num
+        in Provider.of<MyGoals>(context, listen: false).numberOfItems) {
+      if (num.isNaN) {
+        return false;
+      } else if (num != 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
