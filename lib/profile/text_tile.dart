@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/experience.dart';
-import 'package:mobileapp/modal_sheet.dart';
+import 'experience.dart';
+import 'modal_sheet.dart';
 import 'package:provider/provider.dart';
 
 class TextTile extends StatelessWidget {

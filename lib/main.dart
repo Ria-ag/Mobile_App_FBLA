@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goal_modal_sheet.dart';
-import 'chart_tile.dart';
+import 'goals_analytics/goal_modal_sheet.dart';
+import 'goals_analytics/chart_tile.dart';
 import 'home_page.dart';
-import 'experience.dart';
-import 'goals_analytics_page.dart';
-import 'profile_page.dart';
+import 'profile/experience.dart';
+import 'goals_analytics/goals_analytics_page.dart';
+import 'profile/profile_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
 import 'package:provider/provider.dart';

@@ -1,9 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goal_modal_sheet.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import 'chart_tile.dart';
+import 'goal_modal_sheet.dart';
 
 class GoalsAnalyticsPage extends StatefulWidget {
   const GoalsAnalyticsPage({super.key});
@@ -59,60 +59,56 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     List<PieChartSectionData> pieChartSectionData = [
-  PieChartSectionData(
-      value: Provider.of<MyGoals>(context, listen: false).numberOfItems[0],
-      title: Provider.of<MyGoals>(context, listen: false).items[0],
-      color: const Color.fromARGB(255, 147, 187, 229),
-      titlePositionPercentageOffset: 1.9,
-    ),
-    PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[1],
-      title: Provider.of<MyGoals>(context, listen: false).items[1],
-      color: const Color.fromARGB(255, 77, 145, 214),
-    ),
-    PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[2],
-      title: Provider.of<MyGoals>(context, listen: false).items[2],
-      color: const Color.fromARGB(255, 28, 80, 133),
-      titlePositionPercentageOffset: 1.4
-    ),
-    PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[3],
-      title: Provider.of<MyGoals>(context, listen: false).items[3],
-      color: const Color.fromARGB(255, 14, 50, 86),
-      titlePositionPercentageOffset: 1.7, 
-    ),
-     PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[4],
-      title: Provider.of<MyGoals>(context, listen: false).items[4],
-      color: const Color.fromARGB(255, 84, 26, 9),
-      titlePositionPercentageOffset: 2,
-    ),
-     PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[5],
-      title: Provider.of<MyGoals>(context, listen: false).items[5],
-      color: const Color.fromARGB(255, 181, 52, 12),
-    ),
-     PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[6],
-      title: Provider.of<MyGoals>(context, listen: false).items[6],
-      color: const Color.fromARGB(255, 218, 124, 96),
-      titlePositionPercentageOffset: 1.4
-    ),
-     PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[7],
-      title: Provider.of<MyGoals>(context, listen: false).items[7],
-      color: const Color.fromARGB(255, 222, 168, 151),
-      titlePositionPercentageOffset: 1.4
-    ),
-     PieChartSectionData(
-       value: Provider.of<MyGoals>(context, listen: false).numberOfItems[8],
-      title: Provider.of<MyGoals>(context, listen: false).items[8],
-      color: Colors.white,
-      titlePositionPercentageOffset: 1.6,
-    ),
-    
-];
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[0],
+        title: Provider.of<MyGoals>(context, listen: false).items[0],
+        color: const Color.fromARGB(255, 147, 187, 229),
+        titlePositionPercentageOffset: 1.9,
+      ),
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[1],
+        title: Provider.of<MyGoals>(context, listen: false).items[1],
+        color: const Color.fromARGB(255, 77, 145, 214),
+      ),
+      PieChartSectionData(
+          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[2],
+          title: Provider.of<MyGoals>(context, listen: false).items[2],
+          color: const Color.fromARGB(255, 28, 80, 133),
+          titlePositionPercentageOffset: 1.4),
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[3],
+        title: Provider.of<MyGoals>(context, listen: false).items[3],
+        color: const Color.fromARGB(255, 14, 50, 86),
+        titlePositionPercentageOffset: 1.7,
+      ),
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[4],
+        title: Provider.of<MyGoals>(context, listen: false).items[4],
+        color: const Color.fromARGB(255, 84, 26, 9),
+        titlePositionPercentageOffset: 2,
+      ),
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[5],
+        title: Provider.of<MyGoals>(context, listen: false).items[5],
+        color: const Color.fromARGB(255, 181, 52, 12),
+      ),
+      PieChartSectionData(
+          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[6],
+          title: Provider.of<MyGoals>(context, listen: false).items[6],
+          color: const Color.fromARGB(255, 218, 124, 96),
+          titlePositionPercentageOffset: 1.4),
+      PieChartSectionData(
+          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[7],
+          title: Provider.of<MyGoals>(context, listen: false).items[7],
+          color: const Color.fromARGB(255, 222, 168, 151),
+          titlePositionPercentageOffset: 1.4),
+      PieChartSectionData(
+        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[8],
+        title: Provider.of<MyGoals>(context, listen: false).items[8],
+        color: Colors.white,
+        titlePositionPercentageOffset: 1.6,
+      ),
+    ];
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -196,13 +192,14 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width - 25,
                       height: 200,
-                      child: Provider.of<MyGoals>(context, listen: false).sum != 0.0 ?
-                        PieChart(
-                        PieChartData(
-                          sections: pieChartSectionData,
-                        ),
-                      )
-                      : const Text("Add a goal to view chart"),
+                      child: Provider.of<MyGoals>(context, listen: false).sum !=
+                              0.0
+                          ? PieChart(
+                              PieChartData(
+                                sections: pieChartSectionData,
+                              ),
+                            )
+                          : const Text("Add a goal to view chart"),
                     ),
                   );
                 },

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'experience.dart';
+import 'profile/experience.dart';
 import 'main.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;

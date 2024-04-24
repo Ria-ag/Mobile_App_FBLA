@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/modal_sheet.dart';
+import 'modal_sheet.dart';
 
 class IconTile extends StatelessWidget {
   const IconTile(

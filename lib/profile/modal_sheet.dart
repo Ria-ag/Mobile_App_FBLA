@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/experience.dart';
+import 'experience.dart';
 import 'package:provider/provider.dart';
 
 Future<void> modalSheet(BuildContext context, title, tileIndex) {

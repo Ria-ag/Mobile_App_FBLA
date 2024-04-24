@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'experience.dart';
 import 'icon_tile.dart';
-import 'main.dart';
+import 'package:mobileapp/main.dart';
 import 'text_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
