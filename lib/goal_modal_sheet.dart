@@ -68,40 +68,6 @@ class MyGoals extends ChangeNotifier {
       }
       notifyListeners();
     }
-
-    // void deletePiChart() {
-    //   debugPrint("deleted");
-    //   for (int i = 0; i < goals.length; i++){
-    //     if (goals[i].getCategory() == items[0]){
-    //      numberOfItems[0]--;
-    //     } else if (goals[i].getCategory() == items[1]){
-    //       // if (numberOfItems[1] != 0){numberOfItems[1]--;}
-    //       numberOfItems[1]--;
-    //     } else if (goals[i].getCategory() == items[2]){
-    //       // if (numberOfItems[2] != 0){numberOfItems[2]--;}
-    //       numberOfItems[2]--;
-    //     } else if (goals[i].getCategory() == items[3]){
-    //       // if (numberOfItems[3] != 0){numberOfItems[3]--;}
-    //       numberOfItems[3]--;
-    //     } else if (goals[i].getCategory() == items[4]){
-    //       // if (numberOfItems[4] != 0){numberOfItems[4]--;}
-    //       numberOfItems[4]--;
-    //     } else if (goals[i].getCategory() == items[5]){
-    //       // if (numberOfItems[5] != 0){numberOfItems[5]--;}
-    //       numberOfItems[5]--;
-    //     } else if (goals[i].getCategory() == items[6]){
-    //       // if (numberOfItems[6] != 0){numberOfItems[6]--;}
-    //       numberOfItems[6]--;
-    //     } else if (goals[i].getCategory() == items[7]){
-    //       // if (numberOfItems[7] != 0){numberOfItems[7]--;}
-    //       numberOfItems[7]--;
-    //     } else{
-    //       // if (numberOfItems[8] != 0){numberOfItems[8]--;}
-    //       numberOfItems[8]--;
-    //     }
-    //   }
-    //   notifyListeners();
-    // }
 }
 
 class GoalModalSheet extends StatefulWidget {
@@ -202,18 +168,11 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           .toList(),
                         onChanged:
                           (item) => setState(() {
-                            debugPrint(Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getCategory());
-                              // Provider.of<MyGoals>(context, listen: false).deletePiChart();
-                              for(int i = 0; i < 9; i++){
-                            debugPrint(Provider.of<MyGoals>(context, listen: false).numberOfItems[i].toString());}
                               Provider.of<MyGoals>(context, listen: false)
                                 .goals
                                 .firstWhere((goal) => goal.title == widget.title)
                                 .changeCategory(item);
-                               debugPrint(Provider.of<MyGoals>(context, listen: false).goals.firstWhere((goal) => goal.title == widget.title).getCategory());
                               Provider.of<MyGoals>(context, listen: false).updatePiChart();
-                              for(int i = 0; i < 9; i++){
-                            debugPrint(Provider.of<MyGoals>(context, listen: false).numberOfItems[i].toString());}
                               Provider.of<MyGoals>(context, listen: false).sum = 1.0;
                         }),
                       ),

@@ -69,7 +69,6 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[1],
       title: Provider.of<MyGoals>(context, listen: false).items[1],
       color: const Color.fromARGB(255, 77, 145, 214),
-      titlePositionPercentageOffset: 0.5, 
     ),
     PieChartSectionData(
        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[2],
@@ -93,7 +92,6 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[5],
       title: Provider.of<MyGoals>(context, listen: false).items[5],
       color: const Color.fromARGB(255, 181, 52, 12),
-      titlePositionPercentageOffset: 0.5,
     ),
      PieChartSectionData(
        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[6],
@@ -193,9 +191,8 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               ),
               Consumer<MyGoals>(
                 builder: (context, myGoals, child) {
-                  debugPrint(Provider.of<MyGoals>(context, listen: false).sum.toString());
                   return Padding(
-                    padding: const EdgeInsets.all(25.0),
+                    padding: const EdgeInsets.only(top: 25, bottom: 25),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width - 25,
                       height: 200,
