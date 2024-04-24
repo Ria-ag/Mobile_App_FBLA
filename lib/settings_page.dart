@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'theme.dart';
 
+//this class builds the settings page
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     super.key,
@@ -23,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 50),
             SizedBox(
               width: MediaQuery.of(context).size.width,
+              //this button opens an account and security page
               child: FloatingActionButton(
                 heroTag: "button 1",
                 onPressed: () {
@@ -37,6 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             SizedBox(
               width: MediaQuery.of(context).size.width,
+              //this button opens a terms and conditions page
               child: FloatingActionButton(
                 heroTag: "button 2",
                 onPressed: () {
@@ -49,6 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 20),
+            //this creates a reset button
             const Center(child: ResetButton()),
           ],
         ),
@@ -57,6 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
+//this class builds a security page with your stored data
 // ignore: must_be_immutable
 class Security extends StatefulWidget {
   Security({super.key});
@@ -73,12 +78,14 @@ class _SecurityState extends State<Security> {
   String year = "";
   final _formKey = GlobalKey<FormState>();
 
+  //this method retrieves the user data immediately every time
   @override
   void initState() {
     super.initState();
     getData();
   }
 
+  //this method gets the stored data from shared preferences
   void getData() {
     String? tempName = prefs.getString('name');
     String? tempSchool = prefs.getString('school');
@@ -97,6 +104,7 @@ class _SecurityState extends State<Security> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //this button takes the user back to the main settings page and saves the new data to shared preferences if changed
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -129,11 +137,13 @@ class _SecurityState extends State<Security> {
               padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
               child: Column(
                 children: [
+                  //name data
                   ListTile(
                     title: const Text('Name: '),
                     subtitle: !widget.nameEditable
                         ? Text(name)
                         : TextFormField(
+                          //has to have a value to continue
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -147,6 +157,7 @@ class _SecurityState extends State<Security> {
                                 context, "ex. Alexander T. Graham"),
                             initialValue: name,
                           ),
+                    //this button puts the name in edit mode
                     trailing: TextButton(
                       child: Icon(
                         (!widget.nameEditable) ? Icons.edit : Icons.check,
@@ -168,11 +179,13 @@ class _SecurityState extends State<Security> {
                       },
                     ),
                   ),
+                  //school data
                   ListTile(
                     title: const Text('School: '),
                     subtitle: !widget.schoolEditable
                         ? Text(school)
                         : TextFormField(
+                          //has to have a value to continue
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -185,6 +198,7 @@ class _SecurityState extends State<Security> {
                             decoration: underlineInputDecoration(
                                 context, "ex. Woodinville High School"),
                           ),
+                    //this button puts the school in edit mode
                     trailing: TextButton(
                       child: Icon(
                         (!widget.schoolEditable) ? Icons.edit : Icons.check,
@@ -206,11 +220,14 @@ class _SecurityState extends State<Security> {
                       },
                     ),
                   ),
+                  //year data
                   ListTile(
                     title: const Text('Year: '),
                     subtitle: !widget.yearEditable
                         ? Text(year)
                         : TextFormField(
+                          //has to be a year greater than 1900 and before 50 years ahead of the current year 
+                          //and has to have a value to continue
                             validator: (value) {
                               if (value != null) {
                                 final int? numVal = int.tryParse(value);
@@ -229,6 +246,7 @@ class _SecurityState extends State<Security> {
                             decoration:
                                 underlineInputDecoration(context, "ex. 2025"),
                           ),
+                    //this button puts the year in edit mode
                     trailing: TextButton(
                       child: Icon(
                         (!widget.yearEditable) ? Icons.edit : Icons.check,
@@ -259,6 +277,7 @@ class _SecurityState extends State<Security> {
     );
   }
 
+  //ui style changes
   InputDecoration underlineInputDecoration(BuildContext context, String hint) {
     return InputDecoration(
       hintText: hint,
@@ -274,6 +293,7 @@ class _SecurityState extends State<Security> {
   }
 }
 
+//this class builds the terms page to review the terms the user accepted
 class Terms extends StatelessWidget {
   const Terms({super.key});
 
@@ -281,6 +301,7 @@ class Terms extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //this button takes the user back to the main settings page
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -316,6 +337,7 @@ class Terms extends StatelessWidget {
   }
 }
 
+//this class builds a reset button to clear all data from shared preferences
 class ResetButton extends StatelessWidget {
   const ResetButton({super.key});
 
@@ -333,12 +355,14 @@ class ResetButton extends StatelessWidget {
                 title: const Text('Warning'),
                 content: const Text('Are you sure you want to clear all data?'),
                 actions: <Widget>[
+                  //this button closes clear button without clearing
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                     child: const Text('Cancel'),
                   ),
+                  //this button clears all data
                   TextButton(
                     onPressed: () {
                       prefs.clear();

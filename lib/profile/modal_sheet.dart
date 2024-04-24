@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'experience.dart';
 import 'package:provider/provider.dart';
 
+//this is a method that builds the modal sheet that opens with every tile
+//it takes the context, title, and type of tile 
 Future<void> modalSheet(BuildContext context, title, tileIndex) {
   return showModalBottomSheet<void>(
     context: context,
@@ -22,6 +24,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                     Text("More Information",
                         style: Theme.of(context).textTheme.headlineSmall),
                     const Spacer(),
+                    //this button when pressed adds an experience to the tile list and updates using a provider
                     TextButton(
                       child: const Icon(
                         Icons.add,
@@ -31,6 +34,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                       onPressed: () =>
                           context.read<MyExperiences>().add(title, tileIndex),
                     ),
+                    //this button when pressed closes the modal sheet
                     TextButton(
                         child: const Icon(
                           Icons.cancel,
@@ -42,6 +46,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                         }),
                   ],
                 ),
+                //displays the list of experiences for each tile
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 25,
                   height: MediaQuery.of(context).size.height - 130,
@@ -58,6 +63,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                         )
                       : const Padding(
                           padding: EdgeInsets.all(10.0),
+                          //displays this text until experiences are added
                           child: Text(
                               "Looks a little empty in here. Click on the add button at the top to get started!"),
                         ),

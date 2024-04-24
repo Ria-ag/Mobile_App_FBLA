@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'goal_tile.dart';
 import 'package:provider/provider.dart';
 
+//this is a provider class to manage changes in goals
 class MyGoals extends ChangeNotifier {
   List<GoalTile> goals = [];
   int totalCompletedTasks = 0;
@@ -21,16 +22,20 @@ class MyGoals extends ChangeNotifier {
   List<double> numberOfItems = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
   double sum = 0.0;
 
+  //this method takes a title and adds a new goal tile to the list
   void add(String title) {
     goals.add(GoalTile(title: title));
     notifyListeners();
   }
 
+  //this method takes a title and removes that goal tile from the list
   void remove(String title) {
     goals.remove(goals.firstWhere((goal) => goal.title == title));
     notifyListeners();
   }
 
+  //this method takes a title and calculates how much progress that goal has made
+  //progress is defined by completed/total
   double calculateProgress(title) {
     if (goals.firstWhere((goal) => goal.title == title).totalTasks == 0) {
       return 0.0;
@@ -39,11 +44,13 @@ class MyGoals extends ChangeNotifier {
         goals.firstWhere((goal) => goal.title == title).totalTasks;
   }
 
+  //this method takes a title and adds to the total number of tasks
   void addTotalTasks(title) {
     goals.firstWhere((goal) => goal.title == title).totalTasks++;
     notifyListeners();
   }
 
+  //this method takes a title and addes to the completed tasks
   void addCompletedTasks(title) {
     goals.firstWhere((goal) => goal.title == title).completedTasks++;
     totalCompletedTasks++;
@@ -51,6 +58,7 @@ class MyGoals extends ChangeNotifier {
     notifyListeners();
   }
 
+  //this method updates the number of items of the new category
   void updatePiChart() {
     for (int i = 0; i < goals.length; i++) {
       if (goals[i].getCategory() == items[0]) {
@@ -77,6 +85,7 @@ class MyGoals extends ChangeNotifier {
   }
 }
 
+//this class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
   const GoalModalSheet({
     super.key,
@@ -103,6 +112,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   ];
   TextEditingController taskController = TextEditingController();
 
+  //this method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
     Provider.of<MyGoals>(context, listen: false)
         .goals
@@ -129,6 +139,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   Text(widget.title,
                       style: Theme.of(context).textTheme.headlineSmall),
                   const Spacer(),
+                  //this button puts the data in edit mode
                   TextButton(
                     onPressed: () {
                       !editable
@@ -144,6 +155,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       size: 20,
                     ),
                   ),
+                  //this button closes the modal sheet
                   TextButton(
                       child: const Icon(
                         Icons.cancel,
@@ -155,6 +167,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       }),
                 ],
               ),
+              //catetory is a dropdown menu to pick from in edit mode
               !editable
                   ? buildRichText(
                       context,
@@ -192,6 +205,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                         ),
                       ],
                     ),
+              //deadline of goal
               (!editable)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -214,6 +228,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               .getDate(),
                           Theme.of(context).textTheme.bodyMedium)
                       : TextFormField(
+                        //has to have a value to continue
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Field cannot be empty";
@@ -231,6 +246,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           readOnly: true, // Prevents manual editing
                           decoration: underlineInputDecoration(
                               context, "ex. 4/24/2024", "Deadline"),
+                          //date picker
                           onTap: () async {
                             final pickedDate = await showDatePicker(
                               context: context,
@@ -253,6 +269,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                             }
                           },
                         ),
+              //description of goal
               (!editable)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -300,6 +317,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 125,
+                    //input field to add tasks
                     child: TextField(
                       controller: taskController,
                       decoration: const InputDecoration(
@@ -330,7 +348,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   ),
                 ],
               ),
-              //const SizedBox(height: 10),
+              //displays list of all the tasks with a checkbox
               Expanded(
                 child: ListView.builder(
                   itemCount: Provider.of<MyGoals>(context, listen: false)
@@ -357,6 +375,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               .firstWhere((goal) => goal.title == widget.title)
                               .tasks[index]
                               .isChecked = value!;
+                            //goal removed when checked
                           Provider.of<MyGoals>(context, listen: false)
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
@@ -392,11 +411,13 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     );
   }
 
+  //takes a date and formats it into month day year
   String formatDate(String date) {
     List<String> parts = date.split('-');
     return '${parts[1]}/${parts[2]}/${parts[0]}';
   }
 
+  //ui style changes
   InputDecoration underlineInputDecoration(
       BuildContext context, String hint, String label,
       {String? errorText}) {
@@ -427,6 +448,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   }
 }
 
+//this class defines a task that requires a task name and if it is checked yet
 class Task {
   Task({required this.task, required this.isChecked});
   final String task;

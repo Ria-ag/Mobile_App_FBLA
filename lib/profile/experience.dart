@@ -8,10 +8,13 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
+//this is a provider class to manage changes in experiences
 class MyExperiences extends ChangeNotifier {
+  //experiences are stored in a list which is stored in a list of each list of experiences per tile type
   List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
   double serviceHrs = 0;
 
+  //this method adds an experience to the list and takes the title and type of tile
   void add(String title, int tileIndex) {
     xpList[tileIndex].add(Experience(
         title: title,
@@ -20,12 +23,14 @@ class MyExperiences extends ChangeNotifier {
     notifyListeners();
   }
 
+  //this method removes experiences from the list and takes the id and type of tile
   void remove(int id, int tileIndex) {
     xpList[tileIndex]
         .remove(xpList[tileIndex].firstWhere((xp) => xp.xpID == id));
     notifyListeners();
   }
 
+  //this method saves every experience in the list to the shared preferences as a json string
   void saveXP(int tileIndex) {
     List<String> xps = [];
     for (Experience xp in xpList[tileIndex]) {
@@ -38,6 +43,7 @@ class MyExperiences extends ChangeNotifier {
     prefs.setStringList('$tileIndex', xps);
   }
 
+  //this method adds up all the hours of each experience in the community service tile
   void addHrs() {
     double totalHrs = 0;
     for (Experience xp in xpList[2]) {
@@ -47,6 +53,7 @@ class MyExperiences extends ChangeNotifier {
   }
 }
 
+//this class defines an experience and requires a title, id, and type of tile
 //ignore: must_be_immutable
 class Experience extends StatefulWidget {
   Experience(
@@ -74,7 +81,7 @@ class Experience extends StatefulWidget {
   DateTime updateTime = DateTime.now();
   final _formKey = GlobalKey<FormState>();
 
-// Convert an Experience object into a JSON string
+  //convert an Experience object into a JSON string
   String toJsonString() {
     final Map<String, dynamic> data = {
       'title': title,
@@ -97,7 +104,7 @@ class Experience extends StatefulWidget {
     return jsonEncode(data);
   }
 
-  // Create an Experience object from a JSON string
+  ///create an Experience object from a JSON string
   static Experience fromJsonString(String jsonString) {
     Map<String, dynamic> json = jsonDecode(jsonString);
     Experience exp = Experience(
@@ -152,6 +159,7 @@ class _ExperienceState extends State<Experience> {
               xpListTile(context),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                //can add an image to the experience by camera or gallery
                 child: (!widget.editable)
                     ? widget._image == null
                         ? Text("No images selected",
@@ -197,12 +205,14 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
+//this create a list tile of each experience and has an edit mode
   ListTile xpListTile(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //name of experience
           if (widget.title != "Community Service")
             (!widget.editable)
                 ? Column(
@@ -221,6 +231,7 @@ class _ExperienceState extends State<Experience> {
                   )
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
+                    //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
@@ -237,6 +248,7 @@ class _ExperienceState extends State<Experience> {
                         underlineInputDecoration(context, "ex. FBLA", "Name"),
                   )
           else
+          //location of experience if it's community service
             (!widget.editable)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,6 +266,7 @@ class _ExperienceState extends State<Experience> {
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.location,
+                    //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
@@ -268,10 +281,12 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. Hopelink", "Location"),
                   ),
+          //start date with a date picker
           (!widget.editable)
               ? buildRichText(context, "Start Date: ", widget.startDate,
                   Theme.of(context).textTheme.bodyMedium)
               : TextFormField(
+                //has to have a value and the start date should be before the end date to continue
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Field cannot be empty";
@@ -307,12 +322,14 @@ class _ExperienceState extends State<Experience> {
                     }
                   },
                 ),
+          //end date with a date picker
           Padding(
             padding: const EdgeInsets.only(bottom: 7.5),
             child: (!widget.editable)
                 ? buildRichText(context, "End Date: ", widget.endDate,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
+                  //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
@@ -342,12 +359,14 @@ class _ExperienceState extends State<Experience> {
                   ),
           ),
           const SizedBox(width: 10),
+          //role in experience
           if (widget.title == "Clubs/Organizations")
             (!widget.editable)
                 ? buildRichText(context, "Role: ", widget.role,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
+                    //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
@@ -363,6 +382,7 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. President", "Role"),
                   ),
+          //issuer of award
           if (widget.title == "Awards")
             (!widget.editable)
                 ? (widget.award.isEmpty)
@@ -380,6 +400,7 @@ class _ExperienceState extends State<Experience> {
                     },
                     decoration: underlineInputDecoration(
                         context, "ex. Woodinville High School", "Issuer")),
+          //service hours
           if (widget.title == "Community Service")
             (!widget.editable)
                 ? buildRichText(context, "Hours: ", widget.hours,
@@ -397,6 +418,7 @@ class _ExperienceState extends State<Experience> {
                       "ex. 10",
                       "Hours",
                     ),
+                    //has to be a postive number and has to have a value to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -409,12 +431,14 @@ class _ExperienceState extends State<Experience> {
                       return null;
                     },
                   ),
+          //score on test
           if (widget.title == "Tests")
             (!widget.editable)
                 ? buildRichText(context, "Score: ", widget.score,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
+                    //has to be non-negative and has to have a value to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -435,12 +459,14 @@ class _ExperienceState extends State<Experience> {
                     decoration:
                         underlineInputDecoration(context, "ex. 1320", "Score"),
                   ),
+          //grade in class
           if (widget.title == "Honors Classes")
             (!widget.editable)
                 ? buildRichText(context, "Grade: ", widget.grade,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
+                    //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
@@ -456,6 +482,7 @@ class _ExperienceState extends State<Experience> {
                     decoration:
                         underlineInputDecoration(context, "ex. A", "Grade"),
                   ),
+          //description of experience
           if (widget.title != "Tests" && widget.title != "Honors Classes")
             (!widget.editable)
                 ? (widget.description.isEmpty)
@@ -487,6 +514,7 @@ class _ExperienceState extends State<Experience> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            //this button puts all the values in edit mode where you can change and update them
             TextButton(
               onPressed: (!widget.editable)
                   ? () => setState(() {
@@ -500,6 +528,7 @@ class _ExperienceState extends State<Experience> {
                       formState.save();
 
                       setState(() {
+                        //will not save edit if validation is not true
                         hasErrors = !formState.validate();
                         if (!hasErrors) {
                           widget.editable = false;
@@ -510,11 +539,13 @@ class _ExperienceState extends State<Experience> {
                         }
                       });
                     },
+              //changes to check icon when you want to end edit mode
               child: Icon(
                 (!widget.editable) ? Icons.edit : Icons.check,
                 size: 20,
               ),
             ),
+            //this button lets you remove the experience
             TextButton(
               onPressed: () {
                 context
@@ -530,6 +561,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
+  //ui style changes
   InputDecoration underlineInputDecoration(
       BuildContext context, String hint, String label) {
     return InputDecoration(
@@ -555,6 +587,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
+  //this method takes the image source(camera or gallery) and gets an image using uses image picker package
   Future getImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(
       source: source,
@@ -594,6 +627,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
+  //this method takes a date and formates it into month day and year
   String formatDate(String date) {
     List<String> parts = date.split('-');
     return '${parts[1]}/${parts[2]}/${parts[0]}';
