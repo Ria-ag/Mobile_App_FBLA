@@ -12,7 +12,38 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const RestartWidget(child: MyApp()));
+}
+
+// This class is used to restart and clear the app
+class RestartWidget extends StatefulWidget {
+  const RestartWidget({required this.child, super.key});
+  final Widget child;
+
+  // Calls the restart method in the state class of the widget
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>()!.restartApp();
+  }
+
+  @override
+  State<RestartWidget> createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  // To restart the app, a new key is created, resetting old information
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // A new tree is returned and built
+    return KeyedSubtree(key: key, child: widget.child);
+  }
 }
 
 // This SharePreferences instance is where app data is locally stored
@@ -185,7 +216,7 @@ class SplashState extends State<Splash> {
   final delay = 3;
 
   Future checkSeen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     bool seen = (prefs.getBool('seen') ?? false);
 
     if (seen) {
@@ -448,10 +479,10 @@ class _IntroScreenState extends State<IntroScreen> {
 
 // Upon continuing, the user data is stored locally
   void save(BuildContext context, String name, String school, String year,
-      bool isChecked) {
-    prefs.setString("name", name);
-    prefs.setString("school", school);
-    prefs.setString("year", year);
-    prefs.setBool("checked", isChecked);
+      bool isChecked) async {
+    await prefs.setString("name", name);
+    await prefs.setString("school", school);
+    await prefs.setString("year", year);
+    await prefs.setBool("checked", isChecked);
   }
 }

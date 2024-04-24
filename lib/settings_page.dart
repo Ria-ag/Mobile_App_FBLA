@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'theme.dart';
 
@@ -86,7 +87,9 @@ class _SecurityState extends State<Security> {
   }
 
   //this method gets the stored data from shared preferences
-  void getData() {
+  void getData() async {
+    prefs = await SharedPreferences.getInstance();
+
     String? tempName = prefs.getString('name');
     String? tempSchool = prefs.getString('school');
     String? tempYear = prefs.getString('year');
@@ -143,7 +146,7 @@ class _SecurityState extends State<Security> {
                     subtitle: !widget.nameEditable
                         ? Text(name)
                         : TextFormField(
-                          //has to have a value to continue
+                            //has to have a value to continue
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -185,7 +188,7 @@ class _SecurityState extends State<Security> {
                     subtitle: !widget.schoolEditable
                         ? Text(school)
                         : TextFormField(
-                          //has to have a value to continue
+                            //has to have a value to continue
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -226,8 +229,8 @@ class _SecurityState extends State<Security> {
                     subtitle: !widget.yearEditable
                         ? Text(year)
                         : TextFormField(
-                          //has to be a year greater than 1900 and before 50 years ahead of the current year 
-                          //and has to have a value to continue
+                            //has to be a year greater than 1900 and before 50 years ahead of the current year
+                            //and has to have a value to continue
                             validator: (value) {
                               if (value != null) {
                                 final int? numVal = int.tryParse(value);
@@ -341,6 +344,13 @@ class Terms extends StatelessWidget {
 class ResetButton extends StatelessWidget {
   const ResetButton({super.key});
 
+  Future<void> _clearSharedPreferences(BuildContext context) async {
+    prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    // ignore: use_build_context_synchronously
+    RestartWidget.restartApp(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -362,18 +372,19 @@ class ResetButton extends StatelessWidget {
                     },
                     child: const Text('Cancel'),
                   ),
+
                   //this button clears all data
                   TextButton(
                     onPressed: () {
-                      prefs.clear();
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Data cleared'),
-                        ),
-                      );
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/splash", (_) => false);
+                      _clearSharedPreferences(context);
+                      // Navigator.of(context).pop();
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('Data cleared'),
+                      //   ),
+                      // );
+                      // Navigator.pushNamedAndRemoveUntil(
+                      //     context, "/splash", (_) => false);
                     },
                     child: const Text('Reset'),
                   ),

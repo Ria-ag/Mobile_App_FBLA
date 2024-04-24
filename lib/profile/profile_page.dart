@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'experience.dart';
 import 'icon_tile.dart';
 import 'package:mobileapp/main.dart';
@@ -35,10 +36,10 @@ class MyProfileState extends ChangeNotifier {
           .toList();
 
   //this method takes a value and index and updates the checked list
-  onChange(bool value, int index) {
+  onChange(bool value, int index) async {
     isChecked[index] = value;
     String isCheckedStr = isChecked.map((b) => b.toString()).join(',');
-    prefs.setString("isChecked", isCheckedStr);
+    await prefs.setString("isChecked", isCheckedStr);
     notifyListeners();
   }
 
@@ -59,7 +60,7 @@ class MyProfileState extends ChangeNotifier {
     final String path = directory.path;
 
     await pfp!.copy('$path/${basename(pickedImage.path)}');
-    prefs.setString('image', pfp!.path);
+    await prefs.setString('image', pfp!.path);
   }
 }
 
@@ -83,8 +84,10 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     getData();
   }
+
   //this method gets the stored data from shared preferences
-  void getData() {
+  void getData() async {
+    prefs = await SharedPreferences.getInstance();
     String? tempName = prefs.getString('name');
     String? tempSchool = prefs.getString('school');
     String? tempYear = prefs.getString('year');

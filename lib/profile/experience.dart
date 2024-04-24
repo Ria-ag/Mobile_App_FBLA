@@ -31,7 +31,7 @@ class MyExperiences extends ChangeNotifier {
   }
 
   //this method saves every experience in the list to the shared preferences as a json string
-  void saveXP(int tileIndex) {
+  void saveXP(int tileIndex) async {
     List<String> xps = [];
     for (Experience xp in xpList[tileIndex]) {
       xps.add(xp.toJsonString());
@@ -40,7 +40,7 @@ class MyExperiences extends ChangeNotifier {
       addHrs();
     }
     notifyListeners();
-    prefs.setStringList('$tileIndex', xps);
+    await prefs.setStringList('$tileIndex', xps);
   }
 
   //this method adds up all the hours of each experience in the community service tile
@@ -248,7 +248,7 @@ class _ExperienceState extends State<Experience> {
                         underlineInputDecoration(context, "ex. FBLA", "Name"),
                   )
           else
-          //location of experience if it's community service
+            //location of experience if it's community service
             (!widget.editable)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,7 +286,7 @@ class _ExperienceState extends State<Experience> {
               ? buildRichText(context, "Start Date: ", widget.startDate,
                   Theme.of(context).textTheme.bodyMedium)
               : TextFormField(
-                //has to have a value and the start date should be before the end date to continue
+                  //has to have a value and the start date should be before the end date to continue
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Field cannot be empty";
@@ -329,7 +329,7 @@ class _ExperienceState extends State<Experience> {
                 ? buildRichText(context, "End Date: ", widget.endDate,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
-                  //has to have a value to continue
+                    //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Field cannot be empty";
