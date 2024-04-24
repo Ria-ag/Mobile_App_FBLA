@@ -9,6 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
 
+// This is the home page of the app
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   String name = "";
 
   @override
+  //When the home page is initialized, and initial methods are called
   void initState() {
     super.initState();
     getRecent(prefs);
@@ -32,7 +34,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> getRecent(prefs) async {
+  // This method compares the times of experiences to get the most recent one
+  void getRecent(prefs) {
     DateTime mostRecentUpdateTime = DateTime.utc(0);
     Experience? mostRecent;
     for (int i = 0; i < 8; i++) {
@@ -54,6 +57,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //A method called when a dependency of this [State] object changes.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -78,6 +82,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  // The home page's welcome message
                   Row(
                     children: [
                       Padding(
@@ -103,6 +108,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+
+                  // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media.
                   Padding(
                     padding: const EdgeInsets.only(top: 200, bottom: 10),
                     child: Text(
@@ -132,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                     width: 200,
                     child: FloatingActionButton(
                       heroTag: "button 1",
-                      onPressed: () => instaPdf(),
+                      onPressed: () => socialPdf(),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
@@ -142,6 +149,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+
+                  // Here, to most recently updated experience is shown
                   Padding(
                     padding: const EdgeInsets.only(top: 25, bottom: 10),
                     child: Text("Most recently updated:",
@@ -197,6 +206,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// This is the method that creates the look of a pdf page that's shared
   void addPage(
     pw.Document pdf,
     String? name,
@@ -231,7 +241,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              // Experiences section
               for (var experience in experiences) ...[
                 pw.Container(
                   margin: const pw.EdgeInsets.only(bottom: 10.0),
@@ -268,6 +277,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// Here, the pdf is actually made and saved to the device's directory
   Future<File> makePdf() async {
     MyExperiences myExperiences =
         Provider.of<MyExperiences>(context, listen: false);
@@ -289,7 +299,9 @@ class _HomePageState extends State<HomePage> {
     return tempFile;
   }
 
-  void instaPdf() async {
+// This method is similar to makePdf(), but is catered towards sharing with social media apps
+// It has a custom message and shares the pdf as jpeg images
+  void socialPdf() async {
     File pdf = await makePdf();
     debugPrint(pdf.path);
     List<XFile> tempFiles = [];
@@ -311,6 +323,7 @@ class _HomePageState extends State<HomePage> {
     await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
   }
 
+//Here, the pdf is created to be shared by Bluetooth or printed
   void createPdf(context) async {
     MyExperiences myExperiences =
         Provider.of<MyExperiences>(context, listen: false);
