@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goal_tile.dart';
 import 'package:provider/provider.dart';
