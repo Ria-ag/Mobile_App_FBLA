@@ -113,7 +113,7 @@ final termsConditions = RichText(
       ),
       TextSpan(
         text:
-            "All users may use the application, but it is specifically catered towards a high school audience. Users under the age of 18 must have parental consent to use this application.\n\n",
+            "All users may use the application, but it is specifically catered to a high school audience. Users under the age of 13 must have parental consent to use this application.\n\n",
         style: theme.textTheme.bodySmall, // Content style
       ),
       TextSpan(
@@ -122,7 +122,7 @@ final termsConditions = RichText(
       ),
       TextSpan(
         text:
-            "Rise collects personal information such as name, school, graduation year, academic achievements, athletic participation, performing arts experience, club memberships, community service hours, honors classes, and related items as provided by the user. User data is stored securely and used solely for the purpose of creating and managing the user's portfolio within the app. Rise does not share user data with third parties without explicit user consent.\n\n",
+            "Rise collects personal information such as name, school, graduation year, academic achievements, athletic participation, performing arts experience, club memberships, community service hours, honors classes, and related items as provided by the user. User data is stored securely and used solely to create and manage the user's portfolio within the app. Rise does not share user data with third parties without explicit user consent.\n\n",
         style: theme.textTheme.bodySmall, // Content style
       ),
       TextSpan(
