@@ -561,7 +561,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
-  //ui style changes
+  // The widget decoration for all text fields in this class
   InputDecoration underlineInputDecoration(
       BuildContext context, String hint, String label) {
     return InputDecoration(
