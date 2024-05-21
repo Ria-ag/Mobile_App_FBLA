@@ -4,41 +4,52 @@ import 'package:google_fonts/google_fonts.dart';
 // This is the theme data used throughout the app
 final theme = ThemeData(
     // This app adopts a color scheme of bronze, light pastel blue, black, and white
+    useMaterial3: true,
     primaryColor: const Color.fromARGB(255, 218, 124, 96),
     colorScheme:
         ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
-      secondary: const Color.fromARGB(255, 77, 145, 214),
+      secondary: const Color.fromARGB(255, 20, 49, 92),
       primary: const Color.fromARGB(255, 218, 124, 96),
       background: Colors.white,
     ),
     // These are the text styles in the app
-    // The primary fonts are Urbanist and Merriweather, retrieved from Google Fonts
+    // The primary fonts are Poppins and Poppins, retrieved from Google Fonts
     textTheme: TextTheme(
-      displayLarge:
-          GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 32),
-      displayMedium: GoogleFonts.merriweather(fontSize: 20),
-      displaySmall:
-          GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 16),
-      headlineLarge:
-          GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 24),
-      headlineMedium:
-          GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 20),
-      headlineSmall:
-          GoogleFonts.urbanist(fontWeight: FontWeight.bold, fontSize: 18),
-      bodyLarge: GoogleFonts.merriweather(fontSize: 16),
-      bodyMedium: GoogleFonts.merriweather(fontSize: 14),
-      bodySmall: GoogleFonts.merriweather(fontSize: 12),
-      labelMedium: GoogleFonts.merriweather(fontSize: 10.5),
-      labelLarge: GoogleFonts.merriweather(),
-    ),
+        displayLarge:
+            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 32),
+        displayMedium: GoogleFonts.poppins(fontSize: 20),
+        displaySmall:
+            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+        headlineLarge:
+            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 24),
+        headlineMedium:
+            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),
+        headlineSmall:
+            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+        bodyLarge: GoogleFonts.poppins(fontSize: 16),
+        bodyMedium: GoogleFonts.poppins(fontSize: 14),
+        bodySmall: GoogleFonts.poppins(fontSize: 12),
+        labelMedium: GoogleFonts.poppins(fontSize: 10.5),
+        labelLarge: GoogleFonts.poppins()),
 
     // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
     iconTheme: const IconThemeData(
-      color: Color.fromARGB(255, 77, 145, 214),
+      color: Color.fromARGB(255, 20, 49, 92),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Color.fromARGB(255, 218, 124, 96)),
-    useMaterial3: true,
+      backgroundColor: Color.fromARGB(255, 218, 124, 96),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        minimumSize: const Size.fromHeight(40),
+        backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+        foregroundColor: Colors.white,
+        //textStyle: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+    ),
     checkboxTheme: CheckboxThemeData(
       fillColor:
           MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -53,8 +64,8 @@ final theme = ThemeData(
       indicatorColor: Color.fromARGB(190, 218, 124, 96),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyle(
-          fontFamily: GoogleFonts.merriweather().fontFamily, fontSize: 13),
+      hintStyle:
+          TextStyle(fontFamily: GoogleFonts.poppins().fontFamily, fontSize: 13),
     ),
     textButtonTheme: const TextButtonThemeData(
       style: ButtonStyle(
@@ -62,9 +73,9 @@ final theme = ThemeData(
       ),
     ),
     snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color.fromARGB(255, 77, 145, 214)),
-    dropdownMenuTheme: DropdownMenuThemeData(
-        textStyle: GoogleFonts.merriweather(fontSize: 14)));
+        backgroundColor: Color.fromARGB(255, 20, 49, 92)),
+    dropdownMenuTheme:
+        DropdownMenuThemeData(textStyle: GoogleFonts.poppins(fontSize: 14)));
 
 // This is the app header bar used throughout the app
 // It contains the app logo and title

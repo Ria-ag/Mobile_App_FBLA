@@ -67,141 +67,116 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              // The home page's welcome message
+              Row(
                 children: [
-                  // The home page's welcome message
-                  Row(
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 30, top: 30, right: 30),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: const Image(
-                              image: AssetImage('assets/logo.png'),
-                              height: 100),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: SizedBox(
-                          width: 200,
-                          child: Text(
-                            'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 40),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media.
                   Padding(
-                    padding: const EdgeInsets.only(top: 200, bottom: 10),
-                    child: Text(
-                      "Share your profile with the world!",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(color: Colors.white),
+                    padding:
+                        const EdgeInsets.only(left: 30, top: 30, right: 30),
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      child: const Image(
+                          image: AssetImage('assets/logo.png'), height: 100),
                     ),
                   ),
-                  SizedBox(
-                    width: 200,
-                    child: FloatingActionButton(
-                      heroTag: "button 1",
-                      onPressed: () => createPdf(context),
-                      child: const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Create and share a .pdf version of the profile",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 200,
-                    child: FloatingActionButton(
-                      heroTag: "button 1",
-                      onPressed: () => socialPdf(),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          "Share profile to social media as images",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Here, to most recently updated experience is shown
                   Padding(
-                    padding: const EdgeInsets.only(top: 25, bottom: 10),
-                    child: Text("Most recently updated:",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(color: Colors.white)),
-                  ),
-                  SizedBox(
-                    width: 400,
-                    child: FloatingActionButton(
-                      heroTag: "button 2",
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
-                        child: (recent != null)
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(recent!.title,
-                                            style: const TextStyle(
-                                                color: Colors.white)),
-                                        Text(recent!.name,
-                                            style: const TextStyle(
-                                                color: Colors.white)),
-                                      ],
-                                    ),
-                                    Text(
-                                        "${recent!.startDate} - ${recent!.endDate}",
-                                        style: const TextStyle(
-                                            color: Colors.white)),
-                                  ])
-                            : const Text(
-                                "Add an experience in the profile page to get started.",
-                                style: TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
+                    padding: const EdgeInsets.only(top: 30),
+                    child: SizedBox(
+                      width: 200,
+                      child: Text(
+                        'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 40),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+
+              // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media.
+              Padding(
+                padding: const EdgeInsets.only(top: 200, bottom: 10),
+                child: Text(
+                  "Share your profile with the world!",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.white),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () => createPdf(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "Create and share a .pdf version of the profile",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () => socialPdf(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "Share profile to social media as images",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Here, to most recently updated experience is shown
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text("Most recently updated:",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium!
+                        .copyWith(color: Colors.white)),
+              ),
+              SizedBox(
+                width: 400,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: (recent != null)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(recent!.title),
+                                    Text(recent!.name),
+                                  ],
+                                ),
+                                Text(
+                                    "${recent!.startDate} - ${recent!.endDate}"),
+                              ])
+                        : const Text(
+                            "Add an experience in the profile page to get started.",
+                            textAlign: TextAlign.center,
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

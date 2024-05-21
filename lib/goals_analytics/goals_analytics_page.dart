@@ -152,9 +152,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   children: [
                     const SizedBox(height: 5),
                     Container(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-                      width: 200,
-                      height: 75,
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(20),
@@ -167,30 +165,32 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ],
                       ),
                       child: Center(
-                          // The first thing in the analtics page is the tital number of tasks completed
-                          child: Column(
-                        children: [
-                          Text(
-                              Provider.of<MyGoals>(context, listen: false).done,
+                        // The first thing in the analtics page is the total number of tasks completed
+                        child: Column(
+                          children: [
+                            Text(
+                                Provider.of<MyGoals>(context, listen: false)
+                                    .done,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary)),
+                            Text(
+                              "Total Completed Tasks",
                               style: Theme.of(context)
                                   .textTheme
-                                  .displayLarge!
+                                  .displaySmall!
                                   .copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .secondary)),
-                          Text(
-                            "Total Completed Tasks",
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                          )
-                        ],
-                      )),
+                                          .secondary),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

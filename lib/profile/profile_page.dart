@@ -277,6 +277,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: displayITs,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                 ),
               ),
               const SizedBox(height: 30),

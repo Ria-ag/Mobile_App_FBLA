@@ -19,12 +19,18 @@ class IconTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.5),
       child: SizedBox(
-        width: 200,
+        width: 185,
         child: Column(
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: (title == "Community Service")
+                  ? Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .apply(fontSizeFactor: 0.925)
+                  : Theme.of(context).textTheme.headlineMedium,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),
             //on click the text tile opens up a modal sheet with its data in it

@@ -26,30 +26,34 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               //this button opens an account and security page
-              child: FloatingActionButton(
-                heroTag: "button 1",
+              child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Security()),
                   );
                 },
-                child: const Text("Account and Security"),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text("Account and Security"),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               //this button opens a terms and conditions page
-              child: FloatingActionButton(
-                heroTag: "button 2",
+              child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const Terms()),
                   );
                 },
-                child: const Text("Terms and Conditions"),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text("Terms and Conditions"),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -355,8 +359,7 @@ class ResetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: FloatingActionButton(
-        heroTag: "button 3",
+      child: ElevatedButton(
         onPressed: () {
           showDialog(
             context: context,
@@ -393,7 +396,10 @@ class ResetButton extends StatelessWidget {
             },
           );
         },
-        child: const Text('Reset Profile'),
+        child: const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Text('Reset Profile'),
+        ),
       ),
     );
   }
