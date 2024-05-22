@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'modal_sheet.dart';
 
-//this class defines icon tiles eg.Athletics
+// This class defines icon tiles eg.Athletics
 
 class IconTile extends StatelessWidget {
-  //needs an icon, the title, and which tile it is
+  // Needs an icon, the title, and which tile it is
   const IconTile(
       {super.key,
       required this.icon,
@@ -33,7 +33,7 @@ class IconTile extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),
-            //on click the text tile opens up a modal sheet with its data in it
+            // On click the text tile opens up a modal sheet with its data in it
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -54,7 +54,7 @@ class IconTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  //if it is a community service tile it displays the number of hours not the icon
+                  // If it is a community service tile it displays the number of hours not the icon
                   child: Center(
                     child: (icon.runtimeType == IconData)
                         ? Icon(icon, size: 60)

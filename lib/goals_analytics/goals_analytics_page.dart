@@ -43,10 +43,9 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               onPressed: () {
                 if (title.isNotEmpty) {
                   if (isGoal) {
-                    Provider.of<MyGoals>(context, listen: false).add(title);
+                    context.read<MyGoals>().add(title);
                   } else {
-                    Provider.of<ChartDataState>(context, listen: false)
-                        .addChart(title);
+                    context.read<ChartDataState>().addChart(title);
                   }
                   title = "";
                 }
@@ -65,58 +64,58 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   Widget build(BuildContext context) {
     List<PieChartSectionData> pieChartSectionData = [
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[0],
-        title: Provider.of<MyGoals>(context, listen: false).items[0],
+        value: context.read<MyGoals>().numberOfItems[0],
+        title: context.read<MyGoals>().items[0],
         color: const Color.fromARGB(255, 147, 187, 229),
         titlePositionPercentageOffset: 1.9,
       ),
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[1],
-        title: Provider.of<MyGoals>(context, listen: false).items[1],
+        value: context.read<MyGoals>().numberOfItems[1],
+        title: context.read<MyGoals>().items[1],
         color: const Color.fromARGB(255, 77, 145, 214),
       ),
       PieChartSectionData(
-          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[2],
-          title: Provider.of<MyGoals>(context, listen: false).items[2],
+          value: context.read<MyGoals>().numberOfItems[2],
+          title: context.read<MyGoals>().items[2],
           color: const Color.fromARGB(255, 28, 80, 133),
           titlePositionPercentageOffset: 1.4),
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[3],
-        title: Provider.of<MyGoals>(context, listen: false).items[3],
+        value: context.read<MyGoals>().numberOfItems[3],
+        title: context.read<MyGoals>().items[3],
         color: const Color.fromARGB(255, 14, 50, 86),
         titlePositionPercentageOffset: 1.7,
       ),
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[4],
-        title: Provider.of<MyGoals>(context, listen: false).items[4],
+        value: context.read<MyGoals>().numberOfItems[4],
+        title: context.read<MyGoals>().items[4],
         color: const Color.fromARGB(255, 84, 26, 9),
         titlePositionPercentageOffset: 2,
       ),
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[5],
-        title: Provider.of<MyGoals>(context, listen: false).items[5],
+        value: context.read<MyGoals>().numberOfItems[5],
+        title: context.read<MyGoals>().items[5],
         color: const Color.fromARGB(255, 181, 52, 12),
       ),
       PieChartSectionData(
-          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[6],
-          title: Provider.of<MyGoals>(context, listen: false).items[6],
+          value: context.read<MyGoals>().numberOfItems[6],
+          title: context.read<MyGoals>().items[6],
           color: const Color.fromARGB(255, 218, 124, 96),
           titlePositionPercentageOffset: 1.4),
       PieChartSectionData(
-          value: Provider.of<MyGoals>(context, listen: false).numberOfItems[7],
-          title: Provider.of<MyGoals>(context, listen: false).items[7],
+          value: context.read<MyGoals>().numberOfItems[7],
+          title: context.read<MyGoals>().items[7],
           color: const Color.fromARGB(255, 222, 168, 151),
           titlePositionPercentageOffset: 1.4),
       PieChartSectionData(
-        value: Provider.of<MyGoals>(context, listen: false).numberOfItems[8],
-        title: Provider.of<MyGoals>(context, listen: false).items[8],
+        value: context.read<MyGoals>().numberOfItems[8],
+        title: context.read<MyGoals>().items[8],
         color: Colors.white,
         titlePositionPercentageOffset: 1.6,
       ),
     ];
 
     // Here is the main layout of the page
-    //The first section is on goals, and the second section is data andn analytics
+    // The first section is on goals, and the second section is data and analytics
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -133,7 +132,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 child: (context.watch<MyGoals>().goals.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
-                          // The all goals are displayed as list tiles here
+                          // All the goals are displayed as list tiles here
                           children: context.watch<MyGoals>().goals,
                         ),
                       )
@@ -165,12 +164,10 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ],
                       ),
                       child: Center(
-                        // The first thing in the analtics page is the total number of tasks completed
+                        // The first thing in the analytics page is the total number of tasks completed
                         child: Column(
                           children: [
-                            Text(
-                                Provider.of<MyGoals>(context, listen: false)
-                                    .done,
+                            Text(context.read<MyGoals>().done,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayLarge!
@@ -204,8 +201,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width - 25,
                       height: 200,
-                      child: Provider.of<MyGoals>(context, listen: false).sum !=
-                              0.0
+                      child: context.read<MyGoals>().sum != 0.0
                           ? PieChart(
                               PieChartData(
                                 sections: pieChartSectionData,
@@ -259,8 +255,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
 
   // The method checks if any section of the pie chart data is empty
   bool checkIfEmpty() {
-    for (double num
-        in Provider.of<MyGoals>(context, listen: false).numberOfItems) {
+    for (double num in context.read<MyGoals>().numberOfItems) {
       if (num.isNaN) {
         return false;
       } else if (num != 0) {

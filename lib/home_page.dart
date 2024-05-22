@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   String name = "";
 
   @override
-  //When the home page is initialized, and initial methods are called
+  // When the home page is initialized, and initial methods are called
   void initState() {
     super.initState();
     getRecent(prefs);
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //A method called when a dependency of this [State] object changes.
+  // A method called when a dependency of this [State] object changes
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
 
-              // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media.
+              // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media
               Padding(
                 padding: const EdgeInsets.only(top: 200, bottom: 10),
                 child: Text(
@@ -256,8 +256,6 @@ class _HomePageState extends State<HomePage> {
 
 // Here, the pdf is actually made and saved to the device's directory
   Future<File> makePdf() async {
-    MyExperiences myExperiences =
-        Provider.of<MyExperiences>(context, listen: false);
     String? name = prefs.getString('name');
     String? school = prefs.getString('school');
     String? year = prefs.getString('year');
@@ -265,7 +263,7 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = myExperiences.xpList[i];
+      List<Experience> experiences = context.read<MyExperiences>().xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }
@@ -301,10 +299,8 @@ class _HomePageState extends State<HomePage> {
     await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
   }
 
-//Here, the pdf is created to be shared by Bluetooth or printed
+// Here, the pdf is created to be shared by Bluetooth or printed
   void createPdf(context) async {
-    MyExperiences myExperiences =
-        Provider.of<MyExperiences>(context, listen: false);
     String? name = prefs.getString('name');
     String? school = prefs.getString('school');
     String? year = prefs.getString('year');
@@ -312,7 +308,7 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = myExperiences.xpList[i];
+      List<Experience> experiences = context.read<MyExperiences>().xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }

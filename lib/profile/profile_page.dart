@@ -10,14 +10,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
-//this is a provider class to manage changes in the profile
+// This is a provider class to manage changes in the profile
 class MyProfileState extends ChangeNotifier {
   List<Widget> widgetList = [];
   File? pfp = (prefs.getString('image') != null)
       ? File(prefs.getString('image')!)
       : null;
 
-  //checklist starts off empty and updates list as it's checked
+  // Checklist starts off empty and updates list as it's checked
   List<bool> isChecked = (prefs.getString("isChecked") == null)
       ? [
           false,
@@ -35,7 +35,7 @@ class MyProfileState extends ChangeNotifier {
           .map((s) => s == 'true')
           .toList();
 
-  //this method takes a value and index and updates the checked list
+  // This method takes a value and index and updates the checked list
   onChange(bool value, int index) async {
     isChecked[index] = value;
     String isCheckedStr = isChecked.map((b) => b.toString()).join(',');
@@ -43,7 +43,7 @@ class MyProfileState extends ChangeNotifier {
     notifyListeners();
   }
 
-  //this method takes the image source(camera or gallery) and gets an image using uses image picker package
+  // This method takes the image source (camera or gallery) and gets an image using uses image picker package
   Future getImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(
       source: source,
@@ -71,21 +71,21 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-//this class defines the profile page
+// This class defines the profile page
 class _ProfilePageState extends State<ProfilePage> {
   bool showButton = false;
   String name = "";
   String school = "";
   String year = "";
 
-  //this method retrieves the user data immediately every time
+  // This method retrieves the user data immediately every time
   @override
   void initState() {
     super.initState();
     getData();
   }
 
-  //this method gets the stored data from shared preferences
+  // This method gets the stored data from shared preferences
   void getData() async {
     prefs = await SharedPreferences.getInstance();
     String? tempName = prefs.getString('name');
@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
       const TextTile(title: "Tests", tileIndex: 7),
     ];
 
-    //displays icon tiles
+    // Displays icon tiles
     List<Widget> displayITs = [
       Container(),
       Container(),
@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Container(),
     ];
 
-    //displays text tiles
+    // Displays text tiles
     List<Widget> displayTTs = [
       Container(),
       Container(),
@@ -139,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Container(),
     ];
 
-    //displays them only when the box is checked
+    // Displays them only when the box is checked
     for (var i = 0; i < ITs.length; i++) {
       displayITs[i] =
           (context.watch<MyProfileState>().isChecked[i]) ? ITs[i] : Container();
@@ -151,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
           : Container();
     }
 
-    //displays text until boxes are checked
+    // Displays text until boxes are checked
     Widget introText =
         (!context.watch<MyProfileState>().isChecked.contains(true))
             ? const Padding(
@@ -276,8 +276,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: displayITs,
                   crossAxisAlignment: CrossAxisAlignment.end,
+                  children: displayITs,
                 ),
               ),
               const SizedBox(height: 30),
@@ -287,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      //this button is what lets you control what is checked
+      // This button is what lets you control what is checked
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
@@ -296,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  //this method displays a pop up with the tiles in a checklist that are allowed to be changed
+  // This method displays a pop up with the tiles in a checklist that are allowed to be changed
   Future<void> _dialogBuilder(BuildContext context) {
     List<String> blocks = [
       "Athletics",

@@ -3,17 +3,16 @@ import 'experience.dart';
 import 'modal_sheet.dart';
 import 'package:provider/provider.dart';
 
-//this class defines text tiles eg.Clubs/Organizations
-
+// This class defines text tiles eg.Clubs/Organizations
 class TextTile extends StatelessWidget {
-  //needs a title and which tile it is
+  // The class requires a title and index
   const TextTile({super.key, required this.title, required this.tileIndex});
   final String title;
   final int tileIndex;
 
   @override
   Widget build(BuildContext context) {
-    //displays each experience summary in the body with its name
+    // Displays each experience summary in the body with its name
     List<Widget> nameSummary = [];
     List<Widget> dateSummary = [];
     for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
@@ -26,7 +25,7 @@ class TextTile extends StatelessWidget {
                 .copyWith(color: Colors.white)),
       ));
     }
-    //displays each experience summary in the body with its date as well
+    // Displays each experience summary in the body with its date as well
     for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
       dateSummary.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 1.125),
@@ -48,7 +47,7 @@ class TextTile extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 5),
-          //on click the text tile opens up a modal sheet with its data in it
+          // On click the text tile opens up a modal sheet with its data in it
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
