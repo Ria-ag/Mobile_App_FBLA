@@ -45,7 +45,7 @@ final theme = ThemeData(
           borderRadius: BorderRadius.circular(15),
         ),
         minimumSize: const Size.fromHeight(40),
-        backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+        backgroundColor: const Color.fromARGB(255, 218, 124, 96),
         foregroundColor: Colors.white,
         //textStyle: const TextStyle(fontWeight: FontWeight.bold),
       ),
@@ -81,23 +81,16 @@ final theme = ThemeData(
 // It contains the app logo and title
 final appBar = AppBar(
   automaticallyImplyLeading: false,
-  backgroundColor: Colors.white,
-  title: Row(
-    children: [
-      const Image(
-        image: AssetImage('assets/logo.png'),
-        // PLACEHOLDER ICON
-        height: 30,
-      ),
+  backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+  actions: const [
       Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: Text(
-          'Rise',
-          style: theme.textTheme.headlineLarge,
+        padding: EdgeInsets.only(right: 20, top: 10),
+        child: Image(
+          image: AssetImage('assets/logo.png'),
+          height: 50,
         ),
-      )
-    ],
-  ),
+      ),
+  ],
 );
 
 // These are the terms and conditions of the app, formatted with RichText
