@@ -13,24 +13,24 @@ final theme = ThemeData(
       background: Colors.white,
     ),
     // These are the text styles in the app
-    // The primary fonts are Poppins and Poppins, retrieved from Google Fonts
+    // The primary font is Poppins, retrieved from Google Fonts
     textTheme: TextTheme(
         displayLarge:
-            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 32),
-        displayMedium: GoogleFonts.poppins(fontSize: 20),
+            GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 80),
+        displayMedium: GoogleFonts.poppins(fontWeight: FontWeight.w300, fontSize: 30),
         displaySmall:
-            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+            GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 30),
         headlineLarge:
-            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 24),
+            GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 30),
         headlineMedium:
-            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),
+            GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 20),
         headlineSmall:
             GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
-        bodyLarge: GoogleFonts.poppins(fontSize: 16),
+        bodyLarge: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w300),
         bodyMedium: GoogleFonts.poppins(fontSize: 14),
         bodySmall: GoogleFonts.poppins(fontSize: 12),
-        labelMedium: GoogleFonts.poppins(fontSize: 10.5),
-        labelLarge: GoogleFonts.poppins()),
+        labelMedium: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+        labelLarge: GoogleFonts.poppins(fontSize: 35, fontWeight: FontWeight.w600)),
 
     // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
     iconTheme: const IconThemeData(

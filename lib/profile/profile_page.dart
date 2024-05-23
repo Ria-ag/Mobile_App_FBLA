@@ -154,10 +154,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // Displays text until boxes are checked
     Widget introText =
         (!context.watch<MyProfileState>().isChecked.contains(true))
-            ? const Padding(
-                padding: EdgeInsets.all(10.0),
+            ? Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: Text(
-                    "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
+                    "Looks a little empty in here. Click on the add button in the bottom right to get started!",
+                    style: Theme.of(context).textTheme.bodyLarge),
               )
             : Container();
 
@@ -241,9 +242,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               Text(
                                 name,
                                 style:
-                                    Theme.of(context).textTheme.headlineLarge,
+                                    Theme.of(context).textTheme.displaySmall,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -251,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -259,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
                             ],
                           ),

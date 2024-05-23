@@ -17,13 +17,26 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text("Settings", style: Theme.of(context).textTheme.displayLarge),
-            const SizedBox(height: 50),
-            SizedBox(
+      body: Column(
+        children: [
+          Container(
+            color: const Color.fromARGB(255, 20, 49, 92),
+            height: MediaQuery.of(context).size.height/3,
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.only(left:20, top: 150),
+              child: Text(
+                "Settings", 
+                style: Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 50, color: Colors.white)
+              ),
+            )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                 SizedBox(
               width: MediaQuery.of(context).size.width,
               //this button opens an account and security page
               child: ElevatedButton(
@@ -33,9 +46,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     MaterialPageRoute(builder: (context) => Security()),
                   );
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text("Account and Security"),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text("Account and Security",
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
                 ),
               ),
             ),
@@ -50,17 +64,20 @@ class _SettingsPageState extends State<SettingsPage> {
                     MaterialPageRoute(builder: (context) => const Terms()),
                   );
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text("Terms and Conditions"),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text("Terms and Conditions",
+                   style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
                 ),
               ),
             ),
             const SizedBox(height: 20),
             //this creates a reset button
             const Center(child: ResetButton()),
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -396,9 +413,10 @@ class ResetButton extends StatelessWidget {
             },
           );
         },
-        child: const Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Text('Reset Profile'),
+        child:Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Reset Profile',
+          style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
         ),
       ),
     );
