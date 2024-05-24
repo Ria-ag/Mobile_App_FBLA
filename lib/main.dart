@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'goals_analytics/goal_modal_sheet.dart';
-import 'goals_analytics/chart_tile.dart';
-import 'home_page.dart';
-import 'profile/experience.dart';
-import 'goals_analytics/goals_analytics_page.dart';
-import 'profile/profile_page.dart';
-import 'settings_page.dart';
-import 'theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'goals_analytics/goal_modal_sheet.dart';
+import 'goals_analytics/chart_tile.dart';
+import 'goals_analytics/goals_analytics_page.dart';
+import 'profile/experience.dart';
+import 'profile/profile_page.dart';
+import 'home_page.dart';
+import 'settings_page.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const RestartWidget(child: MyApp()));
@@ -199,7 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           .secondary
                           .withOpacity(0.75),
                       backgroundColor: Colors.grey[200],
-                      splashBorderRadius: 20,
+                      borderRadius: 15,
+                      splashBorderRadius: 15,
                       onTap: _onItemTapped,
                       items: [
                         DotNavigationBarItem(icon: const Icon(Icons.home)),
@@ -329,17 +330,12 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    return null;
-                  },
+                  validator: (value) => noEmptyField(value),
                   onChanged: (value) => setState(() {
                     name = value;
                   }),
                   decoration: underlineInputDecoration(
-                      context, "ex. Alexander T. Graham"),
+                      context, "ex. Alexander T. Graham", null),
                   initialValue: name,
                 ),
                 const Padding(
@@ -349,16 +345,11 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    return null;
-                  },
+                  validator: (value) => noEmptyField(value),
                   onChanged: (value) => setState(() => school = value),
                   initialValue: school,
                   decoration: underlineInputDecoration(
-                      context, "ex. Woodinville High School"),
+                      context, "ex. Woodinville High School", null),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
@@ -382,7 +373,8 @@ class _IntroScreenState extends State<IntroScreen> {
                   },
                   onChanged: (value) => setState(() => year = value),
                   initialValue: year,
-                  decoration: underlineInputDecoration(context, "ex. 2025"),
+                  decoration:
+                      underlineInputDecoration(context, "ex. 2025", null),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
@@ -392,7 +384,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
                 // The user is also required to accept the terms and conditions
                 // This can be seen in a dialog box
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
                     showTermsAndConditionsDialog(context);
                   },
@@ -415,7 +407,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 // The app will not continue until the user meets all requirements
                 SizedBox(
                   width: 20,
-                  child: FloatingActionButton(
+                  child: CustomElevatedButton(
                     onPressed: () {
                       setState(() {
                         save(context, name, school, year, isChecked);
@@ -476,20 +468,20 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-// This is the input decoration used for all the TextFormFields on this page
-  InputDecoration underlineInputDecoration(BuildContext context, String hint) {
-    return InputDecoration(
-      hintText: hint,
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-          width: 2,
-        ),
-      ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-    );
-  }
+// // This is the input decoration used for all the TextFormFields on this page
+//   InputDecoration underlineInputDecoration(BuildContext context, String hint) {
+//     return InputDecoration(
+//       hintText: hint,
+//       focusedBorder: UnderlineInputBorder(
+//         borderSide: BorderSide(
+//           color: Theme.of(context).colorScheme.secondary,
+//           width: 2,
+//         ),
+//       ),
+//       focusedErrorBorder:
+//           const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+//     );
+//   }
 
 // Upon continuing, the user data is stored locally
   void save(BuildContext context, String name, String school, String year,

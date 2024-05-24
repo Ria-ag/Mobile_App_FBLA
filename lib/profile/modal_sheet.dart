@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'experience.dart';
 import 'package:provider/provider.dart';
+import 'experience.dart';
 
 // This is a method that builds the modal sheet that opens with every tile
 // It takes the context, title, and type of tile
-Future<void> modalSheet(BuildContext context, title, tileIndex) {
+Future<void> modalSheet(context, title, tileIndex, theme) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -16,7 +16,7 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
           height: MediaQuery.of(context).size.height - 50,
           width: MediaQuery.of(context).size.width - 15,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
                 Row(
@@ -24,9 +24,9 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                     Text("More Information",
                         style: Theme.of(context).textTheme.headlineSmall),
                     const Spacer(),
-                    //t Tis button when pressed adds an experience to the tile list and updates using a provider
-                    TextButton(
-                      child: const Icon(
+                    //This button when pressed adds an experience to the tile list and updates using a provider
+                    IconButton(
+                      icon: const Icon(
                         Icons.add,
                         color: Colors.black,
                         size: 20,
@@ -35,8 +35,8 @@ Future<void> modalSheet(BuildContext context, title, tileIndex) {
                           context.read<MyExperiences>().add(title, tileIndex),
                     ),
                     // This button when pressed closes the modal sheet
-                    TextButton(
-                        child: const Icon(
+                    IconButton(
+                        icon: const Icon(
                           Icons.cancel,
                           color: Colors.red,
                           size: 20,

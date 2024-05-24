@@ -2,12 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'profile/experience.dart';
-import 'main.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
+import 'main.dart';
+import 'profile/experience.dart';
+import 'theme.dart';
 
 // This is the home page of the app
 class HomePage extends StatefulWidget {
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 width: 200,
-                child: ElevatedButton(
+                child: CustomElevatedButton(
                   onPressed: () => createPdf(context),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
               SizedBox(
                 width: 200,
-                child: ElevatedButton(
+                child: CustomElevatedButton(
                   onPressed: () => socialPdf(),
                   child: const Padding(
                     padding: EdgeInsets.all(10),
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 width: 400,
-                child: ElevatedButton(
+                child: CustomElevatedButton(
                   onPressed: () {},
                   child: Padding(
                     padding: const EdgeInsets.all(10),

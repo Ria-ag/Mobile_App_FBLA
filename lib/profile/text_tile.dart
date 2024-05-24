@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'experience.dart';
 import 'modal_sheet.dart';
-import 'package:provider/provider.dart';
+import '../theme.dart';
 
 // This class defines text tiles eg.Clubs/Organizations
 class TextTile extends StatelessWidget {
@@ -52,20 +53,14 @@ class TextTile extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context, title, tileIndex);
+                modalSheet(context, title, tileIndex, theme);
               },
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.secondary,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [shadow],
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),

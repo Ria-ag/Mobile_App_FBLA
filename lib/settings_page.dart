@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'theme.dart';
 
-//this class builds the settings page
+// This class is the settings page
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     super.key,
@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               //this button opens an account and security page
-              child: ElevatedButton(
+              child: CustomElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -42,8 +42,8 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              //this button opens a terms and conditions page
-              child: ElevatedButton(
+              // This button opens a terms and conditions page
+              child: CustomElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 20),
-            //this creates a reset button
+            // This is where the reset button is
             const Center(child: ResetButton()),
           ],
         ),
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-//this class builds a security page with your stored data
+// This class builds a security page where users can change their name, school and grade
 // ignore: must_be_immutable
 class Security extends StatefulWidget {
   Security({super.key});
@@ -83,14 +83,14 @@ class _SecurityState extends State<Security> {
   String year = "";
   final _formKey = GlobalKey<FormState>();
 
-  //this method retrieves the user data immediately every time
+  // This method retrieves user data when the class is initialized
   @override
   void initState() {
     super.initState();
     getData();
   }
 
-  //this method gets the stored data from shared preferences
+  // This method gets the stored data from shared preferences
   void getData() async {
     prefs = await SharedPreferences.getInstance();
 
@@ -111,7 +111,7 @@ class _SecurityState extends State<Security> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //this button takes the user back to the main settings page and saves the new data to shared preferences if changed
+        // This button takes the user back to the main settings page and saves the new data to shared preferences if changed
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -123,7 +123,7 @@ class _SecurityState extends State<Security> {
               prefs.setString("year", year);
               Navigator.pop(context);
             } else {
-              // Show an error message
+              // Users cannot leave till all errors on the page are fixed
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content:
                       Text('Please fix the errors before leaving the page')));
@@ -144,13 +144,13 @@ class _SecurityState extends State<Security> {
               padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
               child: Column(
                 children: [
-                  //name data
+                  // Name data
                   ListTile(
                     title: const Text('Name: '),
                     subtitle: !widget.nameEditable
                         ? Text(name)
                         : TextFormField(
-                            //has to have a value to continue
+                            // A value must be entered in the field
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -161,12 +161,12 @@ class _SecurityState extends State<Security> {
                               name = value;
                             }),
                             decoration: underlineInputDecoration(
-                                context, "ex. Alexander T. Graham"),
+                                context, "ex. Alexander T. Graham", null),
                             initialValue: name,
                           ),
-                    //this button puts the name in edit mode
-                    trailing: TextButton(
-                      child: Icon(
+                    // This button is used to toggle whether the field is editable
+                    trailing: IconButton(
+                      icon: Icon(
                         (!widget.nameEditable) ? Icons.edit : Icons.check,
                         color: Colors.black,
                         size: 20,
@@ -186,13 +186,13 @@ class _SecurityState extends State<Security> {
                       },
                     ),
                   ),
-                  //school data
+                  // School data
                   ListTile(
                     title: const Text('School: '),
                     subtitle: !widget.schoolEditable
                         ? Text(school)
                         : TextFormField(
-                            //has to have a value to continue
+                            // A value must be entered in the field
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Field cannot be empty";
@@ -203,11 +203,11 @@ class _SecurityState extends State<Security> {
                                 setState(() => school = value),
                             initialValue: school,
                             decoration: underlineInputDecoration(
-                                context, "ex. Woodinville High School"),
+                                context, "ex. Woodinville High School", null),
                           ),
-                    //this button puts the school in edit mode
-                    trailing: TextButton(
-                      child: Icon(
+                    // This button is used to toggle whether the field is editable
+                    trailing: IconButton(
+                      icon: Icon(
                         (!widget.schoolEditable) ? Icons.edit : Icons.check,
                         color: Colors.black,
                         size: 20,
@@ -227,14 +227,14 @@ class _SecurityState extends State<Security> {
                       },
                     ),
                   ),
-                  //year data
+                  // Year data
                   ListTile(
                     title: const Text('Year: '),
                     subtitle: !widget.yearEditable
                         ? Text(year)
                         : TextFormField(
-                            //has to be a year greater than 1900 and before 50 years ahead of the current year
-                            //and has to have a value to continue
+                            // A value must be entered in the field
+                            // This value must be a year greater than 1900 and before 50 years ahead of the current year
                             validator: (value) {
                               if (value != null) {
                                 final int? numVal = int.tryParse(value);
@@ -250,12 +250,12 @@ class _SecurityState extends State<Security> {
                             },
                             onChanged: (value) => setState(() => year = value),
                             initialValue: year,
-                            decoration:
-                                underlineInputDecoration(context, "ex. 2025"),
+                            decoration: underlineInputDecoration(
+                                context, "ex. 2025", null),
                           ),
-                    //this button puts the year in edit mode
-                    trailing: TextButton(
-                      child: Icon(
+                    // This button is used to toggle whether the field is editable
+                    trailing: IconButton(
+                      icon: Icon(
                         (!widget.yearEditable) ? Icons.edit : Icons.check,
                         color: Colors.black,
                         size: 20,
@@ -281,21 +281,6 @@ class _SecurityState extends State<Security> {
           ],
         ),
       ),
-    );
-  }
-
-  //ui style changes
-  InputDecoration underlineInputDecoration(BuildContext context, String hint) {
-    return InputDecoration(
-      hintText: hint,
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-          width: 2,
-        ),
-      ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
     );
   }
 }
@@ -359,7 +344,7 @@ class ResetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: ElevatedButton(
+      child: CustomElevatedButton(
         onPressed: () {
           showDialog(
             context: context,
@@ -368,7 +353,7 @@ class ResetButton extends StatelessWidget {
                 title: const Text('Warning'),
                 content: const Text('Are you sure you want to clear all data?'),
                 actions: <Widget>[
-                  //this button closes clear button without clearing
+                  // This button closes the dialong without clearing data
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -376,18 +361,10 @@ class ResetButton extends StatelessWidget {
                     child: const Text('Cancel'),
                   ),
 
-                  //this button clears all data
+                  // This button clears all data
                   TextButton(
                     onPressed: () {
                       _clearSharedPreferences(context);
-                      // Navigator.of(context).pop();
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   const SnackBar(
-                      //     content: Text('Data cleared'),
-                      //   ),
-                      // );
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //     context, "/splash", (_) => false);
                     },
                     child: const Text('Reset'),
                   ),

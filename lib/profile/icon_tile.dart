@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme.dart';
 import 'modal_sheet.dart';
 
 // This class defines icon tiles eg.Athletics
@@ -38,20 +39,16 @@ class IconTile extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  modalSheet(context, title, tileIndex);
+                  modalSheet(context, title, tileIndex, theme);
                 },
                 child: Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(15),
                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
+                      shadow,
                     ],
                   ),
                   // If it is a community service tile it displays the number of hours not the icon
