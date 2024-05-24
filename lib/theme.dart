@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 final theme = ThemeData(
     // This app adopts a color scheme of bronze, light pastel blue, black, and white
     useMaterial3: true,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
     primaryColor: const Color.fromARGB(255, 218, 124, 96),
     colorScheme:
         ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(

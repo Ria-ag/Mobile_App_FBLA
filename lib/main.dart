@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'goals_analytics/goal_modal_sheet.dart';
 import 'goals_analytics/chart_tile.dart';
@@ -90,6 +91,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// This enum is used to store
+//enum _SelectedTab {home, profile, goalsAndData, settings};
+
 // This is the home page of the app
 // The user is taken here after the loading page and initial setup
 class _MyHomePageState extends State<MyHomePage> {
@@ -174,30 +178,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               : Scaffold(
                   appBar: appBar,
-                  // The bottomNavigationBar is the primary for of app navigation
-                  bottomNavigationBar: NavigationBar(
-                    onDestinationSelected: _onItemTapped,
-                    selectedIndex: _selectedIndex,
-                    destinations: const <Widget>[
-                      NavigationDestination(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.account_circle),
-                        label: 'Profile',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.checklist),
-                        label: 'Goals & Data',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                      ),
-                    ],
+                  // The bottomNavigationBar is the primary form of app navigation
+                  bottomNavigationBar: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: DotNavigationBar(
+                      enableFloatingNavBar: true,
+                      enablePaddingAnimation: false,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      marginR: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 0),
+                      paddingR: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      currentIndex: _selectedIndex,
+                      dotIndicatorColor:
+                          Theme.of(context).colorScheme.secondary,
+                      selectedItemColor:
+                          Theme.of(context).colorScheme.secondary,
+                      unselectedItemColor: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.75),
+                      backgroundColor: Colors.grey[200],
+                      splashBorderRadius: 20,
+                      onTap: _onItemTapped,
+                      items: [
+                        DotNavigationBarItem(icon: const Icon(Icons.home)),
+                        DotNavigationBarItem(
+                            icon: const Icon(Icons.account_circle)),
+                        DotNavigationBarItem(icon: const Icon(Icons.checklist)),
+                        DotNavigationBarItem(icon: const Icon(Icons.settings)),
+                      ],
+                    ),
                   ),
                   body: page,
+                  extendBody: true,
                 );
         });
   }
