@@ -131,7 +131,6 @@ InputDecoration underlineInputDecoration(
     BuildContext context, String hint, String? label,
     {bool alwaysFloat = true}) {
   return InputDecoration(
-    //border: const UnderlineInputBorder(borderSide: BorderSide(width: 3)),
     hintText: hint,
     labelText: label,
     floatingLabelBehavior: (alwaysFloat) ? FloatingLabelBehavior.always : null,

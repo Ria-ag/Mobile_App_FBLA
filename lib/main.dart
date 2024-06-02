@@ -468,21 +468,6 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-// // This is the input decoration used for all the TextFormFields on this page
-//   InputDecoration underlineInputDecoration(BuildContext context, String hint) {
-//     return InputDecoration(
-//       hintText: hint,
-//       focusedBorder: UnderlineInputBorder(
-//         borderSide: BorderSide(
-//           color: Theme.of(context).colorScheme.secondary,
-//           width: 2,
-//         ),
-//       ),
-//       focusedErrorBorder:
-//           const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-//     );
-//   }
-
 // Upon continuing, the user data is stored locally
   void save(BuildContext context, String name, String school, String year,
       bool isChecked) async {
