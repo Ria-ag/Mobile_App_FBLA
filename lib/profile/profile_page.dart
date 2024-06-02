@@ -166,11 +166,13 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Padding(
+        child: Column(
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height/3,
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -180,13 +182,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         //profile image displayed
                         context.watch<MyProfileState>().pfp == null
                             ? const Icon(Icons.supervised_user_circle,
-                                size: 150)
+                                size: 150, color:  Color.fromARGB(255, 218, 124, 96))
                             : Container(
                                 padding:
                                     const EdgeInsets.all(6), // Border width
                                 decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.background,
                                     shape: BoxShape.circle),
                                 child: ClipOval(
                                   child: SizedBox.fromSize(
@@ -237,31 +239,43 @@ class _ProfilePageState extends State<ProfilePage> {
                             maxWidth: MediaQuery.of(context).size.width - 230),
                         child: Container(
                           padding: const EdgeInsets.all(5.0),
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Column(
                             children: [
-                              Text(
-                                name,
-                                style:
-                                    Theme.of(context).textTheme.displaySmall,
-                                softWrap: true,
-                                textAlign: TextAlign.left,
+                              Row(
+                                children: [
+                                  Text(
+                                    name,
+                                    style:
+                                        Theme.of(context).textTheme.displaySmall!.copyWith(color: Colors.white),
+                                    softWrap: true,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 8),
-                              Text(
-                                school,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
-                                softWrap: true,
-                                textAlign: TextAlign.left,
+                              Row(
+                                children: [
+                                  Text(
+                                    school,
+                                    style:
+                                        Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                                    softWrap: true,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 8),
-                              Text(
-                                'Class of $year',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
-                                softWrap: true,
-                                textAlign: TextAlign.left,
+                              Row(
+                                children: [
+                                  Text(
+                                    'Class of $year',
+                                    style:
+                                        Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                                    softWrap: true,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -271,31 +285,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
-              introText,
-              //makes icon tiles be scrollable horizontally
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: displayITs,
-                ),
+            ),
+            const SizedBox(height: 30),
+            introText,
+            //makes icon tiles be scrollable horizontally
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: displayITs,
               ),
-              const SizedBox(height: 30),
-              ...displayTTs,
-              ...context.watch<MyProfileState>().widgetList,
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+            ...displayTTs,
+            ...context.watch<MyProfileState>().widgetList,
+          ],
         ),
       ),
       // This button opens up the menu to add and remove tiles
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 75, right: 7.5),
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: const Icon(Icons.add),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           onPressed: () => _dialogBuilder(context),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );

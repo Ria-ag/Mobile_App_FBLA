@@ -20,7 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Column(
         children: [
           Container(
-            color: const Color.fromARGB(255, 20, 49, 92),
+            color: Theme.of(context).colorScheme.secondary,
             height: MediaQuery.of(context).size.height/3,
             width: double.infinity,
             child: Padding(
@@ -53,6 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Text("Account and Security",
                       style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
                     ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 175),
+                      child: Icon(Icons.circle, size: 45),
+                    ),
                   ],
                 ),
               ),
@@ -74,6 +78,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       padding: const EdgeInsets.all(20.0),
                       child: Text("Terms and Conditions",
                        style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 171),
+                      child: Icon(Icons.circle, size: 45),
                     ),
                   ],
                 ),
@@ -405,6 +413,10 @@ class ResetButton extends StatelessWidget {
               child: Text('Reset Profile',
               style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
             ),
+            const Padding(
+                      padding: EdgeInsets.only(left: 246),
+                      child: Icon(Icons.circle, size: 45),
+                    ),
           ],
         ),
       ),

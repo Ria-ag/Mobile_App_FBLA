@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
             // The home page's welcome message
                 Center(
                   child: Container(
-                    color: const Color.fromARGB(255, 20, 49, 92),
+                    color: Theme.of(context).colorScheme.secondary,
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height/2,
                     child: Column(
@@ -193,10 +193,10 @@ class _HomePageState extends State<HomePage> {
                     width: 100,
                     child: CustomElevatedButton(
                       onPressed: () => createPdf(context),
-                      style: CustomElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(30),
-                      ),
+                      // style: CustomElevatedButton.styleFrom(
+                      //   shape: const CircleBorder(),
+                      //   padding: const EdgeInsets.all(30),
+                      // ),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
@@ -214,10 +214,10 @@ class _HomePageState extends State<HomePage> {
                 width: 150,
                 child: CustomElevatedButton(
                   onPressed: () => socialPdf(),
-                  style: CustomElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(30),
-                  ),
+                  // style: CustomElevatedButton.styleFrom(
+                  //   shape: const CircleBorder(),
+                  //   padding: const EdgeInsets.all(30),
+                  // ),
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(

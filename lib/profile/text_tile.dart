@@ -58,7 +58,7 @@ class TextTile extends StatelessWidget {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.primary,
                   boxShadow: [shadow],
                   borderRadius: BorderRadius.circular(15),
                 ),
