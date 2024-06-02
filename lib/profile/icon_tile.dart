@@ -28,9 +28,9 @@ class IconTile extends StatelessWidget {
               style: (title == "Community Service")
                   ? Theme.of(context)
                       .textTheme
-                      .labelMedium!
+                      .headlineMedium!
                       .apply(fontSizeFactor: 0.925)
-                  : Theme.of(context).textTheme.labelMedium,
+                  : Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),
@@ -62,20 +62,24 @@ class IconTile extends StatelessWidget {
                                 "$icon",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelLarge!
+                                    .headlineLarge!
                                     .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
                               ),
-                              Text("hours",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary))
+                              Text(
+                                "hours",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                              ),
                             ],
                           ),
                   ),

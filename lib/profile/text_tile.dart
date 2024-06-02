@@ -17,14 +17,15 @@ class TextTile extends StatelessWidget {
     List<Widget> nameSummary = [];
     List<Widget> dateSummary = [];
     for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
-      nameSummary.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 1.125),
-        child: Text(xp.name,
-            style: Theme.of(context)
-                .textTheme
-                .displaySmall!
-                .copyWith(color: Colors.white)),
-      ));
+      nameSummary.add(
+        Text(
+          xp.name,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
     }
     // Displays each experience summary in the body with its date as well
     for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
