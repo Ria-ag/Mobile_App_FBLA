@@ -164,13 +164,11 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: Theme.of(context).colorScheme.secondary,
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height/3,
-              child: Padding(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -180,13 +178,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         //profile image displayed
                         context.watch<MyProfileState>().pfp == null
                             ? const Icon(Icons.supervised_user_circle,
-                                size: 150, color:  Color.fromARGB(255, 218, 124, 96))
+                                size: 150)
                             : Container(
                                 padding:
                                     const EdgeInsets.all(6), // Border width
                                 decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.background,
+                                        Theme.of(context).colorScheme.primary,
                                     shape: BoxShape.circle),
                                 child: ClipOval(
                                   child: SizedBox.fromSize(
@@ -237,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             maxWidth: MediaQuery.of(context).size.width - 230),
                         child: Container(
                           padding: const EdgeInsets.all(5.0),
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.background,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -289,10 +287,9 @@ class _ProfilePageState extends State<ProfilePage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 75, right: 7.5),
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          onPressed: () => _dialogBuilder(context),
-          shape: const CircleBorder(),
+          backgroundColor: Theme.of(context).primaryColor,
           child: const Icon(Icons.add),
+          onPressed: () => _dialogBuilder(context),
         ),
       ),
     );
