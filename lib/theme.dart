@@ -89,23 +89,16 @@ final shadow = BoxShadow(
 // It contains the app logo and title
 final appBar = AppBar(
   automaticallyImplyLeading: false,
-  backgroundColor: Colors.white,
-  title: Row(
-    children: [
-      const Image(
-        image: AssetImage('assets/logo.png'),
-        // PLACEHOLDER ICON
-        height: 30,
-      ),
+  backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+  actions: const [
       Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: Text(
-          'Rise',
-          style: theme.textTheme.headlineLarge,
+        padding: EdgeInsets.only(right: 20, top: 10),
+        child: Image(
+          image: AssetImage('assets/logo.png'),
+          height: 50,
         ),
-      )
-    ],
-  ),
+      ),
+  ],
 );
 
 class CustomElevatedButton extends StatelessWidget {

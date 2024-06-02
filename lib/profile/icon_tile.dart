@@ -28,9 +28,9 @@ class IconTile extends StatelessWidget {
               style: (title == "Community Service")
                   ? Theme.of(context)
                       .textTheme
-                      .headlineMedium!
+                      .labelMedium!
                       .apply(fontSizeFactor: 0.925)
-                  : Theme.of(context).textTheme.headlineMedium,
+                  : Theme.of(context).textTheme.labelMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),
@@ -62,7 +62,7 @@ class IconTile extends StatelessWidget {
                                 "$icon",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .displayLarge!
+                                    .labelLarge!
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
