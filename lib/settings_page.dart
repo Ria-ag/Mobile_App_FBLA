@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 15),
                  SizedBox(
               width: MediaQuery.of(context).size.width,
               //this button opens an account and security page
@@ -46,10 +46,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     MaterialPageRoute(builder: (context) => Security()),
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Account and Security",
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text("Account and Security",
+                      style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -64,10 +68,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     MaterialPageRoute(builder: (context) => const Terms()),
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Terms and Conditions",
-                   style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text("Terms and Conditions",
+                       style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -413,10 +421,14 @@ class ResetButton extends StatelessWidget {
             },
           );
         },
-        child:Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text('Reset Profile',
-          style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+        child:Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text('Reset Profile',
+              style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 15)),
+            ),
+          ],
         ),
       ),
     );
