@@ -158,7 +158,7 @@ class _ExperienceState extends State<Experience> {
                 child: (!widget.editable)
                     ? widget._image == null
                         ? Text("No images selected",
-                            style: Theme.of(context).textTheme.bodyMedium)
+                            style: Theme.of(context).textTheme.bodyLarge)
                         : Container(
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
@@ -171,7 +171,8 @@ class _ExperienceState extends State<Experience> {
                           )
                     : Row(
                         children: [
-                          const Text("Add image:"),
+                          Text("Add image:",
+                          style: Theme.of(context).textTheme.bodyLarge),
                           const SizedBox(width: 10),
                           SizedBox(
                             width: 50,
@@ -215,8 +216,7 @@ class _ExperienceState extends State<Experience> {
                     children: [
                       Text(
                         widget.name,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
@@ -225,7 +225,7 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -259,7 +259,7 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     initialValue: widget.location,
                     //has to have a value to continue
                     validator: (value) {
@@ -279,7 +279,7 @@ class _ExperienceState extends State<Experience> {
           // Start date with a date picker
           (!widget.editable)
               ? buildRichText(context, "Start Date: ", widget.startDate,
-                  Theme.of(context).textTheme.bodyMedium)
+                  Theme.of(context).textTheme.bodyLarge)
               : TextFormField(
                   // Value necessary and the start date should be before the end date to continue
                   validator: (value) {
@@ -296,7 +296,7 @@ class _ExperienceState extends State<Experience> {
                     }
                     return null;
                   },
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyLarge,
                   controller: TextEditingController(text: widget.startDate),
                   readOnly: true, // Prevents manual editing
                   decoration: underlineInputDecoration(
@@ -322,7 +322,7 @@ class _ExperienceState extends State<Experience> {
             padding: const EdgeInsets.only(bottom: 7.5),
             child: (!widget.editable)
                 ? buildRichText(context, "End Date: ", widget.endDate,
-                    Theme.of(context).textTheme.bodyMedium)
+                    Theme.of(context).textTheme.bodyLarge)
                 : TextFormField(
                     //has to have a value to continue
                     validator: (value) {
@@ -331,7 +331,7 @@ class _ExperienceState extends State<Experience> {
                       }
                       return null;
                     },
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     controller: TextEditingController(text: widget.endDate),
                     readOnly: true,
                     decoration: underlineInputDecoration(
@@ -358,9 +358,9 @@ class _ExperienceState extends State<Experience> {
           if (widget.title == "Clubs/Organizations")
             (!widget.editable)
                 ? buildRichText(context, "Role: ", widget.role,
-                    Theme.of(context).textTheme.bodyMedium)
+                    Theme.of(context).textTheme.bodyLarge)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {

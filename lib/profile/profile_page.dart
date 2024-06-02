@@ -13,7 +13,6 @@ import 'icon_tile.dart';
 
 // This is a provider class to manage changes in the profile
 class MyProfileState extends ChangeNotifier {
-  List<Widget> widgetList = [];
   File? pfp = (prefs.getString('image') != null)
       ? File(prefs.getString('image')!)
       : null;
@@ -140,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Container(),
     ];
 
-    // Displays them only when the box is checked
+    // Tiles are displayed only when their corresponding checkbox is checked
     for (var i = 0; i < ITs.length; i++) {
       displayITs[i] =
           (context.watch<MyProfileState>().isChecked[i]) ? ITs[i] : Container();
@@ -165,11 +164,13 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Padding(
+        child: Column(
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height/3,
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -179,13 +180,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         //profile image displayed
                         context.watch<MyProfileState>().pfp == null
                             ? const Icon(Icons.supervised_user_circle,
-                                size: 150)
+                                size: 150, color:  Color.fromARGB(255, 218, 124, 96))
                             : Container(
                                 padding:
                                     const EdgeInsets.all(6), // Border width
                                 decoration: BoxDecoration(
                                     color:
-                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.background,
                                     shape: BoxShape.circle),
                                 child: ClipOval(
                                   child: SizedBox.fromSize(
@@ -200,8 +201,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         Row(
                           children: [
                             SizedBox(
-                              width: 40,
-                              height: 40,
+                              width: 45,
+                              height: 45,
                               //this button lets users pick an image from their gallery
                               child: FloatingActionButton(
                                 onPressed: () => context
@@ -214,8 +215,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             const SizedBox(width: 20, height: 20),
                             SizedBox(
-                              width: 40,
-                              height: 40,
+                              width: 45,
+                              height: 45,
                               //this button lets users take and use an image from their camera
                               child: FloatingActionButton(
                                 onPressed: () => context
@@ -236,15 +237,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             maxWidth: MediaQuery.of(context).size.width - 230),
                         child: Container(
                           padding: const EdgeInsets.all(5.0),
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 name,
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge,
+                                style: Theme.of(context).textTheme.displaySmall,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -252,7 +252,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -260,7 +259,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                                 softWrap: true,
-                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
@@ -283,7 +281,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 30),
               ...displayTTs,
-              ...context.watch<MyProfileState>().widgetList,
             ],
           ),
         ),
@@ -292,9 +289,10 @@ class _ProfilePageState extends State<ProfilePage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 75, right: 7.5),
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: const Icon(Icons.add),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           onPressed: () => _dialogBuilder(context),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );
@@ -343,7 +341,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemCount: blocks.length,
                       itemBuilder: (context, index) {
                         return CheckboxListTile(
-                          //activeColor: Theme.of(context).colorScheme.secondary,
                           title: Text(blocks[index]),
                           value:
                               context.watch<MyProfileState>().isChecked[index],

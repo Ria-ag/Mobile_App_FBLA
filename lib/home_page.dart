@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
 import 'main.dart';
 import 'profile/experience.dart';
-import 'theme.dart';
 
 // This is the home page of the app
 class HomePage extends StatefulWidget {
@@ -69,114 +68,151 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              // The home page's welcome message
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // The home page's welcome message
+            Container(
+              color: const Color.fromARGB(255, 20, 49, 92),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 3.2,
+                  ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30, top: 30, right: 30),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      child: const Image(
-                          image: AssetImage('assets/logo.png'), height: 100),
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Text(
+                      'Welcome',
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: SizedBox(
-                      width: 200,
-                      child: Text(
-                        'Welcome,\n${name.substring(0, (name.contains(" ")) ? name.indexOf(" ") : name.length)}',
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 40),
+                    padding: const EdgeInsets.only(left: 25),
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: name.substring(
+                                0,
+                                (name.contains(" "))
+                                    ? name.indexOf(" ")
+                                    : name.length),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(color: Colors.white),
+                          ),
+                          TextSpan(
+                            text: ".",
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
+                          )
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
+            ),
 
-              // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media
-              Padding(
-                padding: const EdgeInsets.only(top: 200, bottom: 10),
-                child: Text(
-                  "Share your profile with the world!",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: Colors.white),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: CustomElevatedButton(
-                  onPressed: () => createPdf(context),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "Create and share a .pdf version of the profile",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 200,
-                child: CustomElevatedButton(
-                  onPressed: () => socialPdf(),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Share profile to social media as images",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-
-              // Here, to most recently updated experience is shown
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text("Most recently updated:",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(color: Colors.white)),
-              ),
-              SizedBox(
+            // Here, to most recently updated experience is shown
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text("Highlights",
+                  style: Theme.of(context).textTheme.headlineLarge),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 35),
+              child: SizedBox(
                 width: 400,
-                child: CustomElevatedButton(
+                child: ElevatedButton(
                   onPressed: () {},
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: (recent != null)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(recent!.title),
-                                    Text(recent!.name),
-                                  ],
-                                ),
-                                Text(
-                                    "${recent!.startDate} - ${recent!.endDate}"),
-                              ])
+                              Text(
+                                recent!.title,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    recent!.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${recent!.startDate} - ${recent!.endDate}",
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
                         : const Text(
                             "Add an experience in the profile page to get started.",
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.left,
                           ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 35),
+
+            // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text("Share",
+                      style: Theme.of(context).textTheme.headlineLarge),
+                ),
+                const Spacer(flex: 2),
+                FloatingActionButton.large(
+                  onPressed: () => createPdf(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "Pdf",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                FloatingActionButton.large(
+                  onPressed: () => socialPdf(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "Image",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
+          ],
         ),
       ),
     );

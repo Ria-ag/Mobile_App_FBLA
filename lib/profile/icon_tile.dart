@@ -62,20 +62,24 @@ class IconTile extends StatelessWidget {
                                 "$icon",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .displayLarge!
+                                    .headlineLarge!
                                     .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
                               ),
-                              Text("hours",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary))
+                              Text(
+                                "hours",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                              ),
                             ],
                           ),
                   ),

@@ -16,26 +16,31 @@ final theme = ThemeData(
   // The font used is Poppins, retrieved from Google Fonts
   textTheme: TextTheme(
     displayLarge:
-        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 32),
-    displayMedium: GoogleFonts.poppins(fontSize: 20),
+        GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 100),
+    displayMedium:
+        GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 80),
     displaySmall:
-        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+        GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 30),
     headlineLarge:
-        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 24),
+        GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 30),
     headlineMedium:
-        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),
+        GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20),
     headlineSmall:
-        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
-    bodyLarge: GoogleFonts.poppins(fontSize: 16),
-    bodyMedium: GoogleFonts.poppins(fontSize: 14),
+        GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18),
+    bodyLarge: GoogleFonts.poppins(fontSize: 20),
+
+    // This fontStyle is the defauly for Text widgets
+    bodyMedium: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w300),
     bodySmall: GoogleFonts.poppins(fontSize: 12),
-    labelMedium: GoogleFonts.poppins(fontSize: 10.5),
-    labelLarge: GoogleFonts.poppins(),
+
+    // This fontStyle is the default for buttons
+    labelLarge: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w300),
   ),
 
   // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Color.fromARGB(255, 218, 124, 96),
+    shape: CircleBorder(),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: OutlinedButton.styleFrom(
@@ -43,8 +48,8 @@ final theme = ThemeData(
         borderRadius: BorderRadius.circular(15),
       ),
       minimumSize: const Size.fromHeight(50),
-      backgroundColor: const Color.fromARGB(255, 20, 49, 92),
-      foregroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 218, 124, 96),
+      foregroundColor: Colors.black,
     ),
   ),
   textButtonTheme: const TextButtonThemeData(
@@ -79,7 +84,7 @@ final theme = ThemeData(
 );
 
 final shadow = BoxShadow(
-  color: Colors.black.withOpacity(0.25),
+  color: Colors.black.withOpacity(0.3),
   offset: const Offset(0, 4),
   blurRadius: 8,
   spreadRadius: 0,
@@ -89,23 +94,16 @@ final shadow = BoxShadow(
 // It contains the app logo and title
 final appBar = AppBar(
   automaticallyImplyLeading: false,
-  backgroundColor: Colors.white,
-  title: Row(
-    children: [
-      const Image(
+  backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+  actions: const [
+    Padding(
+      padding: EdgeInsets.only(right: 20, top: 10, bottom: 10),
+      child: Image(
         image: AssetImage('assets/logo.png'),
-        // PLACEHOLDER ICON
-        height: 30,
+        height: 50,
       ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: Text(
-          'Rise',
-          style: theme.textTheme.headlineLarge,
-        ),
-      )
-    ],
-  ),
+    ),
+  ],
 );
 
 class CustomElevatedButton extends StatelessWidget {
@@ -124,7 +122,7 @@ class CustomElevatedButton extends StatelessWidget {
       ),
     );
   }
-}
+}///
 
 // This is the input decoration used by most fields in the app
 InputDecoration underlineInputDecoration(
