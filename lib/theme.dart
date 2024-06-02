@@ -3,79 +3,87 @@ import 'package:google_fonts/google_fonts.dart';
 
 // This is the theme data used throughout the app
 final theme = ThemeData(
-    // This app adopts a color scheme of bronze, light pastel blue, black, and white
-    useMaterial3: true,
-    primaryColor: const Color.fromARGB(255, 218, 124, 96),
-    colorScheme:
-        ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
-      secondary: const Color.fromARGB(255, 20, 49, 92),
-      primary: const Color.fromARGB(255, 218, 124, 96),
-      background: Colors.white,
-    ),
-    // These are the text styles in the app
-    // The primary font is Poppins, retrieved from Google Fonts
-    textTheme: TextTheme(
-        displayLarge:
-            GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 80),
-        displayMedium: GoogleFonts.poppins(fontWeight: FontWeight.w300, fontSize: 30),
-        displaySmall:
-            GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 30),
-        headlineLarge:
-            GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 30),
-        headlineMedium:
-            GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 20),
-        headlineSmall:
-            GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
-        bodyLarge: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w300),
-        bodyMedium: GoogleFonts.poppins(fontSize: 14),
-        bodySmall: GoogleFonts.poppins(fontSize: 12),
-        labelMedium: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
-        labelLarge: GoogleFonts.poppins(fontSize: 35, fontWeight: FontWeight.w600)),
+  // This app adopts a color scheme of bronze, light pastel blue, black, and white
+  useMaterial3: true,
+  visualDensity: VisualDensity.adaptivePlatformDensity,
+  primaryColor: const Color.fromARGB(255, 218, 124, 96),
+  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
+    secondary: const Color.fromARGB(255, 20, 49, 92),
+    primary: const Color.fromARGB(255, 218, 124, 96),
+    background: Colors.white,
+  ),
+  // These are the text styles in the app
+  // The font used is Poppins, retrieved from Google Fonts
+  textTheme: TextTheme(
+    displayLarge:
+        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 32),
+    displayMedium: GoogleFonts.poppins(fontSize: 20),
+    displaySmall:
+        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+    headlineLarge:
+        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 24),
+    headlineMedium:
+        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),
+    headlineSmall:
+        GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+    bodyLarge: GoogleFonts.poppins(fontSize: 16),
+    bodyMedium: GoogleFonts.poppins(fontSize: 14),
+    bodySmall: GoogleFonts.poppins(fontSize: 12),
+    labelMedium: GoogleFonts.poppins(fontSize: 10.5),
+    labelLarge: GoogleFonts.poppins(),
+  ),
 
-    // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
-    iconTheme: const IconThemeData(
-      color: Color.fromARGB(255, 20, 49, 92),
-    ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color.fromARGB(255, 218, 124, 96),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        minimumSize: const Size.fromHeight(40),
-        backgroundColor: const Color.fromARGB(255, 218, 124, 96),
-        foregroundColor: Colors.white,
-        //textStyle: const TextStyle(fontWeight: FontWeight.bold),
+  // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Color.fromARGB(255, 218, 124, 96),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
+      minimumSize: const Size.fromHeight(50),
+      backgroundColor: const Color.fromARGB(255, 20, 49, 92),
+      foregroundColor: Colors.white,
     ),
-    checkboxTheme: CheckboxThemeData(
-      fillColor:
-          MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+  ),
+  textButtonTheme: const TextButtonThemeData(
+    style: ButtonStyle(
+      iconColor: MaterialStatePropertyAll(Colors.black),
+    ),
+  ),
+  iconButtonTheme: const IconButtonThemeData(),
+  iconTheme: const IconThemeData(
+    color: Color.fromARGB(255, 20, 49, 92),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle:
+        TextStyle(fontFamily: GoogleFonts.poppins().fontFamily, fontSize: 13),
+  ),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color.fromARGB(255, 20, 49, 92),
+  ),
+  dropdownMenuTheme: DropdownMenuThemeData(
+    textStyle: GoogleFonts.poppins(fontSize: 14),
+  ),
+  checkboxTheme: CheckboxThemeData(
+    fillColor: MaterialStateProperty.resolveWith<Color>(
+      (Set<MaterialState> states) {
         if (states.contains(MaterialState.selected)) {
-          return const Color(0xFF636363); // Bismark when selected
+          return const Color.fromARGB(255, 218, 124, 96);
         }
         return Colors.white;
-      }),
+      },
     ),
-    navigationBarTheme: const NavigationBarThemeData(
-      surfaceTintColor: Color.fromARGB(255, 218, 124, 96),
-      indicatorColor: Color.fromARGB(190, 218, 124, 96),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      hintStyle:
-          TextStyle(fontFamily: GoogleFonts.poppins().fontFamily, fontSize: 13),
-    ),
-    textButtonTheme: const TextButtonThemeData(
-      style: ButtonStyle(
-        iconColor: MaterialStatePropertyAll(Colors.black),
-      ),
-    ),
-    snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color.fromARGB(255, 20, 49, 92)),
-    dropdownMenuTheme:
-        DropdownMenuThemeData(textStyle: GoogleFonts.poppins(fontSize: 14)));
+  ),
+);
+
+final shadow = BoxShadow(
+  color: Colors.black.withOpacity(0.25),
+  offset: const Offset(0, 4),
+  blurRadius: 8,
+  spreadRadius: 0,
+);
 
 // This is the app header bar used throughout the app
 // It contains the app logo and title
@@ -92,6 +100,67 @@ final appBar = AppBar(
       ),
   ],
 );
+
+class CustomElevatedButton extends StatelessWidget {
+  const CustomElevatedButton(
+      {super.key, required this.child, required this.onPressed});
+  final Widget child;
+  final Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(boxShadow: [shadow]),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: child,
+      ),
+    );
+  }
+}
+
+// This is the input decoration used by most fields in the app
+InputDecoration underlineInputDecoration(
+    BuildContext context, String hint, String? label,
+    {bool alwaysFloat = true}) {
+  return InputDecoration(
+    hintText: hint,
+    labelText: label,
+    floatingLabelBehavior: (alwaysFloat) ? FloatingLabelBehavior.always : null,
+    labelStyle: MaterialStateTextStyle.resolveWith((states) {
+      final Color color;
+      color =
+          (states.contains(MaterialState.error)) ? Colors.red : Colors.black;
+      return TextStyle(color: color);
+    }),
+    floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+      final Color color;
+      if (states.contains(MaterialState.focused)) {
+        color = (states.contains(MaterialState.error)
+            ? Colors.red
+            : Theme.of(context).colorScheme.secondary);
+      } else {
+        color =
+            (states.contains(MaterialState.error)) ? Colors.red : Colors.black;
+      }
+      return TextStyle(color: color, height: 0.5);
+    }),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).colorScheme.secondary,
+        width: 1.5,
+      ),
+    ),
+    enabledBorder: UnderlineInputBorder(
+      borderSide:
+          BorderSide(color: (alwaysFloat) ? Colors.transparent : Colors.black),
+    ),
+    errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.5)),
+    focusedErrorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.5)),
+  );
+}
 
 // These are the terms and conditions of the app, formatted with RichText
 final termsConditions = RichText(
@@ -177,3 +246,10 @@ final termsConditions = RichText(
     ],
   ),
 );
+
+noEmptyField(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Field cannot be empty";
+  }
+  return null;
+}

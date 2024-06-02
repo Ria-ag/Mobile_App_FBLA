@@ -44,6 +44,7 @@ dependencies:
   fl_chart: ^0.67.0
   share_plus: ^9.0.0
   pdfx: ^2.6.0
+  dot_navigation_bar: ^1.0.2
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import "package:mobileapp/main.dart";
-import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
+import "../main.dart";
+import '../theme.dart';
 
 // This is a provider class to manage changes in experiences
 class MyExperiences extends ChangeNotifier {
@@ -143,14 +144,8 @@ class _ExperienceState extends State<Experience> {
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 2,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [shadow],
         ),
         child: Form(
           key: widget._formKey,
@@ -509,13 +504,14 @@ class _ExperienceState extends State<Experience> {
         ],
       ),
       trailing: SizedBox(
-        width: 145,
+        width: 85,
         height: 175,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // This button puts all the values in edit mode where you can change and update them
-            TextButton(
+            IconButton(
+              style: theme.iconButtonTheme.style,
               onPressed: (!widget.editable)
                   ? () => setState(() {
                         widget.editable = true;
@@ -540,50 +536,25 @@ class _ExperienceState extends State<Experience> {
                       });
                     },
               // Changes to check icon when you want to end edit mode
-              child: Icon(
+              icon: Icon(
                 (!widget.editable) ? Icons.edit : Icons.check,
                 size: 20,
               ),
             ),
             // This button lets you remove the experience
-            TextButton(
+            IconButton(
+              style: theme.iconButtonTheme.style,
               onPressed: () {
                 context
                     .read<MyExperiences>()
                     .remove(widget.xpID, widget.tileIndex);
                 context.read<MyExperiences>().saveXP(widget.tileIndex);
               },
-              child: const Icon(Icons.remove, size: 20),
+              icon: const Icon(Icons.remove, size: 20),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  // The widget decoration for all text fields in this class
-  InputDecoration underlineInputDecoration(
-      BuildContext context, String hint, String label) {
-    return InputDecoration(
-      hintText: hint,
-      labelText: label,
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-      floatingLabelStyle:
-          MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
-        final Color color = states.contains(MaterialState.focused)
-            ? (states.contains(MaterialState.error)
-                ? Colors.red
-                : Theme.of(context).colorScheme.secondary)
-            : Colors.black;
-        return TextStyle(color: color);
-      }),
     );
   }
 

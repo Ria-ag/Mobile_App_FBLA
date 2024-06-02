@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme.dart';
 import 'goal_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,10 @@ class MyGoals extends ChangeNotifier {
   List<double> numberOfItems = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
   double sum = 0.0;
 
+  GoalTile findGoal(String title) {
+    return goals.firstWhere((goal) => goal.title == title);
+  }
+
   // This method takes a title and adds a new goal tile to the list
   void add(String title) {
     goals.add(GoalTile(title: title));
@@ -30,29 +35,28 @@ class MyGoals extends ChangeNotifier {
 
   // This method takes a title and removes that goal tile from the list
   void remove(String title) {
-    goals.remove(goals.firstWhere((goal) => goal.title == title));
+    goals.remove(findGoal(title));
     notifyListeners();
   }
 
   // This method takes a title and calculates how much progress that goal has made
   // Progress is defined by completed/total
   double calculateProgress(title) {
-    if (goals.firstWhere((goal) => goal.title == title).totalTasks == 0) {
+    if (findGoal(title).totalTasks == 0) {
       return 0.0;
     }
-    return goals.firstWhere((goal) => goal.title == title).completedTasks /
-        goals.firstWhere((goal) => goal.title == title).totalTasks;
+    return findGoal(title).completedTasks / findGoal(title).totalTasks;
   }
 
   // This method takes a title and adds to the total number of tasks
   void addTotalTasks(title) {
-    goals.firstWhere((goal) => goal.title == title).totalTasks++;
+    findGoal(title).totalTasks++;
     notifyListeners();
   }
 
   // This method takes a title and addes to the completed tasks
   void addCompletedTasks(title) {
-    goals.firstWhere((goal) => goal.title == title).completedTasks++;
+    findGoal(title).completedTasks++;
     totalCompletedTasks++;
     done = totalCompletedTasks.toString();
     notifyListeners();
@@ -109,7 +113,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
         height: MediaQuery.of(context).size.height - 50,
         width: MediaQuery.of(context).size.width - 15,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
@@ -120,7 +124,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       style: Theme.of(context).textTheme.headlineSmall),
                   const Spacer(),
                   // This button makes the data editable
-                  TextButton(
+                  IconButton(
                     onPressed: () {
                       !editable
                           ? setState(() {
@@ -130,14 +134,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               editable = false;
                             });
                     },
-                    child: Icon(
+                    icon: Icon(
                       (!editable) ? Icons.edit : Icons.check,
                       size: 20,
                     ),
                   ),
                   // This button closes the modal sheet
-                  TextButton(
-                      child: const Icon(
+                  IconButton(
+                      icon: const Icon(
                         Icons.cancel,
                         color: Colors.red,
                         size: 20,
@@ -147,7 +151,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       }),
                 ],
               ),
-              // Catetory is a dropdown menu to pick from in edit mode
+              // Users can pick a category using a dropdown menu
               !editable
                   ? buildRichText(
                       context,
@@ -161,9 +165,11 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 10),
                         Text("Category",
-                            style: Theme.of(context).textTheme.bodyMedium),
+                            style: Theme.of(context).textTheme.bodySmall),
                         DropdownButton<String>(
+                          style: theme.dropdownMenuTheme.textStyle,
                           value: context
                               .read<MyGoals>()
                               .goals
@@ -306,14 +312,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 125,
-                    //input field to add tasks
+                    // Input field to add tasks
                     child: TextField(
                       controller: taskController,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter Task',
-                        hintText: 'ex. Complete draft of business report',
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
+                      decoration: underlineInputDecoration(
+                        alwaysFloat: false,
+                        context,
+                        'ex. Complete draft of business report',
+                        'Enter Task',
                       ),
                       onSubmitted: (value) {
                         _addTaskAndUpdateList(value, context);
@@ -409,33 +415,6 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   String formatDate(String date) {
     List<String> parts = date.split('-');
     return '${parts[1]}/${parts[2]}/${parts[0]}';
-  }
-
-  // UI style changes
-  InputDecoration underlineInputDecoration(
-      BuildContext context, String hint, String label,
-      {String? errorText}) {
-    return InputDecoration(
-      hintText: hint,
-      labelText: label,
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-      floatingLabelStyle:
-          MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
-        final Color color = states.contains(MaterialState.focused)
-            ? (states.contains(MaterialState.error)
-                ? Colors.red
-                : Theme.of(context).colorScheme.secondary)
-            : Colors.black;
-        return TextStyle(color: color);
-      }),
-    );
   }
 }
 

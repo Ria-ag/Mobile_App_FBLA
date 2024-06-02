@@ -1,14 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'experience.dart';
-import 'icon_tile.dart';
-import 'package:mobileapp/main.dart';
-import 'text_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import '../main.dart';
+import '../theme.dart';
+import 'text_tile.dart';
+import 'experience.dart';
+import 'icon_tile.dart';
 
 // This is a provider class to manage changes in the profile
 class MyProfileState extends ChangeNotifier {
@@ -288,16 +289,19 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      // This button is what lets you control what is checked
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(Icons.add),
-        onPressed: () => _dialogBuilder(context),
+      // This button opens up the menu to add and remove tiles
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 75, right: 7.5),
+        child: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: const Icon(Icons.add),
+          onPressed: () => _dialogBuilder(context),
+        ),
       ),
     );
   }
 
-  // This method displays a pop up with the tiles in a checklist that are allowed to be changed
+  // This method displays a pop up with a checklist to add and remove tiles
   Future<void> _dialogBuilder(BuildContext context) {
     List<String> blocks = [
       "Athletics",
@@ -322,21 +326,16 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 15, 165),
+                padding: const EdgeInsets.fromLTRB(0, 0, 25, 165),
                 child: Container(
                   alignment: Alignment.center,
                   width: 300,
                   padding: const EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    borderRadius: BorderRadius.circular(5),
                     color: Theme.of(context).dialogBackgroundColor,
                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        offset: const Offset(0, 4),
-                        blurRadius: 8,
-                        spreadRadius: 0,
-                      )
+                      shadow,
                     ],
                   ),
                   child: Material(
@@ -345,7 +344,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemCount: blocks.length,
                       itemBuilder: (context, index) {
                         return CheckboxListTile(
-                          activeColor: Theme.of(context).colorScheme.secondary,
+                          //activeColor: Theme.of(context).colorScheme.secondary,
                           title: Text(blocks[index]),
                           value:
                               context.watch<MyProfileState>().isChecked[index],

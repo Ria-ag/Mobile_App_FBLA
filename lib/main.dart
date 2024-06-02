@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'goals_analytics/goal_modal_sheet.dart';
-import 'goals_analytics/chart_tile.dart';
-import 'home_page.dart';
-import 'profile/experience.dart';
-import 'goals_analytics/goals_analytics_page.dart';
-import 'profile/profile_page.dart';
-import 'settings_page.dart';
-import 'theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'goals_analytics/goal_modal_sheet.dart';
+import 'goals_analytics/chart_tile.dart';
+import 'goals_analytics/goals_analytics_page.dart';
+import 'profile/experience.dart';
+import 'profile/profile_page.dart';
+import 'home_page.dart';
+import 'settings_page.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const RestartWidget(child: MyApp()));
@@ -89,6 +90,9 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
+// This enum is used to store
+//enum _SelectedTab {home, profile, goalsAndData, settings};
 
 // This is the home page of the app
 // The user is taken here after the loading page and initial setup
@@ -174,30 +178,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               : Scaffold(
                   appBar: appBar,
-                  // The bottomNavigationBar is the primary for of app navigation
-                  bottomNavigationBar: NavigationBar(
-                    onDestinationSelected: _onItemTapped,
-                    selectedIndex: _selectedIndex,
-                    destinations: const <Widget>[
-                      NavigationDestination(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.account_circle),
-                        label: 'Profile',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.checklist),
-                        label: 'Goals & Data',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                      ),
-                    ],
+                  // The bottomNavigationBar is the primary form of app navigation
+                  bottomNavigationBar: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: DotNavigationBar(
+                      enableFloatingNavBar: true,
+                      enablePaddingAnimation: false,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      marginR: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 0),
+                      paddingR: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      currentIndex: _selectedIndex,
+                      dotIndicatorColor:
+                          Theme.of(context).colorScheme.secondary,
+                      selectedItemColor:
+                          Theme.of(context).colorScheme.secondary,
+                      unselectedItemColor: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.75),
+                      backgroundColor: Colors.grey[200],
+                      borderRadius: 15,
+                      splashBorderRadius: 15,
+                      onTap: _onItemTapped,
+                      items: [
+                        DotNavigationBarItem(icon: const Icon(Icons.home)),
+                        DotNavigationBarItem(
+                            icon: const Icon(Icons.account_circle)),
+                        DotNavigationBarItem(icon: const Icon(Icons.checklist)),
+                        DotNavigationBarItem(icon: const Icon(Icons.settings)),
+                      ],
+                    ),
                   ),
                   body: page,
+                  extendBody: true,
                 );
         });
   }
@@ -315,17 +330,12 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    return null;
-                  },
+                  validator: (value) => noEmptyField(value),
                   onChanged: (value) => setState(() {
                     name = value;
                   }),
                   decoration: underlineInputDecoration(
-                      context, "ex. Alexander T. Graham"),
+                      context, "ex. Alexander T. Graham", null),
                   initialValue: name,
                 ),
                 const Padding(
@@ -335,16 +345,11 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    return null;
-                  },
+                  validator: (value) => noEmptyField(value),
                   onChanged: (value) => setState(() => school = value),
                   initialValue: school,
                   decoration: underlineInputDecoration(
-                      context, "ex. Woodinville High School"),
+                      context, "ex. Woodinville High School", null),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
@@ -368,7 +373,8 @@ class _IntroScreenState extends State<IntroScreen> {
                   },
                   onChanged: (value) => setState(() => year = value),
                   initialValue: year,
-                  decoration: underlineInputDecoration(context, "ex. 2025"),
+                  decoration:
+                      underlineInputDecoration(context, "ex. 2025", null),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
@@ -378,7 +384,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
                 // The user is also required to accept the terms and conditions
                 // This can be seen in a dialog box
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
                     showTermsAndConditionsDialog(context);
                   },
@@ -401,7 +407,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 // The app will not continue until the user meets all requirements
                 SizedBox(
                   width: 20,
-                  child: FloatingActionButton(
+                  child: CustomElevatedButton(
                     onPressed: () {
                       setState(() {
                         save(context, name, school, year, isChecked);
@@ -459,21 +465,6 @@ class _IntroScreenState extends State<IntroScreen> {
           ],
         );
       },
-    );
-  }
-
-// This is the input decoration used for all the TextFormFields on this page
-  InputDecoration underlineInputDecoration(BuildContext context, String hint) {
-    return InputDecoration(
-      hintText: hint,
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-          width: 2,
-        ),
-      ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
     );
   }
 

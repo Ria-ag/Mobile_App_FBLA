@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme.dart';
 import 'chart_tile.dart';
 
 // This is the modal sheet for displaying the chart editor
@@ -38,8 +39,8 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                         Text(title,
                             style: Theme.of(context).textTheme.headlineSmall),
                         const Spacer(),
-                        TextButton(
-                            child: const Icon(
+                        IconButton(
+                            icon: const Icon(
                               Icons.cancel,
                               color: Colors.red,
                               size: 20,
@@ -115,32 +116,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
 }
 
 // This is the text field decoration used throughout the app
-InputDecoration underlineInputDecoration(
-    BuildContext context, String hint, String label) {
-  return InputDecoration(
-    hintText: hint,
-    labelText: label,
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.secondary,
-      ),
-    ),
-    enabledBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.transparent)),
-    focusedErrorBorder:
-        const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-    floatingLabelStyle:
-        MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
-      final Color color = states.contains(MaterialState.focused)
-          ? (states.contains(MaterialState.error)
-              ? Colors.red
-              : Theme.of(context).colorScheme.secondary)
-          : Colors.black;
-      return TextStyle(color: color);
-    }),
-  );
-}
 
 // This widget allows users to edit the points on a certain line chart
 // ignore: must_be_immutable
@@ -228,45 +203,53 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SizedBox(
-                      width: 150,
-                      height: 30,
-                      child: FloatingActionButton(
-                        heroTag: "button 1",
+                      width: 225,
+                      height: 50,
+                      child: CustomElevatedButton(
                         onPressed: () => addRow(),
-                        child: const Text('Add Row'),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.add),
+                            Text("Add Row"),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      width: 150,
-                      height: 30,
-                      child: FloatingActionButton(
-                        heroTag: "button 2",
-                        child: const Text("Remove Last Row"),
+                      width: 225,
+                      height: 50,
+                      child: CustomElevatedButton(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.remove),
+                            Text("Remove Last Row"),
+                          ],
+                        ),
                         onPressed: () => removeRow(),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    SizedBox(
+                      width: 225,
+                      height: 50,
+                      child: CustomElevatedButton(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.save),
+                            Text("Save Chart"),
+                          ],
+                        ),
+                        onPressed: () =>
+                            readChartState.updateChartData(rows, index),
+                      ),
+                    ),
                   ],
                 ),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.secondary),
-                ),
-                onPressed: () => readChartState.updateChartData(rows, index),
-                child: Text(
-                  'Save Chart',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge!
-                      .copyWith(color: Colors.white),
-                ),
-              ),
             ),
           ],
         ),
@@ -274,16 +257,24 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
     );
   }
 
-  // This is the decoration used by text field of this class
+  // This is the decoration used by date cells
   InputDecoration underlineInputDecoration(BuildContext context) {
-    return InputDecoration(
-      focusedBorder: UnderlineInputBorder(
+    return const InputDecoration(
+      border: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Colors.transparent,
         ),
       ),
-      focusedErrorBorder:
-          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.transparent,
+        ),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.transparent,
+        ),
+      ),
     );
   }
 }

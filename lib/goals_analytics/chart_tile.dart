@@ -96,16 +96,16 @@ class _ChartTileState extends State<ChartTile> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Spacer(),
-            TextButton(
+            IconButton(
               onPressed: () =>
                   chartModalSheet(context, widget.chartName, widget.chartID),
-              child: const Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
             ),
-            TextButton(
+            IconButton(
               onPressed: () {
                 context.read<ChartDataState>().removeChart(widget.chartID);
               },
-              child: const Icon(Icons.remove),
+              icon: const Icon(Icons.remove),
             )
           ],
         ),
