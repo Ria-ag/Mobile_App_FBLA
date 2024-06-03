@@ -17,92 +17,63 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
           Container(
               color: Theme.of(context).colorScheme.secondary,
               height: MediaQuery.of(context).size.height / 3,
               width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, top: 150),
-                child: Text("Settings",
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.white)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, bottom: 50),
+                    child: Text("Settings",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(color: Colors.white)),
+                  ),
+                ],
               )),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 15),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-
-                  // This button opens an account and security page
-                  child: CustomElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Security()),
-                      );
-                    },
-                    stadiumBorder: true,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text("Account and Security",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineLarge!
-                                  .copyWith(fontSize: 15)),
-                        ),
-                      ],
+          Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3.75,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    SettingsElevatedButton(
+                      text: "Account and Security",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Security()),
+                        );
+                      },
                     ),
-
-                    const Padding(
-                      padding: EdgeInsets.only(left: 175),
-                      child: Icon(Icons.circle, size: 45),
+                    const SizedBox(height: 20),
+                    SettingsElevatedButton(
+                      text: "Terms and Conditions",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Terms()),
+                        );
+                      },
                     ),
+                    const SizedBox(height: 20),
+                    // This is where the reset button is
+                    const Center(child: ResetButton()),
                   ],
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  // This button opens a terms and conditions page
-                  child: CustomElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Terms()),
-                      );
-                    },
-                    stadiumBorder: true,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text("Terms and Conditions",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineLarge!
-                                  .copyWith(fontSize: 15)),
-                        ),
-                      ],
-                    ),
-
-                    const Padding(
-                      padding: EdgeInsets.only(left: 171),
-                      child: Icon(Icons.circle, size: 45),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // This is where the reset button is
-                const Center(child: ResetButton()),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -329,7 +300,7 @@ class _SecurityState extends State<Security> {
   }
 }
 
-//this class builds the terms page to review the terms the user accepted
+// This class builds the terms page to review the terms the user accepted
 class Terms extends StatelessWidget {
   const Terms({super.key});
 
@@ -373,7 +344,7 @@ class Terms extends StatelessWidget {
   }
 }
 
-//this class builds a reset button to clear all data from shared preferences
+// This class builds a reset button to clear all data from shared preferences
 class ResetButton extends StatelessWidget {
   const ResetButton({super.key});
 
@@ -386,52 +357,77 @@ class ResetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: CustomElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Warning'),
-                content: const Text('Are you sure you want to clear all data?'),
-                actions: <Widget>[
-                  // This button closes the dialong without clearing data
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Cancel'),
-                  ),
+    return SettingsElevatedButton(
+      text: "Reset Profile",
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Warning'),
+              content: const Text('Are you sure you want to clear all data?'),
+              actions: <Widget>[
+                // This button closes the dialong without clearing data
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
 
-                  // This button clears all data
-                  TextButton(
-                    onPressed: () {
-                      _clearSharedPreferences(context);
-                    },
-                    child: const Text('Reset'),
+                // This button clears all data
+                TextButton(
+                  onPressed: () {
+                    _clearSharedPreferences(context);
+                  },
+                  child: const Text('Reset'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class SettingsElevatedButton extends StatelessWidget {
+  const SettingsElevatedButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+  final String text;
+  final dynamic Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomElevatedButton(
+      onPressed: onPressed,
+      stadiumBorder: true,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 200,
+              child:
+                  Text(text, style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            const SizedBox(
+              width: 130,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    Icons.circle,
+                    size: 80,
+                    color: Colors.white,
                   ),
                 ],
-              );
-            },
-          );
-        },
-        stadiumBorder: true,
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('Reset Profile',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge!
-                      .copyWith(fontSize: 15)),
+              ),
             ),
-            const Padding(
-                      padding: EdgeInsets.only(left: 246),
-                      child: Icon(Icons.circle, size: 45),
-                    ),
           ],
         ),
       ),

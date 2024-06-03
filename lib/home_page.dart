@@ -73,15 +73,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             // The home page's welcome message
             Container(
-              color: const Color.fromARGB(255, 20, 49, 92),
+              color: Theme.of(context).colorScheme.secondary,
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 2,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 3.2,
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 25),
                     child: Text(
@@ -93,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 25),
+                    padding: const EdgeInsets.only(left: 25, bottom: 20),
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
@@ -185,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text("Share",
                       style: Theme.of(context).textTheme.headlineLarge),
                 ),
-                const Spacer(flex: 2),
+                const Spacer(),
                 FloatingActionButton.large(
                   onPressed: () => createPdf(context),
                   child: const Padding(
