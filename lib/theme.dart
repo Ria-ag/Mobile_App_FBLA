@@ -18,7 +18,7 @@ final theme = ThemeData(
     displayLarge:
         GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 100),
     displayMedium:
-        GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 80),
+        GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 70),
     displaySmall:
         GoogleFonts.poppins(fontWeight: FontWeight.w100, fontSize: 30),
     headlineLarge:
@@ -85,8 +85,8 @@ final theme = ThemeData(
 
 final shadow = BoxShadow(
   color: Colors.black.withOpacity(0.3),
-  offset: const Offset(0, 4),
-  blurRadius: 8,
+  offset: const Offset(4, 4),
+  blurRadius: 5,
   spreadRadius: 0,
 );
 
@@ -107,17 +107,28 @@ final appBar = AppBar(
 );
 
 class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton(
-      {super.key, required this.child, required this.onPressed});
+  const CustomElevatedButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.stadiumBorder = false,
+  });
   final Widget child;
   final Function() onPressed;
+  final bool stadiumBorder;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(boxShadow: [shadow]),
+      decoration: BoxDecoration(
+        boxShadow: [shadow],
+        borderRadius: BorderRadius.circular((stadiumBorder) ? 1000 : 15),
+      ),
       child: ElevatedButton(
         onPressed: onPressed,
+        style: (stadiumBorder)
+            ? ElevatedButton.styleFrom(shape: const StadiumBorder())
+            : null,
         child: child,
       ),
     );
