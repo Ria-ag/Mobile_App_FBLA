@@ -20,7 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Column(
         children: [
           Container(
-              color: const Color.fromARGB(255, 20, 49, 92),
+              color: Theme.of(context).colorScheme.secondary,
               height: MediaQuery.of(context).size.height / 3,
               width: double.infinity,
               child: Padding(
@@ -60,7 +60,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
-                  ),
+
+                    const Padding(
+                      padding: EdgeInsets.only(left: 175),
+                      child: Icon(Icons.circle, size: 45),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -86,7 +91,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
-                  ),
+
+                    const Padding(
+                      padding: EdgeInsets.only(left: 171),
+                      child: Icon(Icons.circle, size: 45),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 // This is where the reset button is
@@ -418,6 +428,10 @@ class ResetButton extends StatelessWidget {
                       .headlineLarge!
                       .copyWith(fontSize: 15)),
             ),
+            const Padding(
+                      padding: EdgeInsets.only(left: 246),
+                      child: Icon(Icons.circle, size: 45),
+                    ),
           ],
         ),
       ),
