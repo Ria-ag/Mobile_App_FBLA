@@ -11,11 +11,11 @@ import '../theme.dart';
 
 // This is a provider class to manage changes in experiences
 class MyExperiences extends ChangeNotifier {
-  //experiences are stored in a list which is stored in a list of each list of experiences per tile type
+  // Experiences are stored in a list which is stored in a list of each list of experiences per tile type
   List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
   double serviceHrs = 0;
 
-  //this method adds an experience to the list and takes the title and type of tile
+  // This method adds an experience to the list and takes the title and type of tile
   void add(String title, int tileIndex) {
     xpList[tileIndex].add(Experience(
         title: title,
@@ -24,14 +24,14 @@ class MyExperiences extends ChangeNotifier {
     notifyListeners();
   }
 
-  //this method removes experiences from the list and takes the id and type of tile
+  // This method removes experiences from the list and takes the id and type of tile
   void remove(int id, int tileIndex) {
     xpList[tileIndex]
         .remove(xpList[tileIndex].firstWhere((xp) => xp.xpID == id));
     notifyListeners();
   }
 
-  //this method saves every experience in the list to the shared preferences as a json string
+  // This method saves every experience in the list to the shared preferences as a json string
   void saveXP(int tileIndex) async {
     List<String> xps = [];
     for (Experience xp in xpList[tileIndex]) {
@@ -44,7 +44,7 @@ class MyExperiences extends ChangeNotifier {
     await prefs.setStringList('$tileIndex', xps);
   }
 
-  //this method adds up all the hours of each experience in the community service tile
+  // This method adds up all the hours of each experience in the community service tile
   void addHrs() {
     double totalHrs = 0;
     for (Experience xp in xpList[2]) {
@@ -141,10 +141,13 @@ class _ExperienceState extends State<Experience> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7.5),
-      child: Form(
-        key: widget._formKey,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [shadow],
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             xpListTile(context),
             Padding(
@@ -153,7 +156,6 @@ class _ExperienceState extends State<Experience> {
               child: (!widget.editable)
                   ? widget._image == null
                       ? Text("No images selected",
-                          style: Theme.of(context).textTheme.bodyMedium)
                       : Container(
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
@@ -167,7 +169,6 @@ class _ExperienceState extends State<Experience> {
                   : Row(
                       children: [
                         Text("Add image:",
-                        style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(width: 10),
                         SizedBox(
                           width: 50,
@@ -221,14 +222,8 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    //has to have a value to continue
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a value to continue
+                    validator: (value) => noEmptyField(value),
                     initialValue: widget.name,
                     onChanged: (value) {
                       setState(() {
@@ -257,13 +252,8 @@ class _ExperienceState extends State<Experience> {
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.location,
-                    //has to have a value to continue
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a value to continue
+                    validator: (value) => noEmptyField(value),
                     onChanged: (value) {
                       setState(() {
                         widget.location = value;
@@ -320,14 +310,8 @@ class _ExperienceState extends State<Experience> {
                 ? buildRichText(context, "End Date: ", widget.endDate,
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
-                    //has to have a value to continue
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    //Must contain a value to continue
+                    validator: (value) => noEmptyField(value),
                     controller: TextEditingController(text: widget.endDate),
                     readOnly: true,
                     decoration: underlineInputDecoration(
@@ -357,13 +341,8 @@ class _ExperienceState extends State<Experience> {
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
-                    //has to have a value to continue
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a value to continue
+                    validator: (value) => noEmptyField(value),
                     initialValue: widget.role,
                     onChanged: (value) {
                       setState(() {
@@ -409,7 +388,7 @@ class _ExperienceState extends State<Experience> {
                       "ex. 10",
                       "Hours",
                     ),
-                    // Must be a postive number and has to have a value to continue
+                    // Must contain a postive number to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -429,7 +408,7 @@ class _ExperienceState extends State<Experience> {
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
-                    //has to be non-negative and has to have a value to continue
+                    // MUst contain a non-negative a value to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -457,13 +436,8 @@ class _ExperienceState extends State<Experience> {
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
-                    //has to have a value to continue
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a value to continue
+                    validator: (value) => noEmptyField(value),
                     initialValue: widget.grade,
                     onChanged: (value) {
                       setState(() {
@@ -594,7 +568,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
-  // This method takes a date and formates it into month day and year
+  // This method takes a date and formates it into month, day, and year
   String formatDate(String date) {
     List<String> parts = date.split('-');
     return '${parts[1]}/${parts[2]}/${parts[0]}';

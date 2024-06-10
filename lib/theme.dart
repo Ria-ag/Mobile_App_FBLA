@@ -39,7 +39,7 @@ final theme = ThemeData(
 
   // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Color.fromARGB(255, 218, 124, 96),
+    backgroundColor: Color.fromARGB(255, 20, 49, 92),
     shape: CircleBorder(),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -93,6 +93,7 @@ final shadow = BoxShadow(
 // This is the app header bar used throughout the app
 // It contains the app logo and title
 final appBar = AppBar(
+  scrolledUnderElevation: 0,
   automaticallyImplyLeading: false,
   backgroundColor: const Color.fromARGB(255, 20, 49, 92),
   actions: const [
@@ -136,7 +137,9 @@ class CustomElevatedButton extends StatelessWidget {
       ),
     );
   }
-}///
+}
+
+///
 
 // This is the input decoration used by most fields in the app
 InputDecoration underlineInputDecoration(

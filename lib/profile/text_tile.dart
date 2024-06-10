@@ -57,6 +57,7 @@ class TextTile extends StatelessWidget {
                 modalSheet(context, title, tileIndex, theme);
               },
               child: Container(
+                constraints: const BoxConstraints(minHeight: 40),
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
