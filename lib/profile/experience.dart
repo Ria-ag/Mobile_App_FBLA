@@ -156,7 +156,6 @@ class _ExperienceState extends State<Experience> {
               child: (!widget.editable)
                   ? widget._image == null
                       ? Text("No images selected",
-                          style: Theme.of(context).textTheme.bodyLarge)
                       : Container(
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
@@ -170,7 +169,6 @@ class _ExperienceState extends State<Experience> {
                   : Row(
                       children: [
                         Text("Add image:",
-                            style: Theme.of(context).textTheme.bodyLarge),
                         const SizedBox(width: 10),
                         SizedBox(
                           width: 50,
@@ -213,17 +211,18 @@ class _ExperienceState extends State<Experience> {
                     children: [
                       Text(
                         widget.name,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor),
                       ),
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
                         thickness: 2,
+                        endIndent: MediaQuery.of(context).size.width/4,
                       ),
+                      const SizedBox(height: 10),
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    // Has to have a value to continue
+                    // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     initialValue: widget.name,
                     onChanged: (value) {
@@ -251,9 +250,9 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.location,
-                    //has to have a value to continue
+                    // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     onChanged: (value) {
                       setState(() {
@@ -266,7 +265,7 @@ class _ExperienceState extends State<Experience> {
           // Start date with a date picker
           (!widget.editable)
               ? buildRichText(context, "Start Date: ", widget.startDate,
-                  Theme.of(context).textTheme.bodyLarge)
+                  Theme.of(context).textTheme.bodyMedium)
               : TextFormField(
                   // Value necessary and the start date should be before the end date to continue
                   validator: (value) {
@@ -283,7 +282,7 @@ class _ExperienceState extends State<Experience> {
                     }
                     return null;
                   },
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: TextEditingController(text: widget.startDate),
                   readOnly: true, // Prevents manual editing
                   decoration: underlineInputDecoration(
@@ -309,11 +308,10 @@ class _ExperienceState extends State<Experience> {
             padding: const EdgeInsets.only(bottom: 7.5),
             child: (!widget.editable)
                 ? buildRichText(context, "End Date: ", widget.endDate,
-                    Theme.of(context).textTheme.bodyLarge)
+                    Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
-                    //has to have a value to continue
+                    //Must contain a value to continue
                     validator: (value) => noEmptyField(value),
-                    style: Theme.of(context).textTheme.bodyLarge,
                     controller: TextEditingController(text: widget.endDate),
                     readOnly: true,
                     decoration: underlineInputDecoration(
@@ -340,10 +338,10 @@ class _ExperienceState extends State<Experience> {
           if (widget.title == "Clubs/Organizations")
             (!widget.editable)
                 ? buildRichText(context, "Role: ", widget.role,
-                    Theme.of(context).textTheme.bodyLarge)
+                    Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    //has to have a value to continue
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     initialValue: widget.role,
                     onChanged: (value) {
@@ -390,7 +388,7 @@ class _ExperienceState extends State<Experience> {
                       "ex. 10",
                       "Hours",
                     ),
-                    // Must be a postive number and has to have a value to continue
+                    // Must contain a postive number to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -410,7 +408,7 @@ class _ExperienceState extends State<Experience> {
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
-                    //has to be non-negative and has to have a value to continue
+                    // MUst contain a non-negative a value to continue
                     validator: (value) {
                       if (value != null) {
                         final double? numVal = double.tryParse(value);
@@ -438,7 +436,7 @@ class _ExperienceState extends State<Experience> {
                     Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     style: Theme.of(context).textTheme.bodyMedium,
-                    //has to have a value to continue
+                    // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     initialValue: widget.grade,
                     onChanged: (value) {

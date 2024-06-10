@@ -167,22 +167,6 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // Here is the data table, which contains the columns "X" and "Y"
-                DataTable(
-                  columnSpacing: 40,
-                  horizontalMargin: 20,
-                  border: TableBorder.all(
-                    width: 2,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  columns: const [
-                    DataColumn(label: Text('X')),
-                    DataColumn(label: Text('Y')),
-                  ],
-                  rows: rows,
-                ),
-                const SizedBox(width: 10),
-
                 // These are the buttons that allow the user to update the table and chart
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -192,6 +176,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                       height: 50,
                       child: CustomElevatedButton(
                         onPressed: () => addRow(),
+                        buttonColor: Theme.of(context).colorScheme.secondary,
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -234,6 +219,26 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                     ),
                   ],
                 ),
+                // Here is the data table, which contains the columns "X" and "Y"
+                DataTable(
+                  columnSpacing: 40,
+                  horizontalMargin: 20,
+                  showBottomBorder: true,
+                  dividerThickness: 2,
+                  // border: 
+                  // const TableBorder({BorderSide top = BorderSide.none})
+
+                  // TableBorder.all(
+                  //   width: 2,
+                  //   color: Theme.of(context).colorScheme.secondary,
+                  // ),
+                  columns: const [
+                    DataColumn(label: Text('X')),
+                    DataColumn(label: Text('Y')),
+                  ],
+                  rows: rows,
+                ),
+                const SizedBox(width: 10),
               ],
             ),
           ],

@@ -106,17 +106,18 @@ final appBar = AppBar(
     ),
   ],
 );
-
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
     required this.child,
     required this.onPressed,
     this.stadiumBorder = false,
+    this.buttonColor = const Color.fromARGB(255, 218, 124, 96),
   });
   final Widget child;
   final Function() onPressed;
   final bool stadiumBorder;
+  final Color buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +129,9 @@ class CustomElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: (stadiumBorder)
-            ? ElevatedButton.styleFrom(shape: const StadiumBorder())
+            ? ElevatedButton.styleFrom(
+              backgroundColor: buttonColor,
+              shape: const StadiumBorder())
             : null,
         child: child,
       ),

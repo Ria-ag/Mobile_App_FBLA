@@ -46,19 +46,30 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                         }),
                   ],
                 ),
+                const Divider(color: Colors.grey, thickness: 1),
                 // Displays the list of experiences for each tile
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 25,
-                  height: MediaQuery.of(context).size.height - 130,
+                Container(
                   child: (context
                           .watch<MyExperiences>()
                           .xpList[tileIndex]
                           .isNotEmpty)
                       ? SingleChildScrollView(
-                          child: Column(
-                            children: context
+                          child: ListView.separated(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: context
                                 .watch<MyExperiences>()
-                                .xpList[tileIndex],
+                                .xpList[tileIndex]
+                                .length,
+                              separatorBuilder: (BuildContext context, int index) {
+                                return const Divider (
+                                  color: Colors.grey,
+                                  thickness: 1.5,
+                                );
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                return context.watch<MyExperiences>().xpList[tileIndex][index];
+                              },
                           ),
                         )
                       : const Padding(
