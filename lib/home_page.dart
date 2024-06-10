@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:printing/printing.dart';
@@ -302,7 +303,7 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = context.read<MyExperiences>().xpList[i];
+      List<Experience> experiences = context.read<MyProfileXPs>().xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }
@@ -347,7 +348,7 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = context.read<MyExperiences>().xpList[i];
+      List<Experience> experiences = context.read<MyProfileXPs>().xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }

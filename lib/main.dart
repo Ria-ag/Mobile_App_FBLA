@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import 'goals_analytics/goal_modal_sheet.dart';
-import 'goals_analytics/chart_tile.dart';
 import 'goals_analytics/goals_analytics_page.dart';
 import 'profile/experience.dart';
 import 'profile/profile_page.dart';
@@ -65,13 +65,10 @@ class MyApp extends StatelessWidget {
     // These are the providers used in the app for state management across widgets
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<MyProfileState>(
-            create: (context) => MyProfileState()),
-        ChangeNotifierProvider<MyExperiences>(
-            create: (context) => MyExperiences()),
-        ChangeNotifierProvider<ChartDataState>(
-            create: (context) => ChartDataState()),
-        ChangeNotifierProvider<MyGoals>(create: (context) => MyGoals())
+        ChangeNotifierProvider<MyProfileXPs>(
+            create: (context) => MyProfileXPs()),
+        ChangeNotifierProvider<MyGoalsAnalytics>(
+            create: (context) => MyGoalsAnalytics()),
       ],
       child: MaterialApp(
         title: 'FBLA Mobile App',
@@ -127,14 +124,14 @@ class _MyHomePageState extends State<MyHomePage> {
             if (xps != null) {
               for (String xpString in xps) {
                 context
-                    .read<MyExperiences>()
+                    .read<MyProfileXPs>()
                     .xpList[i]
                     .add(Experience.fromJsonString(xpString));
               }
             }
           }
 
-          context.read<MyExperiences>().addHrs();
+          context.read<MyProfileXPs>().addHrs();
 
           return Future.value(value);
         },

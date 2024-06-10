@@ -1,68 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
 import '../main.dart';
 import '../theme.dart';
 import 'text_tile.dart';
-import 'experience.dart';
 import 'icon_tile.dart';
-
-// This is a provider class to manage changes in the profile
-class MyProfileState extends ChangeNotifier {
-  File? pfp = (prefs.getString('image') != null)
-      ? File(prefs.getString('image')!)
-      : null;
-
-  // Checklist starts off empty and updates list as it's checked
-  List<bool> isChecked = (prefs.getString("isChecked") == null)
-      ? [
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-        ]
-      : prefs
-          .getString("isChecked")!
-          .split(',')
-          .map((s) => s == 'true')
-          .toList();
-
-  // This method takes a value and index and updates the checked list
-  onChange(bool value, int index) async {
-    isChecked[index] = value;
-    String isCheckedStr = isChecked.map((b) => b.toString()).join(',');
-    await prefs.setString("isChecked", isCheckedStr);
-    notifyListeners();
-  }
-
-  // This method takes the image source (camera or gallery) and gets an image using uses image picker package
-  Future getImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().pickImage(
-      source: source,
-      maxHeight: 150,
-      maxWidth: 150,
-    );
-    if (pickedImage == null) {
-      return;
-    }
-    pfp = File(pickedImage.path);
-    notifyListeners();
-
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final String path = directory.path;
-
-    await pfp!.copy('$path/${basename(pickedImage.path)}');
-    await prefs.setString('image', pfp!.path);
-  }
-}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -113,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: "Performing Arts", icon: Icons.music_note, tileIndex: 1),
       IconTile(
           title: "Community Service",
-          icon: context.watch<MyExperiences>().serviceHrs,
+          icon: context.watch<MyProfileXPs>().serviceHrs,
           tileIndex: 2),
       const IconTile(title: "Awards", icon: Icons.star, tileIndex: 3),
     ];
@@ -144,33 +88,32 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Tiles are displayed only when their corresponding checkbox is checked
     for (var i = 0; i < ITs.length; i++) {
-      displayITs[i] = (context.watch<MyProfileState>().isChecked[i])
+      displayITs[i] = (context.watch<MyProfileXPs>().isChecked[i])
           ? ITs[i]
           : Container(height: 85);
     }
 
     for (var i = 0; i < TTs.length; i++) {
-      displayTTs[i] = (context.watch<MyProfileState>().isChecked[i + 4])
+      displayTTs[i] = (context.watch<MyProfileXPs>().isChecked[i + 4])
           ? TTs[i]
           : Container();
     }
 
     // Displays text until boxes are checked
-    Widget introText =
-        (!context.watch<MyProfileState>().isChecked.contains(true))
-            ? const Padding(
-                padding: EdgeInsets.fromLTRB(10, 100, 10, 10),
-                child: Text(
-                    "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
-              )
-            : Container();
+    Widget introText = (!context.watch<MyProfileXPs>().isChecked.contains(true))
+        ? const Padding(
+            padding: EdgeInsets.fromLTRB(10, 100, 10, 10),
+            child: Text(
+                "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
+          )
+        : Container();
 
     Widget profilePic = SizedBox(
       height: width,
       width: width,
       child: Align(
         alignment: Alignment.bottomCenter,
-        child: (context.watch<MyProfileState>().pfp == null)
+        child: (context.watch<MyProfileXPs>().pfp == null)
             ? Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Icon(
@@ -187,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: ClipOval(
                   child: SizedBox.fromSize(
                     size: const Size.fromRadius(60),
-                    child: Image.file(context.watch<MyProfileState>().pfp!,
+                    child: Image.file(context.watch<MyProfileXPs>().pfp!,
                         fit: BoxFit.cover),
                   ),
                 ),
@@ -203,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // This button lets users pick an image from their gallery
           child: FloatingActionButton(
             onPressed: () =>
-                context.read<MyProfileState>().getImage(ImageSource.gallery),
+                context.read<MyProfileXPs>().getImage(ImageSource.gallery),
             tooltip: 'Pick Image',
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: const Icon(Icons.add_photo_alternate_rounded, size: 20),
@@ -216,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // This button lets users take and use an image from their camera
           child: FloatingActionButton(
             onPressed: () =>
-                context.read<MyProfileState>().getImage(ImageSource.camera),
+                context.read<MyProfileXPs>().getImage(ImageSource.camera),
             tooltip: 'Capture Image',
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: const Icon(Icons.add_a_photo, size: 20),
@@ -378,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return ChangeNotifierProvider.value(
-          value: context.read<MyProfileState>(),
+          value: context.read<MyProfileXPs>(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -403,11 +346,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemBuilder: (context, index) {
                         return CheckboxListTile(
                           title: Text(blocks[index]),
-                          value:
-                              context.watch<MyProfileState>().isChecked[index],
+                          value: context.watch<MyProfileXPs>().isChecked[index],
                           onChanged: (value) {
                             context
-                                .read<MyProfileState>()
+                                .read<MyProfileXPs>()
                                 .onChange(value!, index);
                           },
                         );

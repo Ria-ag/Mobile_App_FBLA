@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:provider/provider.dart';
-import 'experience.dart';
 
 // This is a method that builds the modal sheet that opens with every tile
 // It takes the context, title, and type of tile
@@ -11,7 +11,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
     backgroundColor: Colors.grey[200],
     builder: (BuildContext context) {
       return ChangeNotifierProvider.value(
-        value: context.read<MyExperiences>(),
+        value: context.read<MyProfileXPs>(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height - 50,
           width: MediaQuery.of(context).size.width - 15,
@@ -32,7 +32,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                         size: 20,
                       ),
                       onPressed: () =>
-                          context.read<MyExperiences>().add(title, tileIndex),
+                          context.read<MyProfileXPs>().add(title, tileIndex),
                     ),
                     // This button when pressed closes the modal sheet
                     IconButton(
@@ -50,7 +50,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                 // Displays the list of experiences for each tile
                 Container(
                   child: (context
-                          .watch<MyExperiences>()
+                          .watch<MyProfileXPs>()
                           .xpList[tileIndex]
                           .isNotEmpty)
                       ? SingleChildScrollView(
@@ -58,18 +58,21 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             itemCount: context
-                                .watch<MyExperiences>()
+                                .watch<MyProfileXPs>()
                                 .xpList[tileIndex]
                                 .length,
-                              separatorBuilder: (BuildContext context, int index) {
-                                return const Divider (
-                                  color: Colors.grey,
-                                  thickness: 1.5,
-                                );
-                              },
-                              itemBuilder: (BuildContext context, int index) {
-                                return context.watch<MyExperiences>().xpList[tileIndex][index];
-                              },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const Divider(
+                                color: Colors.grey,
+                                thickness: 1.5,
+                              );
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              return context
+                                  .watch<MyProfileXPs>()
+                                  .xpList[tileIndex][index];
+                            },
                           ),
                         )
                       : const Padding(

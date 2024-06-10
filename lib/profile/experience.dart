@@ -2,57 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import "../main.dart";
 import '../theme.dart';
-
-// This is a provider class to manage changes in experiences
-class MyExperiences extends ChangeNotifier {
-  // Experiences are stored in a list which is stored in a list of each list of experiences per tile type
-  List<List<Experience>> xpList = [[], [], [], [], [], [], [], []];
-  double serviceHrs = 0;
-
-  // This method adds an experience to the list and takes the title and type of tile
-  void add(String title, int tileIndex) {
-    xpList[tileIndex].add(Experience(
-        title: title,
-        xpID: DateTime.now().microsecondsSinceEpoch,
-        tileIndex: tileIndex));
-    notifyListeners();
-  }
-
-  // This method removes experiences from the list and takes the id and type of tile
-  void remove(int id, int tileIndex) {
-    xpList[tileIndex]
-        .remove(xpList[tileIndex].firstWhere((xp) => xp.xpID == id));
-    notifyListeners();
-  }
-
-  // This method saves every experience in the list to the shared preferences as a json string
-  void saveXP(int tileIndex) async {
-    List<String> xps = [];
-    for (Experience xp in xpList[tileIndex]) {
-      xps.add(xp.toJsonString());
-    }
-    if (tileIndex == 2) {
-      addHrs();
-    }
-    notifyListeners();
-    await prefs.setStringList('$tileIndex', xps);
-  }
-
-  // This method adds up all the hours of each experience in the community service tile
-  void addHrs() {
-    double totalHrs = 0;
-    for (Experience xp in xpList[2]) {
-      totalHrs += double.parse(xp.hours);
-    }
-    serviceHrs = totalHrs;
-  }
-}
 
 // This class defines an experience and requires a title, id, and type of tile
 // ignore: must_be_immutable
@@ -155,7 +111,7 @@ class _ExperienceState extends State<Experience> {
               //can add an image to the experience by camera or gallery
               child: (!widget.editable)
                   ? widget._image == null
-                      ? Text("No images selected",
+                      ? const Text("No images selected")
                       : Container(
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
@@ -168,7 +124,7 @@ class _ExperienceState extends State<Experience> {
                         )
                   : Row(
                       children: [
-                        Text("Add image:",
+                        const Text("Add image:"),
                         const SizedBox(width: 10),
                         SizedBox(
                           width: 50,
@@ -211,12 +167,15 @@ class _ExperienceState extends State<Experience> {
                     children: [
                       Text(
                         widget.name,
-                        style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(color: Theme.of(context).primaryColor),
                       ),
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
                         thickness: 2,
-                        endIndent: MediaQuery.of(context).size.width/4,
+                        endIndent: MediaQuery.of(context).size.width / 4,
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -499,9 +458,7 @@ class _ExperienceState extends State<Experience> {
                         if (!hasErrors) {
                           widget.editable = false;
                           widget.updateTime = DateTime.now();
-                          context
-                              .read<MyExperiences>()
-                              .saveXP(widget.tileIndex);
+                          context.read<MyProfileXPs>().saveXP(widget.tileIndex);
                         }
                       });
                     },
@@ -516,9 +473,9 @@ class _ExperienceState extends State<Experience> {
               style: theme.iconButtonTheme.style,
               onPressed: () {
                 context
-                    .read<MyExperiences>()
+                    .read<MyProfileXPs>()
                     .remove(widget.xpID, widget.tileIndex);
-                context.read<MyExperiences>().saveXP(widget.tileIndex);
+                context.read<MyProfileXPs>().saveXP(widget.tileIndex);
               },
               icon: const Icon(Icons.remove, size: 20),
             ),

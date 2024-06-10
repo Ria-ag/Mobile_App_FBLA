@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:provider/provider.dart';
 import 'experience.dart';
 import 'modal_sheet.dart';
@@ -16,7 +17,7 @@ class TextTile extends StatelessWidget {
     // Displays each experience summary in the body with its name
     List<Widget> nameSummary = [];
     List<Widget> dateSummary = [];
-    for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
+    for (Experience xp in context.watch<MyProfileXPs>().xpList[tileIndex]) {
       nameSummary.add(
         Text(
           xp.name,
@@ -28,7 +29,7 @@ class TextTile extends StatelessWidget {
       );
     }
     // Displays each experience summary in the body with its date as well
-    for (Experience xp in context.watch<MyExperiences>().xpList[tileIndex]) {
+    for (Experience xp in context.watch<MyProfileXPs>().xpList[tileIndex]) {
       dateSummary.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 1.125),
         child: Text(

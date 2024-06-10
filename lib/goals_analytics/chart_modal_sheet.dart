@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
-import 'chart_tile.dart';
+import 'goals_analytics_widgets.dart';
 
 // This is the modal sheet for displaying the chart editor
 Future<void> chartModalSheet(BuildContext context, String title, int id) {
   final formKey = GlobalKey<FormState>();
   ChartTile chartTile = context
-      .read<ChartDataState>()
+      .read<MyGoalsAnalytics>()
       .charts
       .firstWhere((chart) => chart.chartID == id);
 
@@ -19,10 +20,11 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
     backgroundColor: Colors.grey[200],
     builder: (BuildContext context) {
       return ChangeNotifierProvider.value(
-        value: context.read<ChartDataState>(),
+        value: context.read<MyGoalsAnalytics>(),
         child: StatefulBuilder(builder: (context, setState) {
-          final readChartState = context.read<ChartDataState>();
-          int index = context.watch<ChartDataState>().charts.indexOf(chartTile);
+          final readChartState = context.read<MyGoalsAnalytics>();
+          int index =
+              context.watch<MyGoalsAnalytics>().charts.indexOf(chartTile);
 
           return SizedBox(
             height: MediaQuery.of(context).size.height - 50,
@@ -122,7 +124,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
   @override
   void initState() {
     super.initState();
-    var chartState = context.read<ChartDataState>();
+    var chartState = context.read<MyGoalsAnalytics>();
     int index = chartState.charts.indexOf(widget.chartTile);
     rows = List<DataRow>.from(chartState.charts[index].rows);
   }
@@ -155,8 +157,8 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
   // This is where the data table and buttons are displayed
   @override
   Widget build(BuildContext context) {
-    var readChartState = context.read<ChartDataState>();
-    var watchChartState = context.watch<ChartDataState>();
+    var readChartState = context.read<MyGoalsAnalytics>();
+    var watchChartState = context.watch<MyGoalsAnalytics>();
     int index = watchChartState.charts.indexOf(widget.chartTile);
 
     return SizedBox(
@@ -225,7 +227,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                   horizontalMargin: 20,
                   showBottomBorder: true,
                   dividerThickness: 2,
-                  // border: 
+                  // border:
                   // const TableBorder({BorderSide top = BorderSide.none})
 
                   // TableBorder.all(
