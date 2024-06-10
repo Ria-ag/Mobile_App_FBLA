@@ -191,13 +191,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                       height: 50,
                       child: CustomElevatedButton(
                         onPressed: () => addRow(),
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-                        child: const Text('Add Row'),
-=======
                         buttonColor: Theme.of(context).colorScheme.secondary,
->>>>>>> Stashed changes
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -205,15 +199,10 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                             Text("Add Row"),
                           ],
                         ),
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                       ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-<<<<<<< Updated upstream
                       width: 225,
                       height: 50,
                       child: CustomElevatedButton(
@@ -224,47 +213,14 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                             Text("Remove Last Row"),
                           ],
                         ),
-=======
-<<<<<<< Updated upstream
-                      width: 150,
-                      height: 30,
-                      child: FloatingActionButton(
-                        heroTag: "button 2",
-                        child: const Text("Remove Last Row"),
->>>>>>> Stashed changes
                         onPressed: () => removeRow(),
                       ),
                     ),
                     const SizedBox(height: 10),
-<<<<<<< Updated upstream
-=======
-=======
-                      width: 225,
-                      height: 50,
-                      child: CustomElevatedButton(
-                        onPressed: () => removeRow(),
-                        buttonColor: Theme.of(context).colorScheme.secondary,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.remove),
-                            Text("Remove Last Row"),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
->>>>>>> Stashed changes
                     SizedBox(
                       width: 225,
                       height: 50,
                       child: CustomElevatedButton(
-<<<<<<< Updated upstream
-=======
-                        onPressed: () =>
-                            readChartState.updateChartData(rows, index),
-                        buttonColor: Theme.of(context).colorScheme.secondary,
->>>>>>> Stashed changes
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -272,16 +228,10 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                             Text("Save Chart"),
                           ],
                         ),
-<<<<<<< Updated upstream
                         onPressed: () =>
                             readChartState.updateChartData(rows, index),
                       ),
                     ),
-=======
-                      ),
-                    ),
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                   ],
                 ),
                 // Here is the data table, which contains the columns "X" and "Y"

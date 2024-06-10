@@ -105,30 +105,18 @@ final appBar = AppBar(
     ),
   ],
 );
-
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
     required this.child,
     required this.onPressed,
     this.stadiumBorder = false,
-<<<<<<< Updated upstream
-=======
     this.buttonColor = const Color.fromARGB(255, 218, 124, 96),
->>>>>>> Stashed changes
   });
   final Widget child;
   final Function() onPressed;
   final bool stadiumBorder;
-<<<<<<< Updated upstream
-=======
   final Color buttonColor;
->>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
@@ -140,13 +128,9 @@ class CustomElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: (stadiumBorder)
-<<<<<<< Updated upstream
-            ? ElevatedButton.styleFrom(shape: const StadiumBorder())
-=======
             ? ElevatedButton.styleFrom(
               backgroundColor: buttonColor,
               shape: const StadiumBorder())
->>>>>>> Stashed changes
             : null,
         child: child,
       ),
@@ -197,10 +181,6 @@ InputDecoration underlineInputDecoration(
   );
 }
 
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 // These are the terms and conditions of the app, formatted with RichText
 final termsConditions = RichText(
   text: TextSpan(

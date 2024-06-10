@@ -141,48 +141,6 @@ class _ExperienceState extends State<Experience> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7.5),
-<<<<<<< Updated upstream
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [shadow],
-        ),
-        child: Form(
-          key: widget._formKey,
-          child: Column(
-            children: [
-              xpListTile(context),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                //can add an image to the experience by camera or gallery
-                child: (!widget.editable)
-                    ? widget._image == null
-                        ? Text("No images selected",
-                            style: Theme.of(context).textTheme.bodyLarge)
-                        : Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.file(widget._image!)),
-                          )
-                    : Row(
-                        children: [
-                          Text("Add image:",
-                          style: Theme.of(context).textTheme.bodyLarge),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: 50,
-                            child: FloatingActionButton(
-                              onPressed: () => getImage(ImageSource.gallery),
-                              tooltip: 'Pick Image',
-                              child: const Icon(Icons.add_a_photo),
-                            ),
-=======
       child: Form(
         key: widget._formKey,
         child: Column(
@@ -201,7 +159,6 @@ class _ExperienceState extends State<Experience> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(12),
->>>>>>> Stashed changes
                           ),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
