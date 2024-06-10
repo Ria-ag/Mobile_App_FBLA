@@ -58,12 +58,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                       children: [
                         TextFormField(
                           style: Theme.of(context).textTheme.bodyMedium,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Field cannot be empty";
-                            }
-                            return null;
-                          },
+                          validator: (value) => noEmptyField(value),
                           initialValue: chartTile.chartName,
                           onChanged: (value) =>
                               readChartState.updateName(value, index),
@@ -72,12 +67,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                         ),
                         TextFormField(
                           style: Theme.of(context).textTheme.bodyMedium,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Field cannot be empty";
-                            }
-                            return null;
-                          },
+                          validator: (value) => noEmptyField(value),
                           initialValue: chartTile.xLabel,
                           onChanged: (value) =>
                               readChartState.updateXLabel(value, index),
@@ -86,12 +76,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                         ),
                         TextFormField(
                           style: Theme.of(context).textTheme.bodyMedium,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Field cannot be empty";
-                            }
-                            return null;
-                          },
+                          validator: (value) => noEmptyField(value),
                           initialValue: chartTile.yLabel,
                           onChanged: (value) =>
                               readChartState.updateYLabel(value, index),

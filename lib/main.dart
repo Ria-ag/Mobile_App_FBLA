@@ -3,6 +3,9 @@ import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 import 'goals_analytics/goal_modal_sheet.dart';
 import 'goals_analytics/chart_tile.dart';
 import 'goals_analytics/goals_analytics_page.dart';
@@ -12,7 +15,10 @@ import 'home_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const RestartWidget(child: MyApp()));
 }
 
@@ -177,16 +183,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 )
               : Scaffold(
-                  appBar: appBar,
+                  appBar: (_selectedIndex == 1) ? null : appBar,
                   // The bottomNavigationBar is the primary form of app navigation
                   bottomNavigationBar: Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: DotNavigationBar(
                       enableFloatingNavBar: true,
                       enablePaddingAnimation: false,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       marginR: const EdgeInsets.symmetric(
-                          horizontal: 80, vertical: 0),
+                          horizontal: 30, vertical: 0),
                       paddingR: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                       currentIndex: _selectedIndex,

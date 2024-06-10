@@ -246,17 +246,11 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
           children: [
             ActionButton(
               onPressed: () => addElementDialog(false),
-              icon: Icon(
-                Icons.addchart,
-                color: theme.colorScheme.primary,
-              ),
+              icon: const Icon(Icons.addchart),
             ),
             ActionButton(
               onPressed: () => addElementDialog(true),
-              icon: Icon(
-                Icons.assignment_add,
-                color: theme.colorScheme.primary,
-              ),
+              icon: const Icon(Icons.assignment_add),
             ),
           ],
         ),

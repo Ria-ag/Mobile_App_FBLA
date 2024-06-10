@@ -6,6 +6,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
+
 import 'main.dart';
 import 'profile/experience.dart';
 
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                   style: Theme.of(context).textTheme.headlineLarge),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 35),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
                 width: 400,
                 child: ElevatedButton(
@@ -185,11 +186,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const Spacer(),
                 FloatingActionButton.large(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   onPressed: () => createPdf(context),
                   child: const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Pdf",
+                      "PDF",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.black),
                     ),
@@ -197,6 +199,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const Spacer(),
                 FloatingActionButton.large(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   onPressed: () => socialPdf(),
                   child: const Padding(
                     padding: EdgeInsets.all(10),
@@ -210,6 +213,7 @@ class _HomePageState extends State<HomePage> {
                 const Spacer(),
               ],
             ),
+            const SizedBox(height: 100),
           ],
         ),
       ),

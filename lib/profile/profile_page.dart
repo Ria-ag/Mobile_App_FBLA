@@ -77,6 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
   String name = "";
   String school = "";
   String year = "";
+  final double leftPad = 15;
+  final double width = 150;
+  final double topPad = 90;
 
   // This method retrieves the user data immediately every time
   @override
@@ -141,8 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Tiles are displayed only when their corresponding checkbox is checked
     for (var i = 0; i < ITs.length; i++) {
-      displayITs[i] =
-          (context.watch<MyProfileState>().isChecked[i]) ? ITs[i] : Container();
+      displayITs[i] = (context.watch<MyProfileState>().isChecked[i])
+          ? ITs[i]
+          : Container(height: 85);
     }
 
     for (var i = 0; i < TTs.length; i++) {
@@ -155,143 +159,199 @@ class _ProfilePageState extends State<ProfilePage> {
     Widget introText =
         (!context.watch<MyProfileState>().isChecked.contains(true))
             ? const Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.fromLTRB(10, 100, 10, 10),
                 child: Text(
                     "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
               )
             : Container();
 
+    Widget profilePic = SizedBox(
+      height: width,
+      width: width,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: (context.watch<MyProfileState>().pfp == null)
+            ? Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Icon(
+                  Icons.supervised_user_circle,
+                  size: 150,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              )
+            : Container(
+                padding: const EdgeInsets.all(6), // Border width
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle),
+                child: ClipOval(
+                  child: SizedBox.fromSize(
+                    size: const Size.fromRadius(60),
+                    child: Image.file(context.watch<MyProfileState>().pfp!,
+                        fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+      ),
+    );
+
+    Widget picButtons = Column(
+      children: [
+        SizedBox(
+          width: 35,
+          height: 35,
+          // This button lets users pick an image from their gallery
+          child: FloatingActionButton(
+            onPressed: () =>
+                context.read<MyProfileState>().getImage(ImageSource.gallery),
+            tooltip: 'Pick Image',
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: const Icon(Icons.add_photo_alternate_rounded, size: 20),
+          ),
+        ),
+        const SizedBox(height: 12.5),
+        SizedBox(
+          width: 35,
+          height: 35,
+          // This button lets users take and use an image from their camera
+          child: FloatingActionButton(
+            onPressed: () =>
+                context.read<MyProfileState>().getImage(ImageSource.camera),
+            tooltip: 'Capture Image',
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: const Icon(Icons.add_a_photo, size: 20),
+          ),
+        ),
+      ],
+    );
+
+    Widget profileInfo = Container(
+      padding: const EdgeInsets.all(5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                  color: Colors.white,
+                ),
+            softWrap: true,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            school,
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  color: Colors.white,
+                ),
+            softWrap: true,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Class of $year',
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  color: Colors.white,
+                ),
+            softWrap: true,
+          ),
+        ],
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        //profile image displayed
-                        context.watch<MyProfileState>().pfp == null
-                            ? const Icon(Icons.supervised_user_circle,
-                                size: 150)
-                            : Container(
-                                padding:
-                                    const EdgeInsets.all(6), // Border width
-                                decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    shape: BoxShape.circle),
-                                child: ClipOval(
-                                  child: SizedBox.fromSize(
-                                    size: const Size.fromRadius(
-                                        60), // Image radius
-                                    child: Image.file(
-                                        context.watch<MyProfileState>().pfp!,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 45,
-                              height: 45,
-                              //this button lets users pick an image from their gallery
-                              child: FloatingActionButton(
-                                onPressed: () => context
-                                    .read<MyProfileState>()
-                                    .getImage(ImageSource.gallery),
-                                tooltip: 'Pick Image',
-                                child: const Icon(
-                                    Icons.add_photo_alternate_rounded),
-                              ),
-                            ),
-                            const SizedBox(width: 20, height: 20),
-                            SizedBox(
-                              width: 45,
-                              height: 45,
-                              //this button lets users take and use an image from their camera
-                              child: FloatingActionButton(
-                                onPressed: () => context
-                                    .read<MyProfileState>()
-                                    .getImage(ImageSource.camera),
-                                tooltip: 'Capture Image',
-                                child: const Icon(Icons.add_a_photo),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+        child: Stack(children: [
+          Container(
+            color: Theme.of(context).colorScheme.secondary,
+            height: MediaQuery.of(context).size.height / 3 + topPad + 15,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(17.5, 0, 20,
+                      MediaQuery.of(context).size.height / 3 + topPad - 268),
+                  child: Stack(children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: leftPad),
+                      child: Container(
+                          height: 130, width: width, color: Colors.white),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width - 230),
-                        child: Container(
-                          padding: const EdgeInsets.all(5.0),
-                          color: Theme.of(context).colorScheme.background,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                name,
-                                style: Theme.of(context).textTheme.displaySmall,
-                                softWrap: true,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                school,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
-                                softWrap: true,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Class of $year',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
-                                softWrap: true,
-                              ),
-                            ],
-                          ),
+                      padding: EdgeInsets.only(top: 60, left: leftPad),
+                      child: Container(
+                        height: width,
+                        width: width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
                         ),
                       ),
-                    )
-                  ],
+                    ),
+                    const Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 59, right: 0),
+                        child: Image(
+                          image: AssetImage('assets/logo.png'),
+                          height: 36,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          // Profile image displayed
+                          children: [
+                            SizedBox(width: leftPad),
+                            profilePic,
+                            const SizedBox(width: 15),
+                            profileInfo,
+                          ],
+                        ),
+                        picButtons,
+                      ],
+                    ),
+                  ]),
                 ),
-              ),
-              const SizedBox(height: 30),
-              introText,
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Column(
+              children: [
+                SizedBox(
+                    height:
+                        MediaQuery.of(context).size.height / 3 + topPad - 75),
+                introText,
 
-              // Makes icon tiles be scrollable horizontally
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
+                // Makes icon tiles be scrollable horizontally
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: displayITs,
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              ...displayTTs,
-            ],
+                const SizedBox(height: 15),
+                ...displayTTs,
+                const SizedBox(height: 100)
+              ],
+            ),
           ),
-        ),
+        ]),
       ),
       // This button opens up the menu to add and remove tiles
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 75, right: 7.5),
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
           child: const Icon(Icons.add),
           onPressed: () => _dialogBuilder(context),
         ),

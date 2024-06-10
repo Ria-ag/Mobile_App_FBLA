@@ -18,10 +18,12 @@ class IconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.5),
+      padding: const EdgeInsets.only(bottom: 7.5),
       child: SizedBox(
-        width: 185,
+        height: 160,
+        width: 160,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
               title,
@@ -29,8 +31,11 @@ class IconTile extends StatelessWidget {
                   ? Theme.of(context)
                       .textTheme
                       .headlineMedium!
-                      .apply(fontSizeFactor: 0.925)
-                  : Theme.of(context).textTheme.headlineMedium,
+                      .apply(fontSizeFactor: 0.925, color: Colors.white)
+                  : Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),

@@ -20,33 +20,33 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Stack(
         children: [
           Container(
-              color: Theme.of(context).colorScheme.secondary,
-              height: MediaQuery.of(context).size.height / 3,
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25, bottom: 50),
-                    child: Text("Settings",
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium!
-                            .copyWith(color: Colors.white)),
-                  ),
-                ],
-              )),
+            color: Theme.of(context).colorScheme.secondary,
+            height: MediaQuery.of(context).size.height / 3.5 + 45,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, bottom: 85),
+                  child: Text("Settings",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
           Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height / 3.75,
+                height: MediaQuery.of(context).size.height / 3.5,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: [
-                    const SizedBox(height: 15),
                     SettingsElevatedButton(
                       text: "Account and Security",
                       onPressed: () {
@@ -166,12 +166,7 @@ class _SecurityState extends State<Security> {
                         ? Text(name)
                         : TextFormField(
                             // A value must be entered in the field
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
+                            validator: (value) => noEmptyField(value),
                             onChanged: (value) => setState(() {
                               name = value;
                             }),
@@ -208,12 +203,7 @@ class _SecurityState extends State<Security> {
                         ? Text(school)
                         : TextFormField(
                             // A value must be entered in the field
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
+                            validator: (value) => noEmptyField(value),
                             onChanged: (value) =>
                                 setState(() => school = value),
                             initialValue: school,
@@ -411,12 +401,12 @@ class SettingsElevatedButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width - 200,
+              width: MediaQuery.of(context).size.width - 160,
               child:
                   Text(text, style: Theme.of(context).textTheme.headlineSmall),
             ),
             const SizedBox(
-              width: 130,
+              width: 95,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
