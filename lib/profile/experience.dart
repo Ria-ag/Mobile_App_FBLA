@@ -141,6 +141,7 @@ class _ExperienceState extends State<Experience> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7.5),
+<<<<<<< Updated upstream
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
@@ -181,21 +182,57 @@ class _ExperienceState extends State<Experience> {
                               tooltip: 'Pick Image',
                               child: const Icon(Icons.add_a_photo),
                             ),
+=======
+      child: Form(
+        key: widget._formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            xpListTile(context),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              //can add an image to the experience by camera or gallery
+              child: (!widget.editable)
+                  ? widget._image == null
+                      ? Text("No images selected",
+                          style: Theme.of(context).textTheme.bodyMedium)
+                      : Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(12),
+>>>>>>> Stashed changes
                           ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: 50,
-                            child: FloatingActionButton(
-                              onPressed: () => getImage(ImageSource.camera),
-                              tooltip: 'Capture Image',
-                              child: const Icon(Icons.camera),
-                            ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(widget._image!)),
+                        )
+                  : Row(
+                      children: [
+                        Text("Add image:",
+                        style: Theme.of(context).textTheme.bodyMedium),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 50,
+                          child: FloatingActionButton(
+                            onPressed: () => getImage(ImageSource.gallery),
+                            tooltip: 'Pick Image',
+                            child: const Icon(Icons.add_a_photo),
                           ),
-                        ],
-                      ),
-              ),
-            ],
-          ),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 50,
+                          child: FloatingActionButton(
+                            onPressed: () => getImage(ImageSource.camera),
+                            tooltip: 'Capture Image',
+                            child: const Icon(Icons.camera),
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ],
         ),
       ),
     );
@@ -216,16 +253,18 @@ class _ExperienceState extends State<Experience> {
                     children: [
                       Text(
                         widget.name,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor),
                       ),
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
                         thickness: 2,
+                        endIndent: MediaQuery.of(context).size.width/4,
                       ),
+                      const SizedBox(height: 10),
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -259,7 +298,7 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.location,
                     //has to have a value to continue
                     validator: (value) {
@@ -279,7 +318,7 @@ class _ExperienceState extends State<Experience> {
           // Start date with a date picker
           (!widget.editable)
               ? buildRichText(context, "Start Date: ", widget.startDate,
-                  Theme.of(context).textTheme.bodyLarge)
+                  Theme.of(context).textTheme.bodyMedium)
               : TextFormField(
                   // Value necessary and the start date should be before the end date to continue
                   validator: (value) {
@@ -296,7 +335,7 @@ class _ExperienceState extends State<Experience> {
                     }
                     return null;
                   },
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: TextEditingController(text: widget.startDate),
                   readOnly: true, // Prevents manual editing
                   decoration: underlineInputDecoration(
@@ -322,7 +361,7 @@ class _ExperienceState extends State<Experience> {
             padding: const EdgeInsets.only(bottom: 7.5),
             child: (!widget.editable)
                 ? buildRichText(context, "End Date: ", widget.endDate,
-                    Theme.of(context).textTheme.bodyLarge)
+                    Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
                     //has to have a value to continue
                     validator: (value) {
@@ -331,7 +370,7 @@ class _ExperienceState extends State<Experience> {
                       }
                       return null;
                     },
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     controller: TextEditingController(text: widget.endDate),
                     readOnly: true,
                     decoration: underlineInputDecoration(
@@ -358,9 +397,9 @@ class _ExperienceState extends State<Experience> {
           if (widget.title == "Clubs/Organizations")
             (!widget.editable)
                 ? buildRichText(context, "Role: ", widget.role,
-                    Theme.of(context).textTheme.bodyLarge)
+                    Theme.of(context).textTheme.bodyMedium)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     //has to have a value to continue
                     validator: (value) {
                       if (value == null || value.isEmpty) {

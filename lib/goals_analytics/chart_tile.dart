@@ -112,21 +112,24 @@ class _ChartTileState extends State<ChartTile> {
 
         // Here, the chart is displayed
         Center(
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width - 50,
-              height: 200,
-              child: Container(
-                  padding: const EdgeInsets.fromLTRB(5, 20, 20, 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width - 50,
+                height: 200,
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(5, 20, 20, 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2,
+                      ),
                     ),
-                  ),
-                  child: CustomLineChart(
-                    id: widget.chartID,
-                  ))),
+                    child: CustomLineChart(
+                      id: widget.chartID,
+                    ))),
+          ),
         ),
         const SizedBox(height: 10),
       ],

@@ -121,7 +121,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
               Row(
                 children: [
                   Text(widget.title,
-                      style: Theme.of(context).textTheme.headlineSmall),
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Theme.of(context).primaryColor)),
                   const Spacer(),
                   // This button makes the data editable
                   IconButton(
@@ -165,9 +165,19 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+<<<<<<< Updated upstream
                         const SizedBox(height: 10),
                         Text("Category",
                             style: Theme.of(context).textTheme.bodySmall),
+=======
+<<<<<<< Updated upstream
+                        Text("Category",
+                            style: Theme.of(context).textTheme.bodyMedium),
+=======
+                        const SizedBox(height: 10),
+                        Text("Category", style: Theme.of(context).textTheme.bodySmall),
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                         DropdownButton<String>(
                           style: theme.dropdownMenuTheme.textStyle,
                           value: context
@@ -215,7 +225,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .getDate(),
-                          Theme.of(context).textTheme.bodyMedium)
+                          Theme.of(context).textTheme.bodySmall)
                       : TextFormField(
                           //has to have a value to continue
                           validator: (value) {
@@ -224,7 +234,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                             }
                             return null;
                           },
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodySmall,
                           controller: TextEditingController(
                             text: context
                                 .read<MyGoals>()
@@ -284,7 +294,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               Theme.of(context).textTheme.bodyMedium),
                     )
                   : TextFormField(
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodySmall,
                       minLines: 1,
                       maxLines: 4,
                       initialValue: context
@@ -305,25 +315,47 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           context, "ex. In this I...", "Description"),
                     ),
               const SizedBox(height: 50),
-              Text("Tasks", style: Theme.of(context).textTheme.headlineSmall),
-              Divider(
-                  color: Theme.of(context).colorScheme.secondary, thickness: 2),
+              Text("Tasks", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Theme.of(context).primaryColor)),
               Row(
                 children: [
+<<<<<<< Updated upstream
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 125,
                     // Input field to add tasks
                     child: TextField(
                       controller: taskController,
+<<<<<<< Updated upstream
                       decoration: underlineInputDecoration(
                         alwaysFloat: false,
                         context,
                         'ex. Complete draft of business report',
                         'Enter Task',
+=======
+                      decoration: const InputDecoration(
+                        labelText: 'Enter Task',
+                        hintText: 'ex. Complete draft of business report',
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+=======
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 200,
+                      // Input field to add tasks
+                      child: TextField(
+                        controller: taskController,
+                        decoration: underlineInputDecoration(
+                          alwaysFloat: false,
+                          context,
+                          'ex. Complete draft of business report',
+                          'Enter Task',
+                        ),
+                        onSubmitted: (value) {
+                          _addTaskAndUpdateList(value, context);
+                        },
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                       ),
-                      onSubmitted: (value) {
-                        _addTaskAndUpdateList(value, context);
-                      },
                     ),
                   ),
                   Padding(
@@ -334,15 +366,16 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                         onPressed: () {
                           _addTaskAndUpdateList(taskController.text, context);
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.add,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.background,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 5),
               // This displays list of all the tasks with a checkbox
               Expanded(
                 child: ListView.builder(

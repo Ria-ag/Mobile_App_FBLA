@@ -136,6 +136,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
     // The first section is on goals, and the second section is data and analytics
     return Scaffold(
       body: SingleChildScrollView(
+<<<<<<< Updated upstream
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -218,8 +219,117 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
 
               // Finally, all the charts are displayed
               SizedBox(
+=======
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:25),
+                    child: Text("Goals", style: theme.textTheme.displayMedium!.copyWith(color: Theme.of(context).colorScheme.background)),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 25,
+                    height: MediaQuery.of(context).size.height / 2 - 100,
+                    child: (context.watch<MyGoals>().goals.isNotEmpty)
+                        ? SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 25, top: 15),
+                              child: Column(
+                                // All the goals are displayed as list tiles here
+                                children: context.watch<MyGoals>().goals,
+                              ),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 25, top: 15),
+                            child: Text(
+                              "Looks a little empty in here. Click on the add button in the bottom right to get started!",
+                              style: theme.textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.background)
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 25, top: 10),
+              child: Text("Analytics", style: theme.textTheme.displayMedium!.copyWith(color: Theme.of(context).colorScheme.secondary)),
+            ),
+            Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.background,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            shadow,
+                          ],
+                        ),
+                        child: Center(
+                          // The first thing in the analytics page is the total number of tasks completed
+                          child: Column(
+                            children: [
+                              Text(context.read<MyGoals>().done,
+                                  style: theme.textTheme.headlineLarge!.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary)),
+                              Text(
+                                "Total Completed Tasks",
+                                style: theme.textTheme.bodyMedium!.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                 // Afterwards, it shows the pie chart created previously with data from the MyGoals provider
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width/2,
+                    height: 150,
+                    child: context.read<MyGoals>().sum != 0.0
+                        ? PieChart(
+                            PieChartData(
+                              sections: pieChartSectionData,
+                            ),
+                          )
+                        : const Text("Add a goal to view chart"),
+                  ),
+                ),
+        
+              ],
+            ),
+    
+            const SizedBox(height: 5),
+        
+            // Finally, all the charts are displayed
+            Padding(
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: SizedBox(
+>>>>>>> Stashed changes
                 width: MediaQuery.of(context).size.width - 25,
-                height: MediaQuery.of(context).size.height / 2 - 160,
+                height: MediaQuery.of(context).size.height / 2 - 100,
                 child: (context.watch<ChartDataState>().charts.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
@@ -232,8 +342,9 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ),
                       ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 100),
+          ],
         ),
       ),
 
