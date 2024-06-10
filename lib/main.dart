@@ -94,9 +94,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// This enum is used to store
-//enum _SelectedTab {home, profile, goalsAndData, settings};
-
 // This is the home page of the app
 // The user is taken here after the loading page and initial setup
 class _MyHomePageState extends State<MyHomePage> {

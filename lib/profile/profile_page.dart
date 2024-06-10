@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../main.dart';
 import '../theme.dart';
-import 'text_tile.dart';
-import 'icon_tile.dart';
+import 'profile_widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
