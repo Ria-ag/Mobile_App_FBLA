@@ -39,7 +39,8 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                     Row(
                       children: [
                         Text(title,
-                            style: Theme.of(context).textTheme.headlineSmall),
+                            style: Theme.of(context).textTheme.headlineSmall
+                            !.copyWith(color: Theme.of(context).primaryColor)),
                         const Spacer(),
                         IconButton(
                             icon: const Icon(
@@ -137,10 +138,14 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
           cells: [
             DataCell(TextField(
                 controller: TextEditingController(),
-                decoration: underlineInputDecoration(context))),
+                decoration: underlineInputDecoration(context),
+                style: TextStyle(color: Theme.of(context).colorScheme.background)
+            ),),
             DataCell(TextField(
                 controller: TextEditingController(),
-                decoration: underlineInputDecoration(context))),
+                decoration: underlineInputDecoration(context),
+                style: TextStyle(color: Theme.of(context).colorScheme.background)
+            ),),
           ],
         ),
       );
@@ -222,23 +227,25 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                   ],
                 ),
                 // Here is the data table, which contains the columns "X" and "Y"
-                DataTable(
-                  columnSpacing: 40,
-                  horizontalMargin: 20,
-                  showBottomBorder: true,
-                  dividerThickness: 2,
-                  // border:
-                  // const TableBorder({BorderSide top = BorderSide.none})
-
-                  // TableBorder.all(
-                  //   width: 2,
-                  //   color: Theme.of(context).colorScheme.secondary,
-                  // ),
-                  columns: const [
-                    DataColumn(label: Text('X')),
-                    DataColumn(label: Text('Y')),
+                Column(
+                  children: [
+                    Text("Data", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.secondary)),
+                    const SizedBox(height: 5),
+                    DataTable(
+                      columnSpacing: 40,
+                      horizontalMargin: 20,
+                      border: const TableBorder(
+                        verticalInside: BorderSide(width: 1, style: BorderStyle.solid, color: Colors.grey),
+                        horizontalInside: BorderSide(width: 2, style: BorderStyle.solid, color: Colors.grey),
+                      ),
+                      dataRowColor: MaterialStateColor.resolveWith((states) =>  const Color.fromARGB(255, 88, 108, 139)),
+                      columns: [
+                        DataColumn(label: Text('X', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary))),
+                        DataColumn(label: Text('Y', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary))),
+                      ],
+                      rows: rows,
+                    ),
                   ],
-                  rows: rows,
                 ),
                 const SizedBox(width: 10),
               ],

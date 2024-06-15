@@ -112,15 +112,17 @@ class CustomElevatedButton extends StatelessWidget {
     required this.child,
     required this.onPressed,
     this.stadiumBorder = false,
-    this.buttonColor = const Color.fromARGB(255, 218, 124, 96),
+    this.buttonColor,
   });
   final Widget child;
   final Function() onPressed;
   final bool stadiumBorder;
-  final Color buttonColor;
+  final Color? buttonColor;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = theme.colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
         boxShadow: [shadow],
@@ -130,7 +132,7 @@ class CustomElevatedButton extends StatelessWidget {
         onPressed: onPressed,
         style: (stadiumBorder)
             ? ElevatedButton.styleFrom(
-              backgroundColor: buttonColor,
+              backgroundColor: color,
               shape: const StadiumBorder())
             : null,
         child: child,

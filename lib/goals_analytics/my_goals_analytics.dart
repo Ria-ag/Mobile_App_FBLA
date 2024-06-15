@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goals_analytics/goal_modal_sheet.dart';
 
 import 'goals_analytics_widgets.dart';
 
@@ -104,8 +105,10 @@ class MyGoalsAnalytics extends ChangeNotifier {
   }
 
   // This method takes a title and adds to the total number of tasks
-  void addTotalTasks(title) {
+  void addTotalTasks(title, task) {
     findGoal(title).totalTasks++;
+    findGoal(title).tasks.add(Task(task: task, isChecked: false));
+    findGoal(title).emptyGoal = false;
     notifyListeners();
   }
 
@@ -114,6 +117,18 @@ class MyGoalsAnalytics extends ChangeNotifier {
     findGoal(title).completedTasks++;
     totalCompletedTasks++;
     done = totalCompletedTasks.toString();
+    notifyListeners();
+  }
+
+  void unCheck(title){
+    findGoal(title).completedTasks--;
+    totalCompletedTasks--;
+    done = totalCompletedTasks.toString();
+    notifyListeners();
+  }
+
+  void deleteTask(title, index){
+    findGoal(title).tasks.removeAt(index);
     notifyListeners();
   }
 

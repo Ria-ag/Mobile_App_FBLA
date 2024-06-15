@@ -164,19 +164,6 @@ class GoalTile extends StatelessWidget {
     required this.title,
   });
 
-  // This method adds a task to the list of tasks and takes the task and context
-  void addTask(task, context) {
-    tasks.add(Task(task: task, isChecked: false));
-    context.read<MyGoalsAnalytics>().addTotalTasks(title);
-    emptyGoal = false;
-  }
-
-  // This method removes a task from the list of tasks and takes the index and context
-  void removeTask(int index, context) {
-    tasks.removeAt(index);
-    context.read<MyGoalsAnalytics>().addCompletedTasks(title);
-  }
-
   // Category getter method
   String getCategory() {
     return category;
@@ -269,6 +256,52 @@ class GoalTile extends StatelessWidget {
         ),
         // Creates a bar showing the progess of the goal
       ],
+    );
+  }
+}
+
+class LegendItem {
+  final String name;
+  final Color color;
+
+  LegendItem({
+    required this.name,
+    required this.color,
+  });
+}
+
+class CustomLegend extends StatelessWidget {
+  final List<LegendItem> legendItems;
+
+  const CustomLegend({super.key, required this.legendItems});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: legendItems.map((item) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: item.color,
+                   border: Border.all(color: Colors.grey)
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(item.name),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

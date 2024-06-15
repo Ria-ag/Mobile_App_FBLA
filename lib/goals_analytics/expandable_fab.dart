@@ -217,10 +217,14 @@ class ActionButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: Colors.white,
       elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: icon,
-      ),
+      child: InkResponse(
+        splashColor: Theme.of(context).primaryColor.withOpacity(0.2),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: icon,
+        ),
+    ),
     );
   }
 }
