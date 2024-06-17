@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
 import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
@@ -81,54 +83,54 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
     List<PieChartSectionData> pieChartSectionData = [
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[0],
-        title: context.read<MyGoalsAnalytics>().items[0],
         color: const Color.fromARGB(255, 147, 187, 229),
-        titlePositionPercentageOffset: 1.9,
       ),
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[1],
-        title: context.read<MyGoalsAnalytics>().items[1],
         color: const Color.fromARGB(255, 77, 145, 214),
       ),
       PieChartSectionData(
           value: context.read<MyGoalsAnalytics>().numberOfItems[2],
-          title: context.read<MyGoalsAnalytics>().items[2],
           color: const Color.fromARGB(255, 28, 80, 133),
-          titlePositionPercentageOffset: 1.4),
+      ),
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[3],
-        title: context.read<MyGoalsAnalytics>().items[3],
         color: const Color.fromARGB(255, 14, 50, 86),
-        titlePositionPercentageOffset: 1.7,
       ),
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[4],
-        title: context.read<MyGoalsAnalytics>().items[4],
         color: const Color.fromARGB(255, 84, 26, 9),
-        titlePositionPercentageOffset: 2,
       ),
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[5],
-        title: context.read<MyGoalsAnalytics>().items[5],
         color: const Color.fromARGB(255, 181, 52, 12),
       ),
       PieChartSectionData(
           value: context.read<MyGoalsAnalytics>().numberOfItems[6],
-          title: context.read<MyGoalsAnalytics>().items[6],
           color: const Color.fromARGB(255, 218, 124, 96),
-          titlePositionPercentageOffset: 1.4),
+      ),
       PieChartSectionData(
           value: context.read<MyGoalsAnalytics>().numberOfItems[7],
-          title: context.read<MyGoalsAnalytics>().items[7],
           color: const Color.fromARGB(255, 222, 168, 151),
-          titlePositionPercentageOffset: 1.4),
+      ),
       PieChartSectionData(
         value: context.read<MyGoalsAnalytics>().numberOfItems[8],
-        title: context.read<MyGoalsAnalytics>().items[8],
         color: Colors.white,
-        titlePositionPercentageOffset: 1.6,
       ),
     ];
+
+    List<LegendItem> legendItems = [
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[0],  color: const Color.fromARGB(255, 147, 187, 229)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[1],  color: const Color.fromARGB(255, 77, 145, 214)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[2],  color: const Color.fromARGB(255, 28, 80, 133)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[3],  color: const Color.fromARGB(255, 14, 50, 86)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[4],  color: const Color.fromARGB(255, 84, 26, 9)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[5],  color: const Color.fromARGB(255, 181, 52, 12)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[6],  color: const Color.fromARGB(255, 218, 124, 96)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[7],  color: const Color.fromARGB(255, 222, 168, 151)),
+      LegendItem(name: context.read<MyGoalsAnalytics>().items[8],  color: Colors.white),
+    ];
+
     final theme = Theme.of(context);
 
     // Here is the main layout of the page
@@ -186,17 +188,17 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   style: theme.textTheme.displayMedium!.copyWith(
                       color: Theme.of(context).colorScheme.secondary)),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 20),
+                  padding: const EdgeInsets.only(left: 25, right: 20, top: 20),
                   child: Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width / 3,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.background,
+                          color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             shadow,
@@ -204,42 +206,50 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ),
                         child: Center(
                           // The first thing in the analytics page is the total number of tasks completed
-                          child: Column(
-                            children: [
-                              Text(context.read<MyGoalsAnalytics>().done,
-                                  style: theme.textTheme.headlineLarge!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary)),
-                              Text(
-                                "Total Completed Tasks",
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                              )
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                            child: Text(context.read<MyGoalsAnalytics>().done,
+                                style: theme.textTheme.headlineLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background)),
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        "Total Completed Tasks",
+                          style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
                 ),
                 // Afterwards, it shows the pie chart created previously with data from the MyGoals provider
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 150,
-                    child: context.read<MyGoalsAnalytics>().sum != 0.0
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: 150,
+                        child: context.read<MyGoalsAnalytics>().sum != 0.0
                         ? PieChart(
-                            PieChartData(
-                              sections: pieChartSectionData,
-                            ),
-                          )
-                        : const Text("Add a goal to view chart"),
-                  ),
+                          PieChartData(
+                            sections: pieChartSectionData,
+                          ),
+                        )
+                      : const Padding(
+                        padding:  EdgeInsets.only(left: 18, top: 40),
+                        child: Text("Add a goal to view chart"),
+                      ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 15),
+                      child: CustomLegend(legendItems: legendItems),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -278,7 +288,10 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
           distance: 60,
           children: [
             ActionButton(
-              onPressed: () => addElementDialog(false),
+              onPressed: () {
+                log(1);
+                addElementDialog(false);
+              },
               icon: const Icon(Icons.addchart),
             ),
             ActionButton(
