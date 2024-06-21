@@ -40,6 +40,7 @@ class MyAppState extends ChangeNotifier {
       Map<String, dynamic> userMap = value.data()!;
       appUser = AppUser.fromMap(userMap);
       appUser.pfp = (appUser.pfpPath.isEmpty) ? null : File(appUser.pfpPath);
+      totalHrs();
       return Future.value(appUser);
     } catch (error, stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
@@ -141,6 +142,7 @@ class MyAppState extends ChangeNotifier {
       totalHrs += double.parse(xp.hours);
     }
     serviceHrs = totalHrs;
+    notifyListeners();
   }
 
   // In the list of ChartTiles, all the charts and their data are stored

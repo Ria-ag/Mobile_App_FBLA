@@ -274,7 +274,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.buttonColor = const Color.fromARGB(255, 218, 124, 96),
   });
   final Widget child;
-  final Function() onPressed;
+  final Function()? onPressed;
   final bool stadiumBorder;
   final Color buttonColor;
 
