@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
+import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
     context
-        .read<MyGoalsAnalytics>()
+        .read<MyAppState>()
         .goals
         .firstWhere((goal) => goal.title == widget.title)
         .addTask(value, context);
@@ -32,7 +32,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> items = context.read<MyGoalsAnalytics>().items;
+    final List<String> items = context.read<MyAppState>().items;
 
     return SingleChildScrollView(
       child: SizedBox(
@@ -86,7 +86,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       context,
                       "Category: ",
                       context
-                          .read<MyGoalsAnalytics>()
+                          .read<MyAppState>()
                           .goals
                           .firstWhere((goal) => goal.title == widget.title)
                           .getCategory(),
@@ -101,9 +101,9 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                         Text("Category",
                             style: Theme.of(context).textTheme.bodySmall),
                         DropdownButton<String>(
-                          style: theme.dropdownMenuTheme.textStyle,
+                          //style: theme.dropdownMenuTheme.textStyle,
                           value: context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .getCategory(),
@@ -113,13 +113,12 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               .toList(),
                           onChanged: (item) => setState(() {
                             context
-                                .read<MyGoalsAnalytics>()
+                                .read<MyAppState>()
                                 .goals
                                 .firstWhere(
                                     (goal) => goal.title == widget.title)
                                 .changeCategory(item);
-                            context.read<MyGoalsAnalytics>().updatePieChart();
-                            context.read<MyGoalsAnalytics>().sum = 1.0;
+                            context.read<MyAppState>().updatePieChart();
                           }),
                         ),
                       ],
@@ -132,7 +131,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           context,
                           "Deadline: ",
                           context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .getDate(),
@@ -143,7 +142,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           context,
                           "Deadline",
                           context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .getDate(),
@@ -159,7 +158,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           style: Theme.of(context).textTheme.bodySmall,
                           controller: TextEditingController(
                             text: context
-                                .read<MyGoalsAnalytics>()
+                                .read<MyAppState>()
                                 .goals
                                 .firstWhere(
                                     (goal) => goal.title == widget.title)
@@ -181,7 +180,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                             if (pickedDate != null) {
                               setState(() {
                                 context
-                                    .read<MyGoalsAnalytics>()
+                                    .read<MyAppState>()
                                     .goals
                                     .firstWhere(
                                         (goal) => goal.title == widget.title)
@@ -197,7 +196,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: (context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .getDescription()
@@ -208,7 +207,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               context,
                               "Description:\n",
                               context
-                                  .read<MyGoalsAnalytics>()
+                                  .read<MyAppState>()
                                   .goals
                                   .firstWhere(
                                       (goal) => goal.title == widget.title)
@@ -220,14 +219,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       minLines: 1,
                       maxLines: 4,
                       initialValue: context
-                          .read<MyGoalsAnalytics>()
+                          .read<MyAppState>()
                           .goals
                           .firstWhere((goal) => goal.title == widget.title)
                           .getDescription(),
                       onChanged: (value) {
                         setState(
                           () => context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .changeDescription(value),
@@ -279,7 +278,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
               Expanded(
                 child: ListView.builder(
                   itemCount: context
-                      .read<MyGoalsAnalytics>()
+                      .read<MyAppState>()
                       .goals
                       .firstWhere((goal) => goal.title == widget.title)
                       .tasks
@@ -287,13 +286,13 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   itemBuilder: (context, index) {
                     return CheckboxListTile(
                       title: Text(context
-                          .read<MyGoalsAnalytics>()
+                          .read<MyAppState>()
                           .goals
                           .firstWhere((goal) => goal.title == widget.title)
                           .tasks[index]
                           .task),
                       value: context
-                          .read<MyGoalsAnalytics>()
+                          .read<MyAppState>()
                           .goals
                           .firstWhere((goal) => goal.title == widget.title)
                           .tasks[index]
@@ -301,14 +300,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                       onChanged: (value) {
                         setState(() {
                           context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .tasks[index]
                               .isChecked = value!;
                           // Goal removed when checked
                           context
-                              .read<MyGoalsAnalytics>()
+                              .read<MyAppState>()
                               .goals
                               .firstWhere((goal) => goal.title == widget.title)
                               .removeTask(index, context);

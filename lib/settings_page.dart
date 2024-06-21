@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'main.dart';
+import 'package:mobileapp/my_app_state.dart';
+import 'package:provider/provider.dart';
 import 'theme.dart';
 
 // This class is the settings page
@@ -38,42 +39,51 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
-          Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 3.5,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Column(
-                  children: [
-                    SettingsElevatedButton(
-                      text: "Account and Security",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Security()),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    SettingsElevatedButton(
-                      text: "Terms and Conditions",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Terms()),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    // This is where the reset button is
-                    const Center(child: ResetButton()),
-                  ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3.5,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Column(
+                    children: [
+                      SettingsElevatedButton(
+                        text: "Account and Security",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Security()),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      SettingsElevatedButton(
+                        text: "Terms and Conditions",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Terms()),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      // This is the sign out button
+                      Center(
+                          child: SettingsElevatedButton(
+                        text: "Sign Out",
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                        },
+                      )),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -85,63 +95,43 @@ class _SettingsPageState extends State<SettingsPage> {
 // ignore: must_be_immutable
 class Security extends StatefulWidget {
   Security({super.key});
-  bool nameEditable = false;
-  bool schoolEditable = false;
-  bool yearEditable = false;
+  bool nameEditable = false, schoolEditable = false, yearEditable = false;
   @override
   State<Security> createState() => _SecurityState();
 }
 
 class _SecurityState extends State<Security> {
-  String name = "";
-  String school = "";
-  String year = "";
+  String name = "", school = "", year = "";
   final _formKey = GlobalKey<FormState>();
 
   // This method retrieves user data when the class is initialized
   @override
   void initState() {
     super.initState();
-    getData();
-  }
-
-  // This method gets the stored data from shared preferences
-  void getData() async {
-    prefs = await SharedPreferences.getInstance();
-
-    String? tempName = prefs.getString('name');
-    String? tempSchool = prefs.getString('school');
-    String? tempYear = prefs.getString('year');
-
-    if (tempName != null && tempSchool != null && tempYear != null) {
-      setState(() {
-        name = tempName;
-        school = tempSchool;
-        year = tempYear;
-      });
-    }
+    name = context.read<MyAppState>().appUser.name;
+    school = context.read<MyAppState>().appUser.school;
+    year = context.read<MyAppState>().appUser.year.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // This button takes the user back to the main settings page and saves the new data to shared preferences if changed
+        // This button takes the user back to the main settings page and saves the new data to Firestore if changed
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             final formState = _formKey.currentState;
             if (formState != null && formState.validate()) {
-              formState.save();
-              prefs.setString("name", name);
-              prefs.setString("school", school);
-              prefs.setString("year", year);
+              context.read<MyAppState>().saveUserInfoLocalandDB(
+                    name,
+                    school,
+                    int.parse(year),
+                  );
               Navigator.pop(context);
             } else {
               // Users cannot leave till all errors on the page are fixed
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content:
-                      Text('Please fix the errors before leaving the page')));
+              showTextSnackBar('Please fix the errors before leaving the page');
             }
           },
         ),
@@ -153,7 +143,7 @@ class _SecurityState extends State<Security> {
             Text("Settings", style: Theme.of(context).textTheme.displayMedium),
             const SizedBox(height: 50),
             Text("Edit Account Information",
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
@@ -234,7 +224,7 @@ class _SecurityState extends State<Security> {
                   ),
                   // Year data
                   ListTile(
-                    title: const Text('Year: '),
+                    title: const Text('Year of Graduation: '),
                     subtitle: !widget.yearEditable
                         ? Text(year)
                         : TextFormField(
@@ -305,6 +295,7 @@ class Terms extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -320,7 +311,7 @@ class Terms extends StatelessWidget {
               child: Column(
                 children: [
                   Text("Review Terms and Conditions",
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.headlineLarge,
                       textAlign: TextAlign.center),
                   const SizedBox(height: 10),
                   termsConditions,
@@ -330,53 +321,6 @@ class Terms extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-// This class builds a reset button to clear all data from shared preferences
-class ResetButton extends StatelessWidget {
-  const ResetButton({super.key});
-
-  Future<void> _clearSharedPreferences(BuildContext context) async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    // ignore: use_build_context_synchronously
-    RestartWidget.restartApp(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SettingsElevatedButton(
-      text: "Reset Profile",
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Warning'),
-              content: const Text('Are you sure you want to clear all data?'),
-              actions: <Widget>[
-                // This button closes the dialong without clearing data
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
-                ),
-
-                // This button clears all data
-                TextButton(
-                  onPressed: () {
-                    _clearSharedPreferences(context);
-                  },
-                  child: const Text('Reset'),
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 }

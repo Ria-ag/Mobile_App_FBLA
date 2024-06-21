@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/profile/my_profile_xps.dart';
+import 'package:mobileapp/profile/experience.dart';
+import '../my_app_state.dart';
 import 'package:provider/provider.dart';
 
 // This is a method that builds the modal sheet that opens with every tile
 // It takes the context, title, and type of tile
-Future<void> modalSheet(context, title, tileIndex, theme) {
+Future<void> modalSheet(context, title, tileIndex) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.grey[200],
     builder: (BuildContext context) {
+      List<List<Experience>> xpList =
+          context.watch<MyAppState>().appUser.xpList;
+
       return ChangeNotifierProvider.value(
-        value: context.read<MyProfileXPs>(),
+        value: context.read<MyAppState>(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height - 50,
           width: MediaQuery.of(context).size.width - 15,
@@ -24,7 +28,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                     Text("More Information",
                         style: Theme.of(context).textTheme.headlineSmall),
                     const Spacer(),
-                    //This button when pressed adds an experience to the tile list and updates using a provider
+                    // This button when pressed adds an experience to the tile list and updates using a provider
                     IconButton(
                       icon: const Icon(
                         Icons.add,
@@ -32,7 +36,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                         size: 20,
                       ),
                       onPressed: () =>
-                          context.read<MyProfileXPs>().add(title, tileIndex),
+                          context.read<MyAppState>().addXp(title, tileIndex),
                     ),
                     // This button when pressed closes the modal sheet
                     IconButton(
@@ -49,18 +53,12 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                 const Divider(color: Colors.grey, thickness: 1),
                 // Displays the list of experiences for each tile
                 Container(
-                  child: (context
-                          .watch<MyProfileXPs>()
-                          .xpList[tileIndex]
-                          .isNotEmpty)
+                  child: (xpList[tileIndex].isNotEmpty)
                       ? SingleChildScrollView(
                           child: ListView.separated(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            itemCount: context
-                                .watch<MyProfileXPs>()
-                                .xpList[tileIndex]
-                                .length,
+                            itemCount: xpList[tileIndex].length,
                             separatorBuilder:
                                 (BuildContext context, int index) {
                               return const Divider(
@@ -69,9 +67,7 @@ Future<void> modalSheet(context, title, tileIndex, theme) {
                               );
                             },
                             itemBuilder: (BuildContext context, int index) {
-                              return context
-                                  .watch<MyProfileXPs>()
-                                  .xpList[tileIndex][index];
+                              return xpList[tileIndex][index];
                             },
                           ),
                         )
