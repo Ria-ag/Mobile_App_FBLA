@@ -9,6 +9,8 @@ import 'main.dart';
 import 'my_app_state.dart';
 import 'theme.dart';
 import 'package:linkedin_login/linkedin_login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // This widget displays and handles login
 class LoginWidget extends StatefulWidget {
@@ -132,8 +134,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
               ),
               IconButton(
-                icon: Image.asset('assets/signIn.png'),
-                onPressed:() => const LinkedInSignInScreen(),
+                icon: Image.asset('signIn.png'),
+                onPressed:() => signInWithLinkedIn(),
               ),
             ],
           ),
@@ -191,6 +193,93 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     // Once this method is completed, the loading page is no longer shown
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  Future<void> signInWithLinkedIn() async {
+    const String clientId = '86w3jl8a5w2h0t';
+    const String clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const String redirectUrl = '';
+
+    final authCode = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LinkedInLoginPage(),
+      ),
+    );
+
+    if (authCode != null) {
+      // Exchange authorization code for access token
+      final accessToken = await _fetchAccessToken(authCode);
+      if (accessToken != null) {
+        // Sign in with Firebase using LinkedIn credentials
+        try {
+          final credential = OAuthCredential(
+            providerId: 'linkedin.com',
+            accessToken: accessToken,
+          );
+          final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+          print('Successfully signed in with LinkedIn: ${userCredential.user!.displayName}');
+          // Navigate to your home screen or next step
+        } catch (e) {
+          print('Error signing in with LinkedIn: $e');
+          // Handle error
+        }
+      }
+    }
+  }
+
+  Future<String?> _fetchAccessToken(String authCode) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://www.linkedin.com/oauth/v2/accessToken'),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'grant_type': 'authorization_code',
+          'code': authCode,
+          'redirect_uri': redirectUrl,
+          'client_id': clientId,
+          'client_secret': clientSecret,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return jsonData['access_token'];
+      } else {
+        print('Failed to fetch access token: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching access token: $e');
+      return null;
+    }
+  }
+}
+
+class LinkedInLoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final authUrl =
+        'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social'; // Update with required LinkedIn scopes
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('LinkedIn Login'),
+      ),
+      body: WebView(
+        initialUrl: authUrl,
+        javascriptMode: JavascriptMode.unrestricted,
+        onPageFinished: (String url) {
+          if (url.startsWith(redirectUrl)) {
+            final Uri uri = Uri.parse(url);
+            final String authCode = uri.queryParameters['code'] ?? '';
+            Navigator.pop(context, authCode);
+          }
+        },
+      ),
+    );
   }
 }
 
@@ -508,77 +597,4 @@ class _VerifiedHomePageState extends State<VerifiedHomePage> {
       },
     );
   }
-}
-
-class LinkedInSignInScreen extends StatefulWidget {
-  const LinkedInSignInScreen({super.key});
-
-  @override
-  _LinkedInSignInScreenState createState() => _LinkedInSignInScreenState();
-}
-
-class _LinkedInSignInScreenState extends State<LinkedInSignInScreen> {
-  LinkedInUser? _user;
-  bool _loading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('LinkedIn Sign In'),
-      ),
-      // body: Center(
-      //   child: _loading
-      //       ? const CircularProgressIndicator()
-      //       : _user == null
-      //           ? LinkedInButtonStandardWidget(
-      //               onTap: _loginWithLinkedIn,
-      //             )
-      //           :
-      // ),
-    );
-  }
-
-  void _loginWithLinkedIn() {
-    setState(() {
-      _loading = true;
-    });
-
-    // LinkedInLogin.getProfile(
-    //   destroySession: true,
-    //   forceLogin: true,
-    //   appBar: AppBar(
-    //     title: const Text('LinkedIn Sign In'),
-    //   ),
-    // ).then((profile) {
-    //   setState(() {
-    //     _user = profile;
-    //     _loading = false;
-    //   });
-    // }).catchError((error) {
-    //   print('Error signing in: $error');
-    //   setState(() {
-    //     _loading = false;
-    //   });
-    // });
-  }
-
-  void _logout() {
-    setState(() {
-      _user = null;
-    });
-  }
-
-  // Future<void> storeUserProfileInFirebase(LinkedInUser user) async {
-  //   try {
-  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //     await firestore.collection('users').doc(user.id).set({
-  //       'name': user.firstName ' ' + user.lastName,
-  //       'pfpPath': user.profileImageUrl,
-  //     });
-  //     print('User profile stored in Firestore');
-  //   } catch (e) {
-  //     print('Error storing user profile: $e');
-  //   }
-  // }
 }

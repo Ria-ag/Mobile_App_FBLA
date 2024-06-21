@@ -49,6 +49,7 @@ dependencies:
   firebase_auth: ^5.0.0
   cloud_firestore: ^5.0.1
   linkedin_login: ^3.0.5
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:
