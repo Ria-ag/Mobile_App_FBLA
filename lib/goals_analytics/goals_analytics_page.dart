@@ -1,5 +1,8 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'goals_analytics_widgets.dart';
+import 'my_goals_analytics.dart';
 import 'package:provider/provider.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
@@ -90,17 +93,44 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       Colors.white
     ];
 
-    final titlePositionOffsets = [1.9, 1.4, 1.4, 1.7, 2.0, null, 1.4, 1.4, 1.6];
-
     List<PieChartSectionData> pieChartSectionData =
         List.generate(context.read<MyAppState>().items.length, (index) {
       return PieChartSectionData(
         value: context.read<MyAppState>().numberOfItems[index].toDouble(),
-        title: context.read<MyAppState>().items[index],
         color: colors[index],
-        titlePositionPercentageOffset: titlePositionOffsets[index],
       );
     });
+
+    List<LegendItem> legendItems = [
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[0],
+          color: const Color.fromARGB(255, 147, 187, 229)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[1],
+          color: const Color.fromARGB(255, 77, 145, 214)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[2],
+          color: const Color.fromARGB(255, 28, 80, 133)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[3],
+          color: const Color.fromARGB(255, 14, 50, 86)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[4],
+          color: const Color.fromARGB(255, 84, 26, 9)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[5],
+          color: const Color.fromARGB(255, 181, 52, 12)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[6],
+          color: const Color.fromARGB(255, 218, 124, 96)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[7],
+          color: const Color.fromARGB(255, 222, 168, 151)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[8], color: Colors.white),
+    ];
+
+    final theme = Theme.of(context);
 
     // Here is the main layout of the page
     // The first section is on goals, and the second section is data and analytics
@@ -156,17 +186,17 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   style: theme.textTheme.displayMedium!.copyWith(
                       color: Theme.of(context).colorScheme.secondary)),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 20),
+                  padding: const EdgeInsets.only(left: 25, right: 20, top: 20),
                   child: Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width / 3,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.background,
+                          color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             shadow,
@@ -174,28 +204,25 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         ),
                         child: Center(
                           // The first thing in the analytics page is the total number of tasks completed
-                          child: Column(
-                            children: [
-                              Text(
-                                  context
-                                      .watch<MyAppState>()
-                                      .totalCompletedTasks
-                                      .toString(),
-                                  style: theme.textTheme.headlineLarge!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary)),
-                              Text(
-                                "Total Completed Tasks",
-                                style: theme.textTheme.bodyMedium!.copyWith(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 20, right: 20),
+                            child: Text(
+                                context
+                                    .read<MyGoalsAnalytics>()
+                                    .totalCompletedTasks
+                                    .toString(),
+                                style: theme.textTheme.headlineLarge!.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .secondary),
-                              )
-                            ],
+                                        .background)),
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        "Total Completed Tasks",
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -206,18 +233,23 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 2,
                     height: 150,
-                    //TODO: make sure the chart works updated, ask Ria if sum had any other purpose
-                    child: context
-                            .read<MyAppState>()
-                            .numberOfItems
-                            .every((element) => element == 0)
+                    child: context.read<MyGoalsAnalytics>().sum != 0.0
                         ? PieChart(
-                            PieChartData(
-                              sections: pieChartSectionData,
-                            ),
-                          )
-                        : const Text("Add a goal to view chart"),
-                  ),
+                          PieChartData(
+                            sections: pieChartSectionData,
+                          ),
+                        )
+                      : const Padding(
+                        padding:  EdgeInsets.only(left: 18, top: 40),
+                        child: Text("Add a goal to view chart"),
+                      ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 15),
+                      child: CustomLegend(legendItems: legendItems),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -256,7 +288,10 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
           distance: 60,
           children: [
             ActionButton(
-              onPressed: () => addElementDialog(false),
+              onPressed: () {
+                log(1);
+                addElementDialog(false);
+              },
               icon: const Icon(Icons.addchart),
             ),
             ActionButton(

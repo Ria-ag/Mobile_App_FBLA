@@ -3,6 +3,8 @@ import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
 
+import 'my_goals_analytics.dart';
+
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
   const GoalModalSheet({
@@ -21,11 +23,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
 
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
-    context
-        .read<MyAppState>()
-        .goals
-        .firstWhere((goal) => goal.title == widget.title)
-        .addTask(value, context);
+    context.read<MyGoalsAnalytics>().addTotalTasks(widget.title, value);
     taskController.clear();
     FocusScope.of(context).unfocus();
   }
@@ -94,9 +92,6 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 10),
-                        Text("Category",
-                            style: Theme.of(context).textTheme.bodySmall),
                         const SizedBox(height: 10),
                         Text("Category",
                             style: Theme.of(context).textTheme.bodySmall),
@@ -276,42 +271,39 @@ class GoalModalSheetState extends State<GoalModalSheet> {
               const SizedBox(height: 5),
               // This displays list of all the tasks with a checkbox
               Expanded(
-                child: ListView.builder(
-                  itemCount: context
-                      .read<MyAppState>()
-                      .goals
-                      .firstWhere((goal) => goal.title == widget.title)
-                      .tasks
-                      .length,
-                  itemBuilder: (context, index) {
-                    return CheckboxListTile(
-                      title: Text(context
-                          .read<MyAppState>()
-                          .goals
-                          .firstWhere((goal) => goal.title == widget.title)
-                          .tasks[index]
-                          .task),
-                      value: context
-                          .read<MyAppState>()
-                          .goals
-                          .firstWhere((goal) => goal.title == widget.title)
-                          .tasks[index]
-                          .isChecked,
-                      onChanged: (value) {
-                        setState(() {
-                          context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .tasks[index]
-                              .isChecked = value!;
-                          // Goal removed when checked
-                          context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .removeTask(index, context);
-                        });
+                child: Consumer<MyGoalsAnalytics>(
+                  builder: (context, myGoalsAnalytics, _) {
+                    final goal = myGoalsAnalytics.goals
+                        .firstWhere((goal) => goal.title == widget.title);
+                    final tasks = goal.tasks;
+
+                    return ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = tasks[index];
+                        return CheckboxListTile(
+                            title: Text(task.task),
+                            value: task.isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                task.isChecked = value!;
+                                if (value) {
+                                  myGoalsAnalytics
+                                      .addCompletedTasks(widget.title);
+                                } else {
+                                  myGoalsAnalytics.unCheck(widget.title);
+                                }
+                              });
+                            },
+                            secondary: IconButton(
+                                icon:
+                                    const Icon(Icons.cancel, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    myGoalsAnalytics.deleteTask(
+                                        widget.title, index);
+                                  });
+                                }));
                       },
                     );
                   },
