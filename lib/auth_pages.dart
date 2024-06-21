@@ -129,14 +129,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // A simple app bar that lets the user go back
-      // TODO: add logo?
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Reset Password'),
+        title: Text(
+          'Reset Password',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
@@ -145,9 +147,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               key: formKey,
               child: Column(
                 children: [
-                  Text(
-                    'Recieve an email to\nreset your password',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  const Text(
+                    'Recieve an email to reset your password.',
                   ),
                   const SizedBox(height: 20),
                   // This is where the user enters their email to send the reset password link to.
@@ -251,7 +252,10 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              title: const Text('Verify Email'),
+              title: Text(
+                'Reset Password',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
               leading: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () {
@@ -264,7 +268,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               padding: const EdgeInsets.all(25),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text('A verification email has been sent.'),
                   const SizedBox(height: 20),

@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  // TODO: always starts on first page, call totalHrs()
   const MyHomePage({super.key, required this.title});
 
   final String title;

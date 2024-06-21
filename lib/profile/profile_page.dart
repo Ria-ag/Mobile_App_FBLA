@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: EdgeInsets.only(top: 59, right: 0),
+                        padding: EdgeInsets.only(top: 9.5),
                         child: Image(
                           image: AssetImage('assets/logo.png'),
                           height: 36,
