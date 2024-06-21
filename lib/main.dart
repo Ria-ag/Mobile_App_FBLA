@@ -4,7 +4,6 @@ import 'package:mobileapp/auth_pages.dart';
 import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:mobileapp/my_app_state.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
@@ -16,7 +15,6 @@ import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -27,9 +25,6 @@ void main() async {
 // They are primarily for navigation and displaying dialogs/snack bars
 final navigatorKey = GlobalKey<NavigatorState>();
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-
-// This SharePreferences instance is where app data is locally stored
-late SharedPreferences prefs;
 
 // This is the root of the app; everything runs from here
 class MyApp extends StatelessWidget {
