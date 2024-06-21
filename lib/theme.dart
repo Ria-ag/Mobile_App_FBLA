@@ -245,9 +245,15 @@ InputDecoration underlineInputDecoration(
 // This is a method for showing a snack bar without a local BuildContext
 //TODO: snackbars look ugly
 showTextSnackBar(String message) {
-  scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-    content: Text(message),
-  ));
+  scaffoldMessengerKey.currentState?.showSnackBar(
+    SnackBar(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 2),
+      content: Text(message, style: TextStyle(fontFamily: GoogleFonts.poppins().fontFamily, fontSize: 14, color: Colors.white)),
+    )
+  );
 }
 
 // This is a commonly used validation method in the app
