@@ -194,7 +194,7 @@ class CustomLineChart extends StatelessWidget {
 // ignore: must_be_immutable
 class GoalTile extends StatelessWidget {
   final String title;
-  String category = "Choose Category";
+  String category = "Athletics";
   String date = "";
   String description = "";
   List<Task> tasks = [];

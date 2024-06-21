@@ -1,6 +1,7 @@
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/auth_pages.dart';
+import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:mobileapp/my_app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
     // These are the providers used in the app for state management across widgets
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
+        ChangeNotifierProvider<MyGoalsAnalytics>(
+            create: (context) => MyGoalsAnalytics()),
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
       ],
       child: MaterialApp(
