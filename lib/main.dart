@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
     // These are the providers used in the app for state management across widgets
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider<MyGoalsAnalytics>(create: (context) => MyGoalsAnalytics()),
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
       ],
       child: MaterialApp(

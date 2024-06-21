@@ -188,7 +188,7 @@ class _ExperienceState extends State<Experience> {
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
                         thickness: 2,
-                        endIndent: MediaQuery.of(context).size.width / 4,
+                        endIndent: MediaQuery.of(context).size.width / 8,
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -427,7 +427,7 @@ class _ExperienceState extends State<Experience> {
         ],
       ),
       trailing: SizedBox(
-        width: 85,
+        width: 100,
         height: 175,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,

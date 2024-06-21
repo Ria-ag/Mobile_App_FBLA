@@ -100,13 +100,16 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       );
     });
 
-    List<LegendItem> legendItems = 
-      List.generate(context.read<MyAppState>().items.length, (index) {
-        return LegendItem (
-          name: context.read<MyAppState>().items[index],
-          color: colors[index],
-        );
-      });
+    List<LegendItem> legendItems =
+        List.generate(context.read<MyAppState>().items.length, (index) {
+      return LegendItem(
+        name: context.read<MyAppState>().items[index].splitMapJoin(
+              RegExp(r'/|\s'),
+              onMatch: (m) => '${m.group(0)}\n',
+            ),
+        color: colors[index],
+      );
+    });
 
     final theme = Theme.of(context);
 
@@ -211,22 +214,21 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: 150,
-                        child: context
-                                .read<MyAppState>()
-                                .numberOfItems
-                                .every((element) => element == 0)
-                            ? const Padding(
-                                padding: EdgeInsets.only(left: 18, top: 40),
-                                child: Text("Add a goal to view chart"),
-                              )
-                            : PieChart(
-                                PieChartData(
-                                  sections: pieChartSectionData,
-                                ),
-                              )
-                      ),
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: 150,
+                          child: context
+                                  .read<MyAppState>()
+                                  .numberOfItems
+                                  .every((element) => element == 0)
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 18, top: 40),
+                                  child: Text("Add a goal to view chart"),
+                                )
+                              : PieChart(
+                                  PieChartData(
+                                    sections: pieChartSectionData,
+                                  ),
+                                )),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 15),

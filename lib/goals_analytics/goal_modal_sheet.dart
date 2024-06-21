@@ -35,7 +35,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
         height: MediaQuery.of(context).size.height - 50,
         width: MediaQuery.of(context).size.width - 15,
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
@@ -250,8 +250,9 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
                     child: CircleAvatar(
+                      maxRadius: 17.5,
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       child: IconButton(
                         onPressed: () {
@@ -260,6 +261,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                         icon: Icon(
                           Icons.add,
                           color: Theme.of(context).colorScheme.background,
+                          size: 15,
                         ),
                       ),
                     ),
@@ -286,8 +288,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               setState(() {
                                 task.isChecked = value!;
                                 if (value) {
-                                  myAppState
-                                      .addCompletedTasks(widget.title);
+                                  myAppState.addCompletedTasks(widget.title);
                                 } else {
                                   myAppState.unCheck(widget.title);
                                 }
@@ -298,8 +299,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                                     const Icon(Icons.cancel, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
-                                    myAppState.deleteTask(
-                                        widget.title, index);
+                                    myAppState.deleteTask(widget.title, index);
                                   });
                                 }));
                       },
