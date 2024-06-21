@@ -8,6 +8,7 @@ import 'auth_pages.dart';
 import 'main.dart';
 import 'my_app_state.dart';
 import 'theme.dart';
+import 'package:linkedin_login/linkedin_login.dart';
 
 // This widget displays and handles login
 class LoginWidget extends StatefulWidget {
@@ -132,7 +133,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               ),
               IconButton(
                 icon: Image.asset('assets/signIn.png'),
-                onPressed:() => loginWithLinkedIn(),
+                onPressed:() => const LinkedInSignInScreen(),
               ),
             ],
           ),
@@ -191,8 +192,6 @@ class _LoginWidgetState extends State<LoginWidget> {
     // Once this method is completed, the loading page is no longer shown
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
-  
-  loginWithLinkedIn() {}
 }
 
 // This widget displays and handles signing up
@@ -509,4 +508,77 @@ class _VerifiedHomePageState extends State<VerifiedHomePage> {
       },
     );
   }
+}
+
+class LinkedInSignInScreen extends StatefulWidget {
+  const LinkedInSignInScreen({super.key});
+
+  @override
+  _LinkedInSignInScreenState createState() => _LinkedInSignInScreenState();
+}
+
+class _LinkedInSignInScreenState extends State<LinkedInSignInScreen> {
+  LinkedInUser? _user;
+  bool _loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('LinkedIn Sign In'),
+      ),
+      // body: Center(
+      //   child: _loading
+      //       ? const CircularProgressIndicator()
+      //       : _user == null
+      //           ? LinkedInButtonStandardWidget(
+      //               onTap: _loginWithLinkedIn,
+      //             )
+      //           :
+      // ),
+    );
+  }
+
+  void _loginWithLinkedIn() {
+    setState(() {
+      _loading = true;
+    });
+
+    // LinkedInLogin.getProfile(
+    //   destroySession: true,
+    //   forceLogin: true,
+    //   appBar: AppBar(
+    //     title: const Text('LinkedIn Sign In'),
+    //   ),
+    // ).then((profile) {
+    //   setState(() {
+    //     _user = profile;
+    //     _loading = false;
+    //   });
+    // }).catchError((error) {
+    //   print('Error signing in: $error');
+    //   setState(() {
+    //     _loading = false;
+    //   });
+    // });
+  }
+
+  void _logout() {
+    setState(() {
+      _user = null;
+    });
+  }
+
+  // Future<void> storeUserProfileInFirebase(LinkedInUser user) async {
+  //   try {
+  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //     await firestore.collection('users').doc(user.id).set({
+  //       'name': user.firstName ' ' + user.lastName,
+  //       'pfpPath': user.profileImageUrl,
+  //     });
+  //     print('User profile stored in Firestore');
+  //   } catch (e) {
+  //     print('Error storing user profile: $e');
+  //   }
+  // }
 }
