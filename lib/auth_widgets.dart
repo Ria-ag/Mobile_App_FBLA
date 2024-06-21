@@ -130,6 +130,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ],
                 ),
               ),
+              IconButton(
+                icon: Image.asset('assets/signIn.png'),
+                onPressed:() => loginWithLinkedIn(),
+              ),
             ],
           ),
         ),
@@ -187,6 +191,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     // Once this method is completed, the loading page is no longer shown
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
+  
+  loginWithLinkedIn() {}
 }
 
 // This widget displays and handles signing up
