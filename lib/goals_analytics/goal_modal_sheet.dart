@@ -3,8 +3,6 @@ import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
 
-import 'my_goals_analytics.dart';
-
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
   const GoalModalSheet({
@@ -23,7 +21,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
 
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
-    context.read<MyGoalsAnalytics>().addTotalTasks(widget.title, value);
+    context.read<MyAppState>().addTotalTasks(widget.title, value);
     taskController.clear();
     FocusScope.of(context).unfocus();
   }
@@ -239,7 +237,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
               Row(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 125,
+                    width: MediaQuery.of(context).size.width - 150,
                     // Input field to add tasks
                     child: TextField(
                       controller: taskController,
@@ -271,9 +269,9 @@ class GoalModalSheetState extends State<GoalModalSheet> {
               const SizedBox(height: 5),
               // This displays list of all the tasks with a checkbox
               Expanded(
-                child: Consumer<MyGoalsAnalytics>(
-                  builder: (context, myGoalsAnalytics, _) {
-                    final goal = myGoalsAnalytics.goals
+                child: Consumer<MyAppState>(
+                  builder: (context, myAppState, _) {
+                    final goal = myAppState.goals
                         .firstWhere((goal) => goal.title == widget.title);
                     final tasks = goal.tasks;
 
@@ -288,10 +286,10 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                               setState(() {
                                 task.isChecked = value!;
                                 if (value) {
-                                  myGoalsAnalytics
+                                  myAppState
                                       .addCompletedTasks(widget.title);
                                 } else {
-                                  myGoalsAnalytics.unCheck(widget.title);
+                                  myAppState.unCheck(widget.title);
                                 }
                               });
                             },
@@ -300,7 +298,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                                     const Icon(Icons.cancel, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
-                                    myGoalsAnalytics.deleteTask(
+                                    myAppState.deleteTask(
                                         widget.title, index);
                                   });
                                 }));

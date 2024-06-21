@@ -73,35 +73,34 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              color: Theme.of(context).colorScheme.secondary,
-              height: MediaQuery.of(context).size.height - 750,
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Image(image: AssetImage("assets/logo.png"), height: 60),
-                  Text(
-                    'Rise',
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ],
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Top section with logo and app name
+          Container(
+            color: Theme.of(context).colorScheme.secondary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 150),
+                const Image(image: AssetImage("assets/logo.png"), height: 60),
+                Text(
+                  'Rise',
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Theme.of(context).colorScheme.background),
+                ),
+                const SizedBox(height: 50),
+              ],
             ),
-            Align(
-              alignment: Alignment.center,
+          ),
+          Expanded(
+            child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: login
-                    ? LoginWidget(switchToSignUp: toggle)
-                    : SignUpWidget(switchtoSignIn: toggle),
+                child: login ? LoginWidget(switchToSignUp: toggle) : SignUpWidget(switchtoSignIn: toggle),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

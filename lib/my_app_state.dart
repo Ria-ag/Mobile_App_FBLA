@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobileapp/goals_analytics/goal_modal_sheet.dart';
 import 'package:mobileapp/theme.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -177,6 +178,26 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+   // This method updates chart data with a list of rows and an index of the specific chart
+  // void updateChartData(List<DataRow> rows, int index) {
+  //   List<FlSpot> newSpots = [];
+
+  //   for (var row in rows) {
+  //     var cells = row.cells;
+  //     double? x =
+  //         double.tryParse((cells[0].child as TextField).controller!.text);
+  //     double? y =
+  //         double.tryParse((cells[1].child as TextField).controller!.text);
+  //     if (x != null && y != null) {
+  //       newSpots.add(FlSpot(x, y));
+  //     }
+  //   }
+  //   charts[index].spots = newSpots;
+
+  //   charts[index].rows = rows;
+  //   notifyListeners();
+  // }
+
   // This is a setter for the chart name
   updateName(String name, int index) {
     charts[index].chartName = name;
@@ -233,12 +254,15 @@ class MyAppState extends ChangeNotifier {
     if (findGoal(title).totalTasks == 0) {
       return 0.0;
     }
+     notifyListeners();
     return findGoal(title).completedTasks / findGoal(title).totalTasks;
   }
 
-  // This method takes a title and adds to the total number of tasks
-  void addTotalTasks(title) {
+   // This method takes a title and adds to the total number of tasks
+  void addTotalTasks(title, task) {
     findGoal(title).totalTasks++;
+    findGoal(title).tasks.add(Task(task: task, isChecked: false));
+    findGoal(title).emptyGoal = false;
     notifyListeners();
   }
 
@@ -246,6 +270,19 @@ class MyAppState extends ChangeNotifier {
   void addCompletedTasks(title) {
     findGoal(title).completedTasks++;
     totalCompletedTasks++;
+    notifyListeners();
+  }
+
+  //This method removes the task from completed
+  void unCheck(title) {
+    findGoal(title).completedTasks--;
+    totalCompletedTasks--;
+    notifyListeners();
+  }
+
+  //This method removes the task from the task list entirely
+  void deleteTask(title, index) {
+    findGoal(title).tasks.removeAt(index);
     notifyListeners();
   }
 

@@ -207,19 +207,6 @@ class GoalTile extends StatelessWidget {
     required this.title,
   });
 
-  // This method adds a task to the list of tasks and takes the task and context
-  void addTask(task, context) {
-    tasks.add(Task(task: task, isChecked: false));
-    context.read<MyAppState>().addTotalTasks(title);
-    emptyGoal = false;
-  }
-
-  // This method removes a task from the list of tasks and takes the index and context
-  void removeTask(int index, context) {
-    tasks.removeAt(index);
-    context.read<MyAppState>().addCompletedTasks(title);
-  }
-
   // Category getter method
   String getCategory() {
     return category;
@@ -257,8 +244,6 @@ class GoalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculates how much progress a user has made on a goal
-    double progressValue = context.read<MyAppState>().calculateProgress(title);
     return Column(
       children: [
         Padding(
@@ -298,13 +283,19 @@ class GoalTile extends StatelessWidget {
                     ],
                   ),
                   // Creates a bar showing the progess of the goal
-                  LinearProgressIndicator(
-                    value: progressValue,
-                    backgroundColor: Colors.grey[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
+                  Consumer<MyAppState>(
+                  builder: (context, myAppState, _) {
+                    final progress = myAppState.calculateProgress(title);
+                
+                    return LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
+                    );
+                  }
+                ),
                 ],
               ),
             ),

@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'goals_analytics_widgets.dart';
-import 'my_goals_analytics.dart';
 import 'package:provider/provider.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
@@ -101,34 +100,13 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       );
     });
 
-    List<LegendItem> legendItems = [
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[0],
-          color: const Color.fromARGB(255, 147, 187, 229)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[1],
-          color: const Color.fromARGB(255, 77, 145, 214)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[2],
-          color: const Color.fromARGB(255, 28, 80, 133)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[3],
-          color: const Color.fromARGB(255, 14, 50, 86)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[4],
-          color: const Color.fromARGB(255, 84, 26, 9)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[5],
-          color: const Color.fromARGB(255, 181, 52, 12)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[6],
-          color: const Color.fromARGB(255, 218, 124, 96)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[7],
-          color: const Color.fromARGB(255, 222, 168, 151)),
-      LegendItem(
-          name: context.read<MyGoalsAnalytics>().items[8], color: Colors.white),
-    ];
+    List<LegendItem> legendItems = 
+      List.generate(context.read<MyAppState>().items.length, (index) {
+        return LegendItem (
+          name: context.read<MyAppState>().items[index],
+          color: colors[index],
+        );
+      });
 
     final theme = Theme.of(context);
 
@@ -209,7 +187,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                                 top: 10, bottom: 10, left: 20, right: 20),
                             child: Text(
                                 context
-                                    .read<MyGoalsAnalytics>()
+                                    .read<MyAppState>()
                                     .totalCompletedTasks
                                     .toString(),
                                 style: theme.textTheme.headlineLarge!.copyWith(
@@ -239,15 +217,15 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                                 .read<MyAppState>()
                                 .numberOfItems
                                 .every((element) => element == 0)
-                            ? PieChart(
+                            ? const Padding(
+                                padding: EdgeInsets.only(left: 18, top: 40),
+                                child: Text("Add a goal to view chart"),
+                              )
+                            : PieChart(
                                 PieChartData(
                                   sections: pieChartSectionData,
                                 ),
                               )
-                            : const Padding(
-                                padding: EdgeInsets.only(left: 18, top: 40),
-                                child: Text("Add a goal to view chart"),
-                              ),
                       ),
                     ),
                     Padding(
