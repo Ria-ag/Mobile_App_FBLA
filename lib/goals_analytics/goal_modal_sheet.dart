@@ -1,8 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer' as developer;
+import 'package:http/http.dart' as http;
 
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
@@ -28,6 +29,78 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     taskController.clear();
     FocusScope.of(context).unfocus();
   }
+
+Future<void> shareOnLinkedIn(String accessToken, BuildContext context) async {
+  try {
+    // Read JSON file from assets or local storage
+    String jsonString = await DefaultAssetBundle.of(context).loadString('goals_analytics/LinkedInPost.json');
+    Map<String, dynamic> postData = jsonDecode(jsonString);
+
+    // API endpoint URL
+    const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+
+    // Define headers
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $accessToken',
+    };
+
+    // Send POST request to LinkedIn API
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: jsonEncode(postData),
+    );
+
+    // Handle response based on status code
+    if (response.statusCode == 201) {
+      // Success: Show success dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Post shared successfully on LinkedIn.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Failure: Show error dialog with status code
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to share post on LinkedIn. Status Code: ${response.statusCode}'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }
+  } catch (e) {
+    // Exception: Show generic error dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text('Failed to share post on LinkedIn. Error: $e'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +306,11 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           context, "ex. In this I...", "Description"),
                     ),
               const SizedBox(height: 50),
+              // ElevatedButton(
+              //   onPressed: shareOnLinkedIn,
+              //   child: const Text('Share on LinkedIn'),
+              // ),
+              const SizedBox(height: 50),
               Text("Tasks",
                   style: Theme.of(context)
                       .textTheme
@@ -286,7 +364,6 @@ class GoalModalSheetState extends State<GoalModalSheet> {
             title: Text(task.task),
             value: task.isChecked,
             onChanged: (value) {
-              developer.log("List view changed");
               setState(() {
                 task.isChecked = value!;
                 if (value) {
