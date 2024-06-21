@@ -228,21 +228,26 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   ),
                 ),
                 // Afterwards, it shows the pie chart created previously with data from the MyGoals provider
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 150,
-                    child: context.read<MyGoalsAnalytics>().sum != 0.0
-                        ? PieChart(
-                          PieChartData(
-                            sections: pieChartSectionData,
-                          ),
-                        )
-                      : const Padding(
-                        padding:  EdgeInsets.only(left: 18, top: 40),
-                        child: Text("Add a goal to view chart"),
-                      ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: 150,
+                        child: context
+                                .read<MyAppState>()
+                                .numberOfItems
+                                .every((element) => element == 0)
+                            ? PieChart(
+                                PieChartData(
+                                  sections: pieChartSectionData,
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.only(left: 18, top: 40),
+                                child: Text("Add a goal to view chart"),
+                              ),
                       ),
                     ),
                     Padding(

@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/goal_modal_sheet.dart';
 
@@ -24,24 +23,24 @@ class MyGoalsAnalytics extends ChangeNotifier {
   }
 
   // This method updates chart data with a list of rows and an index of the specific chart
-  void updateChartData(List<DataRow> rows, int index) {
-    List<FlSpot> newSpots = [];
+  // void updateChartData(List<DataRow> rows, int index) {
+  //   List<FlSpot> newSpots = [];
 
-    for (var row in rows) {
-      var cells = row.cells;
-      double? x =
-          double.tryParse((cells[0].child as TextField).controller!.text);
-      double? y =
-          double.tryParse((cells[1].child as TextField).controller!.text);
-      if (x != null && y != null) {
-        newSpots.add(FlSpot(x, y));
-      }
-    }
-    charts[index].spots = newSpots;
+  //   for (var row in rows) {
+  //     var cells = row.cells;
+  //     double? x =
+  //         double.tryParse((cells[0].child as TextField).controller!.text);
+  //     double? y =
+  //         double.tryParse((cells[1].child as TextField).controller!.text);
+  //     if (x != null && y != null) {
+  //       newSpots.add(FlSpot(x, y));
+  //     }
+  //   }
+  //   charts[index].spots = newSpots;
 
-    charts[index].rows = rows;
-    notifyListeners();
-  }
+  //   charts[index].rows = rows;
+  //   notifyListeners();
+  // }
 
   // This is a setter for the chart name
   updateName(String name, int index) {
@@ -63,7 +62,6 @@ class MyGoalsAnalytics extends ChangeNotifier {
 
   List<GoalTile> goals = [];
   int totalCompletedTasks = 0;
-  String done = "0";
 
   List<String> items = [
     "Athletics",
@@ -77,7 +75,6 @@ class MyGoalsAnalytics extends ChangeNotifier {
     "Other"
   ];
   List<double> numberOfItems = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-  double sum = 0.0;
 
   GoalTile findGoal(String title) {
     return goals.firstWhere((goal) => goal.title == title);
@@ -116,18 +113,16 @@ class MyGoalsAnalytics extends ChangeNotifier {
   void addCompletedTasks(title) {
     findGoal(title).completedTasks++;
     totalCompletedTasks++;
-    done = totalCompletedTasks.toString();
     notifyListeners();
   }
 
-  void unCheck(title){
+  void unCheck(title) {
     findGoal(title).completedTasks--;
     totalCompletedTasks--;
-    done = totalCompletedTasks.toString();
     notifyListeners();
   }
 
-  void deleteTask(title, index){
+  void deleteTask(title, index) {
     findGoal(title).tasks.removeAt(index);
     notifyListeners();
   }
