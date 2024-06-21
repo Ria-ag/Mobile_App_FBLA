@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../my_app_state.dart';
 import '../theme.dart';
 import 'experience.dart';
 import 'modal_sheet.dart';
-import 'my_profile_xps.dart';
 
 // This class defines icon tiles, like Athletics
 class IconTile extends StatelessWidget {
@@ -46,7 +46,8 @@ class IconTile extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  modalSheet(context, title, tileIndex, theme);
+                  modalSheet(context, title, tileIndex).then((value) =>
+                      context.read<MyAppState>().saveXpToDB(tileIndex));
                 },
                 child: Container(
                   width: 100,
@@ -58,7 +59,7 @@ class IconTile extends StatelessWidget {
                       shadow,
                     ],
                   ),
-                  // If it is a community service tile it displays the number of hours not the icon
+                  // If the tile is a community service tile, it displays the number of hours rather than an icon
                   child: Center(
                     child: (icon.runtimeType == IconData)
                         ? Icon(icon, size: 60)
@@ -109,10 +110,12 @@ class TextTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Displays each experience summary in the body with its name
     List<Widget> nameSummary = [];
     List<Widget> dateSummary = [];
-    for (Experience xp in context.watch<MyProfileXPs>().xpList[tileIndex]) {
+
+    for (Experience xp
+        in context.watch<MyAppState>().appUser.xpList[tileIndex]) {
+      // Displays each experience summary in the body with its name
       nameSummary.add(
         Text(
           xp.name,
@@ -122,9 +125,7 @@ class TextTile extends StatelessWidget {
           ),
         ),
       );
-    }
-    // Displays each experience summary in the body with its date as well
-    for (Experience xp in context.watch<MyProfileXPs>().xpList[tileIndex]) {
+      // Displays each experience summary in the body with its date as well
       dateSummary.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 1.125),
         child: Text(
@@ -145,12 +146,13 @@ class TextTile extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 5),
-          // On click the text tile opens up a modal sheet with its data in it
+          // On click, the text tile opens up a modal sheet with the category's experiences
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context, title, tileIndex, theme);
+                modalSheet(context, title, tileIndex).then((value) =>
+                    context.read<MyAppState>().saveXpToDB(tileIndex));
               },
               child: Container(
                 constraints: const BoxConstraints(minHeight: 40),

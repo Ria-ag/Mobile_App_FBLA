@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-import "../main.dart";
+import '../my_app_state.dart';
 import '../theme.dart';
 
 // This class defines an experience and requires a title, id, and type of tile
 // ignore: must_be_immutable
 class Experience extends StatefulWidget {
-  Experience(
-      {super.key,
-      required this.title,
-      required this.xpID,
-      required this.tileIndex});
+  Experience({
+    super.key,
+    required this.title,
+    required this.xpID,
+    required this.tileIndex,
+  });
+
   final String title;
+  // The index of an experience's category
   final int tileIndex;
+  // A unique identification number for each integer
   int xpID;
 
   String name = "";
@@ -39,8 +41,8 @@ class Experience extends StatefulWidget {
   final _formKey = GlobalKey<FormState>();
 
   // Converts an Experience object into a JSON string
-  String toJsonString() {
-    final Map<String, dynamic> data = {
+  Map<String, dynamic> toMap() {
+    return {
       'title': title,
       'tileIndex': tileIndex,
       'xpID': xpID,
@@ -54,37 +56,36 @@ class Experience extends StatefulWidget {
       'hours': hours,
       'award': award,
       'location': location,
-      'editable': editable,
       'updateTime': updateTime.toIso8601String(),
       'image': imagePath,
+      'editable': editable,
     };
-    return jsonEncode(data);
   }
 
-  // Creates an Experience object from a JSON string
-  static Experience fromJsonString(String jsonString) {
-    Map<String, dynamic> json = jsonDecode(jsonString);
-    Experience exp = Experience(
-      title: json['title'],
-      xpID: json['xpID'],
-      tileIndex: json['tileIndex'],
-    );
-    exp.name = json['name'];
-    exp.startDate = json['startDate'];
-    exp.endDate = json['endDate'];
-    exp.description = json['description'];
-    exp.score = json['score'];
-    exp.grade = json['grade'];
-    exp.role = json['role'];
-    exp.hours = json['hours'];
-    exp.award = json['award'];
-    exp.location = json['location'];
-    exp.imagePath = json['image'] ?? "";
-    exp.editable = json['editable'] as bool;
-    exp.updateTime = DateTime.tryParse(json['updateTime']) ?? DateTime.now();
+  // Creates an Experience object from a map
+  factory Experience.fromMap(Map<String, dynamic> xpMap) {
+    final Map<String, dynamic> map = Map<String, dynamic>.from(xpMap);
 
-    exp._image =
-        (exp.imagePath.isEmpty) ? null : File(prefs.getString('image')!);
+    Experience exp = Experience(
+      title: map['title'],
+      xpID: map['xpID'],
+      tileIndex: map['tileIndex'],
+    );
+    exp.name = map['name'];
+    exp.startDate = map['startDate'];
+    exp.endDate = map['endDate'];
+    exp.description = map['description'];
+    exp.score = map['score'];
+    exp.grade = map['grade'];
+    exp.role = map['role'];
+    exp.hours = map['hours'];
+    exp.award = map['award'];
+    exp.location = map['location'];
+    exp.imagePath = map['image'] ?? "";
+    exp.editable = map['editable'];
+    exp.updateTime = DateTime.tryParse(map['updateTime']) ?? DateTime.now();
+    exp._image = (exp.imagePath.isEmpty) ? null : File(exp.imagePath);
+
     return exp;
   }
 
@@ -103,50 +104,62 @@ class _ExperienceState extends State<Experience> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [shadow],
         ),
-        child: Column(
-          children: [
-            xpListTile(context),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-              //can add an image to the experience by camera or gallery
-              child: (!widget.editable)
-                  ? widget._image == null
-                      ? const Text("No images selected")
-                      : Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(12),
+        // This form is used for validation of experiences
+        child: Form(
+          key: widget._formKey,
+          child: Column(
+            children: [
+              xpListTile(context),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                //can add an image to the experience by camera or gallery
+                child: (!widget.editable)
+                    ? widget._image == null
+                        ? const Text("No images selected")
+                        : Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(widget._image!)),
+                          )
+                    : Row(
+                        children: [
+                          const Text("Add image:"),
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: FloatingActionButton(
+                              onPressed: () => getImage(ImageSource.gallery),
+                              tooltip: 'Pick Image',
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              child: const Icon(
+                                  Icons.add_photo_alternate_rounded,
+                                  size: 20),
+                            ),
                           ),
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.file(widget._image!)),
-                        )
-                  : Row(
-                      children: [
-                        const Text("Add image:"),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: 50,
-                          child: FloatingActionButton(
-                            onPressed: () => getImage(ImageSource.gallery),
-                            tooltip: 'Pick Image',
-                            child: const Icon(Icons.add_a_photo),
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: FloatingActionButton(
+                              onPressed: () => getImage(ImageSource.camera),
+                              tooltip: 'Capture Image',
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              child: const Icon(Icons.add_a_photo, size: 20),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: 50,
-                          child: FloatingActionButton(
-                            onPressed: () => getImage(ImageSource.camera),
-                            tooltip: 'Capture Image',
-                            child: const Icon(Icons.camera),
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          ],
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -209,7 +222,6 @@ class _ExperienceState extends State<Experience> {
                     ],
                   )
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.location,
                     // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
@@ -223,10 +235,9 @@ class _ExperienceState extends State<Experience> {
                   ),
           // Start date with a date picker
           (!widget.editable)
-              ? buildRichText(context, "Start Date: ", widget.startDate,
-                  Theme.of(context).textTheme.bodyMedium)
+              ? buildRichText(context, "Start Date: ", widget.startDate)
               : TextFormField(
-                  // Value necessary and the start date should be before the end date to continue
+                  // The value is necessary and the start date should be before the end date to continue
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Field cannot be empty";
@@ -241,7 +252,6 @@ class _ExperienceState extends State<Experience> {
                     }
                     return null;
                   },
-                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: TextEditingController(text: widget.startDate),
                   readOnly: true, // Prevents manual editing
                   decoration: underlineInputDecoration(
@@ -266,8 +276,7 @@ class _ExperienceState extends State<Experience> {
           Padding(
             padding: const EdgeInsets.only(bottom: 7.5),
             child: (!widget.editable)
-                ? buildRichText(context, "End Date: ", widget.endDate,
-                    Theme.of(context).textTheme.bodyMedium)
+                ? buildRichText(context, "End Date: ", widget.endDate)
                 : TextFormField(
                     //Must contain a value to continue
                     validator: (value) => noEmptyField(value),
@@ -281,7 +290,8 @@ class _ExperienceState extends State<Experience> {
                         initialDate: DateTime.now(),
                         firstDate: DateTime.now()
                             .subtract(const Duration(days: 365 * 25)),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        lastDate:
+                            DateTime.now().add(const Duration(days: 365 * 25)),
                       );
                       if (pickedDate != null) {
                         setState(() {
@@ -296,10 +306,8 @@ class _ExperienceState extends State<Experience> {
           // Role in experience
           if (widget.title == "Clubs/Organizations")
             (!widget.editable)
-                ? buildRichText(context, "Role: ", widget.role,
-                    Theme.of(context).textTheme.bodyMedium)
+                ? buildRichText(context, "Role: ", widget.role)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     initialValue: widget.role,
@@ -315,12 +323,9 @@ class _ExperienceState extends State<Experience> {
           if (widget.title == "Awards")
             (!widget.editable)
                 ? (widget.award.isEmpty)
-                    ? Text("No issuer",
-                        style: Theme.of(context).textTheme.bodyMedium)
-                    : buildRichText(context, "Issuer: ", widget.award,
-                        Theme.of(context).textTheme.bodyMedium)
+                    ? const Text("No issuer")
+                    : buildRichText(context, "Issuer: ", widget.award)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.award,
                     onChanged: (value) {
                       setState(() {
@@ -332,10 +337,8 @@ class _ExperienceState extends State<Experience> {
           // Service hours
           if (widget.title == "Community Service")
             (!widget.editable)
-                ? buildRichText(context, "Hours: ", widget.hours,
-                    Theme.of(context).textTheme.bodyMedium)
+                ? buildRichText(context, "Hours: ", widget.hours)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     initialValue: widget.hours,
                     onChanged: (value) {
                       setState(() {
@@ -363,10 +366,8 @@ class _ExperienceState extends State<Experience> {
           // Score on test
           if (widget.title == "Tests")
             (!widget.editable)
-                ? buildRichText(context, "Score: ", widget.score,
-                    Theme.of(context).textTheme.bodyMedium)
+                ? buildRichText(context, "Score: ", widget.score)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     // MUst contain a non-negative a value to continue
                     validator: (value) {
                       if (value != null) {
@@ -391,10 +392,8 @@ class _ExperienceState extends State<Experience> {
           // Grade in class
           if (widget.title == "Honors Classes")
             (!widget.editable)
-                ? buildRichText(context, "Grade: ", widget.grade,
-                    Theme.of(context).textTheme.bodyMedium)
+                ? buildRichText(context, "Grade: ", widget.grade)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     // Must contain a value to continue
                     validator: (value) => noEmptyField(value),
                     initialValue: widget.grade,
@@ -410,15 +409,10 @@ class _ExperienceState extends State<Experience> {
           if (widget.title != "Tests" && widget.title != "Honors Classes")
             (!widget.editable)
                 ? (widget.description.isEmpty)
-                    ? Text("No description",
-                        style: Theme.of(context).textTheme.bodyMedium)
+                    ? const Text("No description")
                     : buildRichText(
-                        context,
-                        "Description:\n",
-                        widget.description,
-                        Theme.of(context).textTheme.bodyMedium)
+                        context, "Description:\n", widget.description)
                 : TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     minLines: 1,
                     maxLines: 4,
                     initialValue: widget.description,
@@ -438,9 +432,8 @@ class _ExperienceState extends State<Experience> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // This button puts all the values in edit mode where you can change and update them
+            // This button puts all the values in edit mode, where you can change and update them
             IconButton(
-              style: theme.iconButtonTheme.style,
               onPressed: (!widget.editable)
                   ? () => setState(() {
                         widget.editable = true;
@@ -448,17 +441,13 @@ class _ExperienceState extends State<Experience> {
                   : () {
                       final formState = widget._formKey.currentState;
                       if (formState == null) return;
-
-                      bool hasErrors = false;
                       formState.save();
 
                       setState(() {
-                        //will not save edit if validation is not true
-                        hasErrors = !formState.validate();
-                        if (!hasErrors) {
+                        // Will not save edit if validation is not true
+                        if (formState.validate()) {
                           widget.editable = false;
                           widget.updateTime = DateTime.now();
-                          context.read<MyProfileXPs>().saveXP(widget.tileIndex);
                         }
                       });
                     },
@@ -470,12 +459,10 @@ class _ExperienceState extends State<Experience> {
             ),
             // This button lets you remove the experience
             IconButton(
-              style: theme.iconButtonTheme.style,
               onPressed: () {
                 context
-                    .read<MyProfileXPs>()
-                    .remove(widget.xpID, widget.tileIndex);
-                context.read<MyProfileXPs>().saveXP(widget.tileIndex);
+                    .read<MyAppState>()
+                    .removeXp(widget.xpID, widget.tileIndex);
               },
               icon: const Icon(Icons.remove, size: 20),
             ),
@@ -507,14 +494,14 @@ class _ExperienceState extends State<Experience> {
     await widget._image!.copy('$path/${basename(pickedImage.path)}');
   }
 
-  Widget buildRichText(
-      BuildContext context, String label, String value, TextStyle? style) {
+  Widget buildRichText(BuildContext context, String label, String value) {
+    final TextStyle style = Theme.of(context).textTheme.bodyMedium!;
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: label,
-            style: style?.copyWith(fontWeight: FontWeight.bold),
+            style: style.copyWith(fontWeight: FontWeight.bold),
           ),
           TextSpan(
             text: value,

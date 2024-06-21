@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/profile/my_profile_xps.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
-
 import 'main.dart';
+import 'my_app_state.dart';
 import 'profile/experience.dart';
 
 // This is the home page of the app
@@ -21,34 +20,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Experience? recent;
-  String name = "";
-
-  @override
-  // When the home page is initialized, and initial methods are called
-  void initState() {
-    super.initState();
-    getRecent(prefs);
-    String? tempName = prefs.getString('name');
-    if (tempName != null) {
-      setState(() {
-        name = tempName;
-      });
-    }
-  }
 
   // This method compares the times of experiences to get the most recent one
-  void getRecent(prefs) {
+  void getRecent() {
     DateTime mostRecentUpdateTime = DateTime.utc(0);
     Experience? mostRecent;
-    for (int i = 0; i < 8; i++) {
-      List<String>? xps = prefs.getStringList('$i');
-      if (xps != null) {
-        for (String xpString in xps) {
-          Experience tempExperience = Experience.fromJsonString(xpString);
-          if (mostRecentUpdateTime.isBefore(tempExperience.updateTime)) {
-            mostRecentUpdateTime = tempExperience.updateTime;
-            mostRecent = tempExperience;
-          }
+    for (List<Experience> categoryList
+        in context.read<MyAppState>().appUser.xpList) {
+      for (Experience xp in categoryList) {
+        if (mostRecentUpdateTime.isBefore(xp.updateTime) && !xp.editable) {
+          mostRecentUpdateTime = xp.updateTime;
+          mostRecent = xp;
         }
       }
     }
@@ -59,15 +41,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // A method called when a dependency of this [State] object changes
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getRecent(prefs);
-  }
-
   @override
   Widget build(BuildContext context) {
+    getRecent();
+
+    String name = context.watch<MyAppState>().appUser.name;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -303,7 +282,8 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = context.read<MyProfileXPs>().xpList[i];
+      List<Experience> experiences =
+          context.read<MyAppState>().appUser.xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }
@@ -348,7 +328,7 @@ class _HomePageState extends State<HomePage> {
     final pdf = pw.Document();
 
     for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = context.read<MyProfileXPs>().xpList[i];
+      List<Experience> experiences = context.read<MyAppState>().xpList[i];
 
       addPage(pdf, name, school, year, experiences, i);
     }

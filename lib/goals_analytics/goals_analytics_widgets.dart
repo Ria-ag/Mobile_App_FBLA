@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:provider/provider.dart';
+import '../my_app_state.dart';
 import 'chart_modal_sheet.dart';
 import 'goal_modal_sheet.dart';
 
@@ -10,15 +10,58 @@ import 'goal_modal_sheet.dart';
 // ignore: must_be_immutable
 class ChartTile extends StatefulWidget {
   ChartTile({required this.chartName, super.key});
-  final chartID = DateTime.now().millisecondsSinceEpoch;
+  final int chartID = DateTime.now().millisecondsSinceEpoch;
   String chartName;
   String xLabel = "";
   String yLabel = "";
-  List<DataRow> rows = [];
-  List<FlSpot> spots = [];
+  List<Map<String, double>> dataPoints =
+      []; // List of maps containing x and y values
 
   @override
   State<ChartTile> createState() => _ChartTileState();
+
+  // toMap method to convert the ChartTile instance to a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'chartID': chartID,
+      'chartName': chartName,
+      'xLabel': xLabel,
+      'yLabel': yLabel,
+      'dataPoints': dataPoints,
+    };
+  }
+
+  // fromMap method to create a ChartTile instance from a Map
+  static ChartTile fromMap(Map<String, dynamic> map) {
+    List<Map<String, double>> dataPoints =
+        List<Map<String, double>>.from(map['dataPoints']);
+
+    return ChartTile(
+      chartName: map['chartName'],
+    )
+      ..xLabel = map['xLabel']
+      ..yLabel = map['yLabel']
+      ..dataPoints = dataPoints;
+  }
+
+  // Method to get spots from dataPoints
+  List<FlSpot> get spots {
+    return dataPoints.map((point) => FlSpot(point['x']!, point['y']!)).toList();
+  }
+
+  // Method to get rows from dataPoints
+  List<DataRow> get rows {
+    return dataPoints.map((point) {
+      return DataRow(
+        cells: [
+          DataCell(TextField(
+              controller: TextEditingController(text: point['x']!.toString()))),
+          DataCell(TextField(
+              controller: TextEditingController(text: point['y']!.toString()))),
+        ],
+      );
+    }).toList();
+  }
 }
 
 // This is where the chart is built, setting its index based on its ID
@@ -26,7 +69,7 @@ class _ChartTileState extends State<ChartTile> {
   @override
   Widget build(BuildContext context) {
     var index = context
-        .watch<MyGoalsAnalytics>()
+        .watch<MyAppState>()
         .charts
         .indexWhere((chart) => chart.chartID == widget.chartID);
 
@@ -36,7 +79,7 @@ class _ChartTileState extends State<ChartTile> {
         Row(
           children: [
             Text(
-              context.watch<MyGoalsAnalytics>().charts[index].chartName,
+              context.watch<MyAppState>().charts[index].chartName,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Spacer(),
@@ -47,7 +90,7 @@ class _ChartTileState extends State<ChartTile> {
             ),
             IconButton(
               onPressed: () {
-                context.read<MyGoalsAnalytics>().removeChart(widget.chartID);
+                context.read<MyAppState>().removeChart(widget.chartID);
               },
               icon: const Icon(Icons.remove),
             )
@@ -90,7 +133,7 @@ class CustomLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var charts = context.watch<MyGoalsAnalytics>().charts;
+    var charts = context.watch<MyAppState>().charts;
     var index = charts.indexWhere((chart) => chart.chartID == id);
 
     // This is the variable will line chart data
@@ -98,7 +141,7 @@ class CustomLineChart extends StatelessWidget {
       lineBarsData: [
         LineChartBarData(
             // The spots are the points that are displayed on the chart
-            spots: context.watch<MyGoalsAnalytics>().charts[index].spots,
+            spots: context.watch<MyAppState>().charts[index].spots,
             isCurved: true,
             color: Colors.blue),
       ],
@@ -133,12 +176,12 @@ class CustomLineChart extends StatelessWidget {
         ),
         leftTitles: AxisTitles(
           axisNameWidget:
-              Text(context.watch<MyGoalsAnalytics>().charts[index].yLabel),
+              Text(context.watch<MyAppState>().charts[index].yLabel),
           sideTitles: const SideTitles(showTitles: true, reservedSize: 25),
         ),
         bottomTitles: AxisTitles(
           axisNameWidget:
-              Text(context.watch<MyGoalsAnalytics>().charts[index].xLabel),
+              Text(context.watch<MyAppState>().charts[index].xLabel),
           sideTitles: const SideTitles(showTitles: true, reservedSize: 25),
         ),
       ),
@@ -151,7 +194,7 @@ class CustomLineChart extends StatelessWidget {
 // ignore: must_be_immutable
 class GoalTile extends StatelessWidget {
   final String title;
-  String category = "Athletics";
+  String category = "Choose Category";
   String date = "";
   String description = "";
   List<Task> tasks = [];
@@ -163,6 +206,19 @@ class GoalTile extends StatelessWidget {
     super.key,
     required this.title,
   });
+
+  // This method adds a task to the list of tasks and takes the task and context
+  void addTask(task, context) {
+    tasks.add(Task(task: task, isChecked: false));
+    context.read<MyAppState>().addTotalTasks(title);
+    emptyGoal = false;
+  }
+
+  // This method removes a task from the list of tasks and takes the index and context
+  void removeTask(int index, context) {
+    tasks.removeAt(index);
+    context.read<MyAppState>().addCompletedTasks(title);
+  }
 
   // Category getter method
   String getCategory() {
@@ -202,8 +258,7 @@ class GoalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Calculates how much progress a user has made on a goal
-    double progressValue =
-        context.read<MyGoalsAnalytics>().calculateProgress(title);
+    double progressValue = context.read<MyAppState>().calculateProgress(title);
     return Column(
       children: [
         Padding(
@@ -236,12 +291,13 @@ class GoalTile extends StatelessWidget {
                       // This button removes the goal from the list
                       IconButton(
                         onPressed: () {
-                          context.read<MyGoalsAnalytics>().remove(title);
+                          context.read<MyAppState>().removeGoal(title);
                         },
                         icon: const Icon(Icons.remove),
                       ),
                     ],
                   ),
+                  // Creates a bar showing the progess of the goal
                   LinearProgressIndicator(
                     value: progressValue,
                     backgroundColor: Colors.grey[200],
@@ -254,7 +310,6 @@ class GoalTile extends StatelessWidget {
             ),
           ),
         ),
-        // Creates a bar showing the progess of the goal
       ],
     );
   }
@@ -290,10 +345,9 @@ class CustomLegend extends StatelessWidget {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: item.color,
-                   border: Border.all(color: Colors.grey)
-                  ),
+                      shape: BoxShape.circle,
+                      color: item.color,
+                      border: Border.all(color: Colors.grey)),
                 ),
                 const SizedBox(width: 8),
                 Text(item.name),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import 'package:provider/provider.dart';
+import '../my_app_state.dart';
 import '../theme.dart';
 import 'goals_analytics_widgets.dart';
 
@@ -8,7 +8,7 @@ import 'goals_analytics_widgets.dart';
 Future<void> chartModalSheet(BuildContext context, String title, int id) {
   final formKey = GlobalKey<FormState>();
   ChartTile chartTile = context
-      .read<MyGoalsAnalytics>()
+      .read<MyAppState>()
       .charts
       .firstWhere((chart) => chart.chartID == id);
 
@@ -20,11 +20,10 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
     backgroundColor: Colors.grey[200],
     builder: (BuildContext context) {
       return ChangeNotifierProvider.value(
-        value: context.read<MyGoalsAnalytics>(),
+        value: context.read<MyAppState>(),
         child: StatefulBuilder(builder: (context, setState) {
-          final readChartState = context.read<MyGoalsAnalytics>();
-          int index =
-              context.watch<MyGoalsAnalytics>().charts.indexOf(chartTile);
+          final readChartState = context.read<MyAppState>();
+          int index = context.watch<MyAppState>().charts.indexOf(chartTile);
 
           return SizedBox(
             height: MediaQuery.of(context).size.height - 50,
@@ -39,8 +38,11 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                     Row(
                       children: [
                         Text(title,
-                            style: Theme.of(context).textTheme.headlineSmall
-                            !.copyWith(color: Theme.of(context).primaryColor)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor)),
                         const Spacer(),
                         IconButton(
                             icon: const Icon(
@@ -103,8 +105,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
   );
 }
 
-// This is the text field decoration used throughout the app
-
 // This widget allows users to edit the points on a certain line chart
 // ignore: must_be_immutable
 class ChartDataInputWidget extends StatefulWidget {
@@ -125,7 +125,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
   @override
   void initState() {
     super.initState();
-    var chartState = context.read<MyGoalsAnalytics>();
+    var chartState = context.read<MyAppState>();
     int index = chartState.charts.indexOf(widget.chartTile);
     rows = List<DataRow>.from(chartState.charts[index].rows);
   }
@@ -136,16 +136,20 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
       rows.add(
         DataRow(
           cells: [
-            DataCell(TextField(
-                controller: TextEditingController(),
-                decoration: underlineInputDecoration(context),
-                style: TextStyle(color: Theme.of(context).colorScheme.background)
-            ),),
-            DataCell(TextField(
-                controller: TextEditingController(),
-                decoration: underlineInputDecoration(context),
-                style: TextStyle(color: Theme.of(context).colorScheme.background)
-            ),),
+            DataCell(
+              TextField(
+                  controller: TextEditingController(),
+                  decoration: underlineInputDecoration(context),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.background)),
+            ),
+            DataCell(
+              TextField(
+                  controller: TextEditingController(),
+                  decoration: underlineInputDecoration(context),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.background)),
+            ),
           ],
         ),
       );
@@ -162,8 +166,8 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
   // This is where the data table and buttons are displayed
   @override
   Widget build(BuildContext context) {
-    var readChartState = context.read<MyGoalsAnalytics>();
-    var watchChartState = context.watch<MyGoalsAnalytics>();
+    var readChartState = context.read<MyAppState>();
+    var watchChartState = context.watch<MyAppState>();
     int index = watchChartState.charts.indexOf(widget.chartTile);
 
     return SizedBox(
@@ -229,19 +233,48 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                 // Here is the data table, which contains the columns "X" and "Y"
                 Column(
                   children: [
-                    Text("Data", style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.secondary)),
+                    Text("Data",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.secondary)),
                     const SizedBox(height: 5),
                     DataTable(
                       columnSpacing: 40,
                       horizontalMargin: 20,
                       border: const TableBorder(
-                        verticalInside: BorderSide(width: 1, style: BorderStyle.solid, color: Colors.grey),
-                        horizontalInside: BorderSide(width: 2, style: BorderStyle.solid, color: Colors.grey),
+                        verticalInside: BorderSide(
+                            width: 1,
+                            style: BorderStyle.solid,
+                            color: Colors.grey),
+                        horizontalInside: BorderSide(
+                            width: 2,
+                            style: BorderStyle.solid,
+                            color: Colors.grey),
                       ),
-                      dataRowColor: MaterialStateColor.resolveWith((states) =>  const Color.fromARGB(255, 88, 108, 139)),
+                      dataRowColor: MaterialStateColor.resolveWith(
+                          (states) => const Color.fromARGB(255, 88, 108, 139)),
                       columns: [
-                        DataColumn(label: Text('X', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary))),
-                        DataColumn(label: Text('Y', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary))),
+                        DataColumn(
+                            label: Text('X',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary))),
+                        DataColumn(
+                            label: Text('Y',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary))),
                       ],
                       rows: rows,
                     ),

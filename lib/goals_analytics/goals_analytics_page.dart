@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
-import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
+import 'goals_analytics_widgets.dart';
+import 'my_goals_analytics.dart';
 import 'package:provider/provider.dart';
+import '../my_app_state.dart';
 import '../theme.dart';
 import 'expandable_fab.dart';
 
@@ -61,11 +62,11 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     if (isGoal) {
-                      context.read<MyGoalsAnalytics>().add(title);
+                      context.read<MyAppState>().addGoal(title);
                     } else {
-                      context.read<MyGoalsAnalytics>().addChart(title);
+                      context.read<MyAppState>().addChart(title);
                     }
-                    Navigator.of(context).pop(title);
+                    Navigator.of(context).pop();
                   }
                 },
                 child: Text((isGoal) ? 'Add Goal' : 'Add Chart'),
@@ -80,55 +81,53 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   @override
   // This is where the pie chart showing analytics on goal categories is created as a variable
   Widget build(BuildContext context) {
-    List<PieChartSectionData> pieChartSectionData = [
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[0],
-        color: const Color.fromARGB(255, 147, 187, 229),
-      ),
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[1],
-        color: const Color.fromARGB(255, 77, 145, 214),
-      ),
-      PieChartSectionData(
-          value: context.read<MyGoalsAnalytics>().numberOfItems[2],
-          color: const Color.fromARGB(255, 28, 80, 133),
-      ),
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[3],
-        color: const Color.fromARGB(255, 14, 50, 86),
-      ),
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[4],
-        color: const Color.fromARGB(255, 84, 26, 9),
-      ),
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[5],
-        color: const Color.fromARGB(255, 181, 52, 12),
-      ),
-      PieChartSectionData(
-          value: context.read<MyGoalsAnalytics>().numberOfItems[6],
-          color: const Color.fromARGB(255, 218, 124, 96),
-      ),
-      PieChartSectionData(
-          value: context.read<MyGoalsAnalytics>().numberOfItems[7],
-          color: const Color.fromARGB(255, 222, 168, 151),
-      ),
-      PieChartSectionData(
-        value: context.read<MyGoalsAnalytics>().numberOfItems[8],
-        color: Colors.white,
-      ),
+    final colors = [
+      const Color.fromARGB(255, 147, 187, 229),
+      const Color.fromARGB(255, 77, 145, 214),
+      const Color.fromARGB(255, 28, 80, 133),
+      const Color.fromARGB(255, 14, 50, 86),
+      const Color.fromARGB(255, 84, 26, 9),
+      const Color.fromARGB(255, 181, 52, 12),
+      const Color.fromARGB(255, 218, 124, 96),
+      const Color.fromARGB(255, 222, 168, 151),
+      Colors.white
     ];
 
+    List<PieChartSectionData> pieChartSectionData =
+        List.generate(context.read<MyAppState>().items.length, (index) {
+      return PieChartSectionData(
+        value: context.read<MyAppState>().numberOfItems[index].toDouble(),
+        color: colors[index],
+      );
+    });
+
     List<LegendItem> legendItems = [
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[0],  color: const Color.fromARGB(255, 147, 187, 229)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[1],  color: const Color.fromARGB(255, 77, 145, 214)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[2],  color: const Color.fromARGB(255, 28, 80, 133)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[3],  color: const Color.fromARGB(255, 14, 50, 86)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[4],  color: const Color.fromARGB(255, 84, 26, 9)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[5],  color: const Color.fromARGB(255, 181, 52, 12)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[6],  color: const Color.fromARGB(255, 218, 124, 96)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[7],  color: const Color.fromARGB(255, 222, 168, 151)),
-      LegendItem(name: context.read<MyGoalsAnalytics>().items[8],  color: Colors.white),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[0],
+          color: const Color.fromARGB(255, 147, 187, 229)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[1],
+          color: const Color.fromARGB(255, 77, 145, 214)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[2],
+          color: const Color.fromARGB(255, 28, 80, 133)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[3],
+          color: const Color.fromARGB(255, 14, 50, 86)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[4],
+          color: const Color.fromARGB(255, 84, 26, 9)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[5],
+          color: const Color.fromARGB(255, 181, 52, 12)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[6],
+          color: const Color.fromARGB(255, 218, 124, 96)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[7],
+          color: const Color.fromARGB(255, 222, 168, 151)),
+      LegendItem(
+          name: context.read<MyGoalsAnalytics>().items[8], color: Colors.white),
     ];
 
     final theme = Theme.of(context);
@@ -157,14 +156,13 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 25,
                     height: MediaQuery.of(context).size.height / 2 - 100,
-                    child: (context.watch<MyGoalsAnalytics>().goals.isNotEmpty)
+                    child: (context.watch<MyAppState>().goals.isNotEmpty)
                         ? SingleChildScrollView(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 25, top: 15),
                               child: Column(
                                 // All the goals are displayed as list tiles here
-                                children:
-                                    context.watch<MyGoalsAnalytics>().goals,
+                                children: context.watch<MyAppState>().goals,
                               ),
                             ),
                           )
@@ -207,20 +205,24 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         child: Center(
                           // The first thing in the analytics page is the total number of tasks completed
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                            child: Text(context.read<MyGoalsAnalytics>().done,
-                                style: theme.textTheme.headlineLarge!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background)),
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 20, right: 20),
+                            child: Text(
+                                context
+                                    .read<MyGoalsAnalytics>()
+                                    .totalCompletedTasks
+                                    .toString(),
+                                style: theme.textTheme.headlineLarge!.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background)),
                           ),
                         ),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         "Total Completed Tasks",
-                          style: theme.textTheme.bodyMedium,
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -229,20 +231,23 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      padding: const EdgeInsets.only(top: 15),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width / 2,
                         height: 150,
-                        child: context.read<MyGoalsAnalytics>().sum != 0.0
-                        ? PieChart(
-                          PieChartData(
-                            sections: pieChartSectionData,
-                          ),
-                        )
-                      : const Padding(
-                        padding:  EdgeInsets.only(left: 18, top: 40),
-                        child: Text("Add a goal to view chart"),
-                      ),
+                        child: context
+                                .read<MyAppState>()
+                                .numberOfItems
+                                .every((element) => element == 0)
+                            ? PieChart(
+                                PieChartData(
+                                  sections: pieChartSectionData,
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.only(left: 18, top: 40),
+                                child: Text("Add a goal to view chart"),
+                              ),
                       ),
                     ),
                     Padding(
@@ -262,10 +267,10 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 25,
                 height: MediaQuery.of(context).size.height / 2 - 100,
-                child: (context.watch<MyGoalsAnalytics>().charts.isNotEmpty)
+                child: (context.watch<MyAppState>().charts.isNotEmpty)
                     ? SingleChildScrollView(
                         child: Column(
-                            children: context.watch<MyGoalsAnalytics>().charts),
+                            children: context.watch<MyAppState>().charts),
                       )
                     : const Padding(
                         padding: EdgeInsets.all(10.0),
@@ -306,7 +311,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
 
   // The method checks if any section of the pie chart data is empty
   bool checkIfEmpty() {
-    for (double num in context.read<MyGoalsAnalytics>().numberOfItems) {
+    for (int num in context.read<MyAppState>().numberOfItems) {
       if (num.isNaN) {
         return false;
       } else if (num != 0) {
