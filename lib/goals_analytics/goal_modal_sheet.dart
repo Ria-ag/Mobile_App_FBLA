@@ -4,6 +4,7 @@ import 'package:mobileapp/goals_analytics/my_goals_analytics.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
@@ -30,51 +31,120 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     FocusScope.of(context).unfocus();
   }
 
-Future<void> shareOnLinkedIn(String accessToken, BuildContext context) async {
+  Future<String?> getAccessToken() async {
+  const clientId = '86w3jl8a5w2h0t';
+  const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+  const redirectUrl = 'http://localhost:51914/';
+
+  // Build authorization URL
+  const authorizationUrl =
+      'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=r_liteprofile%20w_member_social';
+
   try {
-    // Read JSON file from assets or local storage
-    String jsonString = await DefaultAssetBundle.of(context).loadString('goals_analytics/LinkedInPost.json');
-    Map<String, dynamic> postData = jsonDecode(jsonString);
-
-    // API endpoint URL
-    const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
-
-    // Define headers
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $accessToken',
-    };
-
-    // Send POST request to LinkedIn API
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: headers,
-      body: jsonEncode(postData),
+    final result = await FlutterWebAuth2.authenticate(
+      url: authorizationUrl,
+      callbackUrlScheme: redirectUrl,
     );
 
-    // Handle response based on status code
-    if (response.statusCode == 201) {
-      // Success: Show success dialog
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Post shared successfully on LinkedIn.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
+    // Extract authorization code from the result URL
+    final code = Uri.parse(result).queryParameters['code'];
+
+    // Exchange authorization code for access token
+    const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+    final tokenResponse = await http.post(
+      Uri.parse(tokenUrl),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: {
+        'grant_type': 'authorization_code',
+        'code': code!,
+        'redirect_uri': redirectUrl,
+        'client_id': clientId,
+        'client_secret': clientSecret,
+      },
+    );
+
+    // Parse and return access token from response
+    if (tokenResponse.statusCode == 200) {
+      final data = jsonDecode(tokenResponse.body);
+      return data['access_token'];
     } else {
-      // Failure: Show error dialog with status code
+      throw Exception('Failed to retrieve access token');
+    }
+  } catch (e) {
+    print('Error: $e');
+    return null;
+  }
+}
+
+Future<void> shareOnLinkedIn(BuildContext context) async {
+  try {
+    String? accessToken = await getAccessToken();
+
+    if (accessToken != null) {
+      const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      };
+
+      final postData = {
+        "author": "urn:li:person:ria-agarwal-b7a57b27b",
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+          "com.linkedin.ugc.ShareContent": {
+            "shareCommentary": {
+              "text": "I completed my goal!"
+            },
+            "shareMediaCategory": "NONE"
+          }
+        },
+        "visibility": {
+          "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+        }
+      };
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(postData),
+      );
+
+      if (response.statusCode == 201) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Post shared successfully on LinkedIn.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to share post on LinkedIn. Status Code: ${response.statusCode}'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Handle case where access token is null (user canceled authentication)
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Failed to share post on LinkedIn. Status Code: ${response.statusCode}'),
+          content: const Text('Failed to obtain access token for LinkedIn.'),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
@@ -85,7 +155,7 @@ Future<void> shareOnLinkedIn(String accessToken, BuildContext context) async {
       );
     }
   } catch (e) {
-    // Exception: Show generic error dialog
+    // Handle generic error
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -306,10 +376,10 @@ Future<void> shareOnLinkedIn(String accessToken, BuildContext context) async {
                           context, "ex. In this I...", "Description"),
                     ),
               const SizedBox(height: 50),
-              // ElevatedButton(
-              //   onPressed: shareOnLinkedIn,
-              //   child: const Text('Share on LinkedIn'),
-              // ),
+              IconButton(
+                icon: Image.asset('Share.png'),
+                onPressed: () => shareOnLinkedIn(context),
+              ),
               const SizedBox(height: 50),
               Text("Tasks",
                   style: Theme.of(context)
