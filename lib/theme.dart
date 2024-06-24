@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'main.dart';
+
+// This is a list of items, the order they follow, and the type of field that is shown for each
+// TODO: no validation for issuer in addGoal from XP
+final Map<String, String?> items = {
+  "Athletics": null,
+  "Performing Arts": null,
+  "Community Service": "Hours",
+  "Awards": "Issuer",
+  "Honors Classes": "Grade",
+  "Clubs/Organizations": "Role",
+  "Projects": null,
+  "Tests": "Score",
+  "Other": null,
+};
 
 // This is the theme data used throughout the app
 final theme = ThemeData(
@@ -29,6 +44,8 @@ final theme = ThemeData(
     headlineSmall:
         GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18),
     bodySmall: GoogleFonts.poppins(fontSize: 12),
+    labelSmall: GoogleFonts.poppins(fontSize: 14),
+    labelMedium: GoogleFonts.poppins(fontSize: 14),
 
     // This style is the default for Text widgets
     bodyMedium: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w300),
@@ -38,10 +55,6 @@ final theme = ThemeData(
 
     // This style is the default for TextFields and TextFormFields
     bodyLarge: GoogleFonts.poppins(fontSize: 16),
-
-    // This i
-    labelSmall: GoogleFonts.poppins(fontSize: 14),
-    labelMedium: GoogleFonts.poppins(fontSize: 14),
   ),
 
   // Below are themes for various specific widgets in the app, including icons, buttons, app bars, and menus
@@ -244,17 +257,22 @@ InputDecoration underlineInputDecoration(
 
 // This is a method for showing a snack bar without a local BuildContext
 showTextSnackBar(String message) {
-  scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-    behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    margin: const EdgeInsets.all(10),
-    duration: const Duration(seconds: 2),
-    content: Text(message,
+  scaffoldMessengerKey.currentState?.showSnackBar(
+    SnackBar(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 2),
+      content: Text(
+        message,
         style: TextStyle(
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            fontSize: 14,
-            color: Colors.white)),
-  ));
+          fontFamily: GoogleFonts.poppins().fontFamily,
+          fontSize: 14,
+          color: Colors.white,
+        ),
+      ),
+    ),
+  );
 }
 
 // This is a commonly used validation method in the app
@@ -263,6 +281,53 @@ String? noEmptyField(String? value) {
     return "Field cannot be empty";
   }
   return null;
+}
+
+String? validateStartDate(String? value, String end) {
+  if (value == null || value.isEmpty) {
+    return 'Field cannot be empty';
+  } else if (end.isNotEmpty) {
+    DateTime endDate = DateFormat('MM/dd/yyyy').parse(end);
+    DateTime startDate = DateFormat('MM/dd/yyyy').parse(value);
+    if (startDate.compareTo(endDate) > 0) {
+      return 'Start date should be before end date';
+    }
+  }
+  return null;
+}
+
+String? validateGraduationYear(String? value) {
+  if (value != null) {
+    final int? numVal = int.tryParse(value);
+    if (numVal == null ||
+        numVal <= 1900 ||
+        numVal >= DateTime.now().year + 50) {
+      return "Enter a valid year";
+    }
+  } else if (value == null || value.isEmpty) {
+    return "Field cannot be empty";
+  }
+  return null;
+}
+
+// Must contain a non-negative a value to continue
+String? nonNegativeValue(String? value) {
+  if (value != null) {
+    final double? numVal = double.tryParse(value);
+    if (numVal == null || numVal < 0) {
+      return "Enter a non-negative number";
+    }
+  } else if (value == null || value.isEmpty) {
+    return "Field cannot be empty";
+  }
+  return null;
+}
+
+// This method takes a date and formats it into month, day, and year
+String formatDate(DateTime date) {
+  String dateStr = date.toString().substring(0, 10);
+  List<String> parts = dateStr.split('-');
+  return '${parts[1]}/${parts[2]}/${parts[0]}';
 }
 
 // This is a custom elevated button used throughout the app, with a shadow

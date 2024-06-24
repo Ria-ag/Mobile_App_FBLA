@@ -62,7 +62,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.chartName,
                           onChanged: (value) =>
@@ -71,7 +70,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                               "ex. Tasks Completed Last Month", "Chart Name"),
                         ),
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.xLabel,
                           onChanged: (value) =>
@@ -80,7 +78,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                               "ex. Days Since Jan 1st", "X-Axis Label"),
                         ),
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.yLabel,
                           onChanged: (value) =>
@@ -276,14 +273,17 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                                             .colorScheme
                                             .secondary))),
                         DataColumn(
-                            label: Text('Y',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary))),
+                          label: Text(
+                            'Y',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
                       ],
                       rows: rows,
                     ),

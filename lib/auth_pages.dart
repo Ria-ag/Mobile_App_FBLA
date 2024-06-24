@@ -137,7 +137,8 @@ class _AuthPageState extends State<AuthPage> {
                 const Image(image: AssetImage("assets/logo.png"), height: 60),
                 Text(
                   'Rise',
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Theme.of(context).colorScheme.background),
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.background),
                 ),
                 const SizedBox(height: 50),
               ],
@@ -147,7 +148,9 @@ class _AuthPageState extends State<AuthPage> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: login ? LoginWidget(switchToSignUp: toggle) : SignUpWidget(switchtoSignIn: toggle),
+                child: login
+                    ? LoginWidget(switchToSignUp: toggle)
+                    : SignUpWidget(switchtoSignIn: toggle),
               ),
             ),
           ),
@@ -239,12 +242,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         "Enter your email",
                         "Email",
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
+                      validator: (value) => noEmptyField(value),
                     ),
                     const SizedBox(height: 30),
                     CustomElevatedButton(

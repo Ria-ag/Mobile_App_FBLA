@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
 import 'my_app_state.dart';
 import 'profile/experience.dart';
+import 'theme.dart';
 
 // This is the home page of the app
 class HomePage extends StatefulWidget {
@@ -112,19 +113,19 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
-                width: 400,
+                width: MediaQuery.of(context).size.width - 40,
                 child: ElevatedButton(
                   onPressed: () {},
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: (recent != null)
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                recent!.title,
+                                items.keys.toList()[recent!.tileIndex],
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
@@ -138,8 +139,12 @@ class _HomePageState extends State<HomePage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    "${recent!.startDate} - ${recent!.endDate}",
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      "${recent!.startDate} - ${recent!.endDate}",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -243,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        experience.title,
+                        items.keys.toList()[experience.tileIndex],
                         style: pw.TextStyle(
                           fontSize: 18,
                           fontWeight: pw.FontWeight.bold,

@@ -249,7 +249,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   validator: (value) => noEmptyField(value),
                 ),
                 // This is where the user enters their school
-      
+
                 TextFormField(
                   controller: _schoolController,
                   decoration: const InputDecoration(labelText: 'School'),
@@ -260,18 +260,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   controller: _yearController,
                   decoration:
                       const InputDecoration(labelText: 'Year of Graduation'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    final int? numVal = int.tryParse(value);
-                    if (numVal == null ||
-                        numVal <= 1900 ||
-                        numVal >= DateTime.now().year + 50) {
-                      return "Enter a valid year";
-                    }
-                    return null;
-                  },
+                  validator: (value) => validateGraduationYear(value),
                 ),
                 // This is where the user enters their email
                 TextFormField(
@@ -378,7 +367,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(height:50),
+                const SizedBox(height: 50),
               ],
             ),
           ),

@@ -17,6 +17,8 @@ class MyAppState extends ChangeNotifier {
         FirebaseAuth.instance.currentUser!.email!,
       );
   late AppUser appUser;
+  double serviceHrs = 0;
+  int xpNum = 0;
 
   void createLocalUser(String name, String school, int year) {
     appUser = AppUser.newUser(name: name, school: school, year: year);
@@ -41,6 +43,7 @@ class MyAppState extends ChangeNotifier {
       appUser = AppUser.fromMap(userMap);
       appUser.pfp = (appUser.pfpPath.isEmpty) ? null : File(appUser.pfpPath);
       totalHrs();
+      totalXps();
       return Future.value(appUser);
     } catch (error, stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
@@ -52,8 +55,10 @@ class MyAppState extends ChangeNotifier {
     appUser.name = name;
     appUser.school = school;
     appUser.year = year;
+    notifyListeners();
+
     try {
-      userRef.update({"isChecked": appUser.isChecked});
+      await userRef.update({"isChecked": appUser.isChecked});
       showTextSnackBar('Account info saved');
     } catch (error) {
       showTextSnackBar('Error saving account info to database: $error');
@@ -68,7 +73,7 @@ class MyAppState extends ChangeNotifier {
 
   saveChecklistInDB() async {
     try {
-      userRef.update({"isChecked": appUser.isChecked});
+      await userRef.update({"isChecked": appUser.isChecked});
       showTextSnackBar('Page settings saved');
     } catch (error) {
       showTextSnackBar('Error saving page settings to database: $error');
@@ -94,20 +99,54 @@ class MyAppState extends ChangeNotifier {
 
       await appUser.pfp!.copy('$path/${basename(pickedImage.path)}');
       appUser.pfpPath = appUser.pfp!.path;
-      userRef.update({'pfpPath': appUser.pfpPath});
+      await userRef.update({'pfpPath': appUser.pfpPath});
     } catch (error) {
       showTextSnackBar('Error retrieving or saving image: $error');
     }
   }
 
-  double serviceHrs = 0;
-
   // This method adds an experience to the list and takes the title and type of tile
-  void addXp(String title, int tileIndex) {
+  void addXp(int tileIndex) {
     appUser.xpList[tileIndex].add(Experience(
-        title: title,
-        xpID: DateTime.now().microsecondsSinceEpoch,
-        tileIndex: tileIndex));
+        xpID: DateTime.now().microsecondsSinceEpoch, tileIndex: tileIndex));
+    notifyListeners();
+  }
+
+  void addXpFromGoal(String name, String category, String start, String end,
+      [String? otherInfo, String description = ""]) {
+    int tileIndex = items.keys.toList().indexOf(category);
+    Experience goalXP = Experience(
+        xpID: DateTime.now().microsecondsSinceEpoch, tileIndex: tileIndex);
+    goalXP.name = name;
+    goalXP.startDate = start;
+    goalXP.endDate = end;
+    goalXP.editable = false;
+    if (items[category] != null) {
+      String xpCategory = items[category] ?? '';
+      print(xpCategory);
+      switch (xpCategory) {
+        case "Hours":
+          goalXP.hours = otherInfo!;
+          break;
+        case "Grade":
+          goalXP.grade = otherInfo!;
+          break;
+        case "Role":
+          goalXP.role = otherInfo!;
+          break;
+        case "Score":
+          print('called');
+          goalXP.score = otherInfo!;
+          break;
+        case "Issuer":
+          if (otherInfo != null) {
+            goalXP.award = otherInfo;
+          }
+          break;
+      }
+    }
+    appUser.xpList[tileIndex].add(goalXP);
+    saveXpToDB(tileIndex);
     notifyListeners();
   }
 
@@ -125,14 +164,25 @@ class MyAppState extends ChangeNotifier {
       for (Experience xp in appUser.xpList[tileIndex]) {
         xps.add(xp.toMap());
       }
+      totalXps();
       if (tileIndex == 2) {
         totalHrs();
       }
-      userRef.update({'xpList.$tileIndex': xps});
+      notifyListeners();
+      await userRef.update({'xpList.$tileIndex': xps});
       showTextSnackBar('Experiences saved');
     } catch (error) {
       showTextSnackBar('Error saving experiences to database: $error');
     }
+  }
+
+  void totalXps() {
+    int totalXps = 0;
+    for (List<Experience> xps in appUser.xpList) {
+      totalXps += xps.length;
+    }
+    xpNum = totalXps;
+    notifyListeners();
   }
 
   // This method adds up all the hours of each experience in the community service tile
@@ -180,7 +230,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-   // This method updates chart data with a list of rows and an index of the specific chart
+  // This method updates chart data with a list of rows and an index of the specific chart
   // void updateChartData(List<DataRow> rows, int index) {
   //   List<FlSpot> newSpots = [];
 
@@ -220,18 +270,6 @@ class MyAppState extends ChangeNotifier {
 
   List<GoalTile> goals = [];
   int totalCompletedTasks = 0;
-
-  final List<String> items = [
-    "Athletics",
-    "Performing Arts",
-    "Community Service",
-    "Awards",
-    "Honors Classes",
-    "Clubs/Organizations",
-    "Projects",
-    "Tests",
-    "Other"
-  ];
   List<int> numberOfItems = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   GoalTile findGoal(String title) {
@@ -240,13 +278,18 @@ class MyAppState extends ChangeNotifier {
 
   // This method takes a title and adds a new goal tile to the list
   void addGoal(String title) {
-    goals.add(GoalTile(title: title));
+    goals.add(GoalTile(
+      title: title,
+      createdDate: formatDate(DateTime.now()),
+    ));
     notifyListeners();
   }
 
   // This method takes a title and removes that goal tile from the list
   void removeGoal(String title) {
     goals.remove(findGoal(title));
+    updatePieChart();
+
     notifyListeners();
   }
 
@@ -256,11 +299,11 @@ class MyAppState extends ChangeNotifier {
     if (findGoal(title).totalTasks == 0) {
       return 0.0;
     }
-     notifyListeners();
+    notifyListeners();
     return findGoal(title).completedTasks / findGoal(title).totalTasks;
   }
 
-   // This method takes a title and adds to the total number of tasks
+  // This method takes a title and adds to the total number of tasks
   void addTotalTasks(title, task) {
     findGoal(title).totalTasks++;
     findGoal(title).tasks.add(Task(task: task, isChecked: false));
@@ -276,7 +319,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   //This method removes the task from completed
-  void unCheck(title) {
+  void uncheck(title) {
     findGoal(title).completedTasks--;
     totalCompletedTasks--;
     notifyListeners();
@@ -291,14 +334,15 @@ class MyAppState extends ChangeNotifier {
   // This method updates the number of items of the new category
   void updatePieChart() {
     Map<String, int> categoryIndexMap = {
-      for (int i = 0; i < items.length; i++) items[i]: i
+      for (int i = 0; i < items.length; i++) items.keys.toList()[i]: i
     };
 
-    for (final goal in goals) {
-      int index = categoryIndexMap[goal.getCategory()] ?? 8;
-      numberOfItems[index]++;
+    List<int> updatedItems = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for (GoalTile goal in goals) {
+      int index = categoryIndexMap[goal.category] ?? 8;
+      updatedItems[index]++;
     }
-
+    numberOfItems = updatedItems;
     notifyListeners();
   }
 }

@@ -279,7 +279,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // This method displays a pop up with a checklist to add and remove tiles
   Future<void> _dialogBuilder(BuildContext context) {
-    List<String> blocks = context.read<MyAppState>().items;
+    List<String> blocks = items.keys.toList();
 
     return showDialog<void>(
       barrierColor: Colors.transparent,

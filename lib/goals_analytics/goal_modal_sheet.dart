@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class GoalModalSheet extends StatefulWidget {
 class GoalModalSheetState extends State<GoalModalSheet> {
   bool editable = true;
   TextEditingController taskController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
@@ -28,7 +30,9 @@ class GoalModalSheetState extends State<GoalModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> items = context.read<MyAppState>().items;
+    GoalTile currentGoal = context.read<MyAppState>().goals.firstWhere(
+          (goal) => goal.title == widget.title,
+        );
 
     return SingleChildScrollView(
       child: SizedBox(
@@ -36,278 +40,255 @@ class GoalModalSheetState extends State<GoalModalSheet> {
         width: MediaQuery.of(context).size.width - 15,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Text(widget.title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(color: Theme.of(context).primaryColor)),
-                  const Spacer(),
-                  // This button makes the data editable
-                  IconButton(
-                    onPressed: () {
-                      !editable
-                          ? setState(() {
-                              editable = true;
-                            })
-                          : setState(() {
-                              editable = false;
-                            });
-                    },
-                    icon: Icon(
-                      (!editable) ? Icons.edit : Icons.check,
-                      size: 20,
-                    ),
-                  ),
-                  // This button closes the modal sheet
-                  IconButton(
-                      icon: const Icon(
-                        Icons.cancel,
-                        color: Colors.red,
-                        size: 20,
-                      ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Text(widget.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(color: Theme.of(context).primaryColor)),
+                    const Spacer(),
+                    // This button makes the data editable
+                    IconButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ],
-              ),
-              // Users can pick a category using a dropdown menu
-              !editable
-                  ? buildRichText(
-                      context,
-                      "Category: ",
-                      context
-                          .read<MyAppState>()
-                          .goals
-                          .firstWhere((goal) => goal.title == widget.title)
-                          .getCategory(),
-                      Theme.of(context).textTheme.bodyMedium)
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10),
-                        Text("Category",
-                            style: Theme.of(context).textTheme.bodySmall),
-                        DropdownButton<String>(
-                          //style: theme.dropdownMenuTheme.textStyle,
-                          value: context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .getCategory(),
-                          items: items
-                              .map((item) => DropdownMenuItem<String>(
-                                  value: item, child: Text(item)))
-                              .toList(),
-                          onChanged: (item) => setState(() {
-                            context
-                                .read<MyAppState>()
-                                .goals
-                                .firstWhere(
-                                    (goal) => goal.title == widget.title)
-                                .changeCategory(item);
-                            context.read<MyAppState>().updatePieChart();
-                          }),
-                        ),
-                      ],
-                    ),
-              //deadline of goal
-              (!editable)
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: buildRichText(
-                          context,
-                          "Deadline: ",
-                          context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .getDate(),
-                          Theme.of(context).textTheme.bodyMedium),
-                    )
-                  : (!editable)
-                      ? buildRichText(
-                          context,
-                          "Deadline",
-                          context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .getDate(),
-                          Theme.of(context).textTheme.bodySmall)
-                      : TextFormField(
-                          //has to have a value to continue
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Field cannot be empty";
-                            }
-                            return null;
-                          },
-                          style: Theme.of(context).textTheme.bodySmall,
-                          controller: TextEditingController(
-                            text: context
-                                .read<MyAppState>()
-                                .goals
-                                .firstWhere(
-                                    (goal) => goal.title == widget.title)
-                                .getDate(),
-                          ),
-                          readOnly: true, // Prevents manual editing
-                          decoration: underlineInputDecoration(
-                              context, "ex. 4/24/2024", "Deadline"),
-                          //date picker
-                          onTap: () async {
-                            final pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now()
-                                  .subtract(const Duration(days: 365 * 25)),
-                              lastDate:
-                                  DateTime.now().add(const Duration(days: 365)),
-                            );
-                            if (pickedDate != null) {
-                              setState(() {
-                                context
-                                    .read<MyAppState>()
-                                    .goals
-                                    .firstWhere(
-                                        (goal) => goal.title == widget.title)
-                                    .changeDate(formatDate(pickedDate
-                                        .toString()
-                                        .substring(0, 10)));
-                              });
-                            }
-                          },
-                        ),
-              // The description of goal
-              (!editable)
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: (context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .getDescription()
-                              .isEmpty)
-                          ? Text("No description",
-                              style: Theme.of(context).textTheme.bodyMedium)
-                          : buildRichText(
-                              context,
-                              "Description:\n",
-                              context
-                                  .read<MyAppState>()
-                                  .goals
-                                  .firstWhere(
-                                      (goal) => goal.title == widget.title)
-                                  .getDescription(),
-                              Theme.of(context).textTheme.bodyMedium),
-                    )
-                  : TextFormField(
-                      style: Theme.of(context).textTheme.bodySmall,
-                      minLines: 1,
-                      maxLines: 4,
-                      initialValue: context
-                          .read<MyAppState>()
-                          .goals
-                          .firstWhere((goal) => goal.title == widget.title)
-                          .getDescription(),
-                      onChanged: (value) {
-                        setState(
-                          () => context
-                              .read<MyAppState>()
-                              .goals
-                              .firstWhere((goal) => goal.title == widget.title)
-                              .changeDescription(value),
-                        );
-                      },
-                      decoration: underlineInputDecoration(
-                          context, "ex. In this I...", "Description"),
-                    ),
-              const SizedBox(height: 50),
-              Text("Tasks",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall!
-                      .copyWith(color: Theme.of(context).primaryColor)),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 150,
-                    // Input field to add tasks
-                    child: TextField(
-                      controller: taskController,
-                      decoration: underlineInputDecoration(
-                        alwaysFloat: false,
-                        context,
-                        'ex. Complete draft of business report',
-                        'Enter Task',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
-                    child: CircleAvatar(
-                      maxRadius: 17.5,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      child: IconButton(
-                        onPressed: () {
-                          _addTaskAndUpdateList(taskController.text, context);
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: Theme.of(context).colorScheme.background,
-                          size: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              // This displays list of all the tasks with a checkbox
-              Expanded(
-                child: Consumer<MyAppState>(
-                  builder: (context, myAppState, _) {
-                    final goal = myAppState.goals
-                        .firstWhere((goal) => goal.title == widget.title);
-                    final tasks = goal.tasks;
-
-                    return ListView.builder(
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = tasks[index];
-                        return CheckboxListTile(
-                            title: Text(task.task),
-                            value: task.isChecked,
-                            onChanged: (value) {
-                              setState(() {
-                                task.isChecked = value!;
-                                if (value) {
-                                  myAppState.addCompletedTasks(widget.title);
-                                } else {
-                                  myAppState.unCheck(widget.title);
+                        !editable
+                            ? setState(() {
+                                editable = true;
+                              })
+                            : setState(() {
+                                if (_formKey.currentState!.validate()) {
+                                  editable = false;
                                 }
                               });
-                            },
-                            secondary: IconButton(
-                                icon:
-                                    const Icon(Icons.cancel, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    myAppState.deleteTask(widget.title, index);
-                                  });
-                                }));
                       },
-                    );
-                  },
+                      icon: Icon(
+                        (!editable) ? Icons.edit : Icons.check,
+                        size: 20,
+                      ),
+                    ),
+                    // This button closes the modal sheet
+                    IconButton(
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ],
                 ),
-              ),
-            ],
+                // Users can pick a category using a dropdown menu
+                !editable
+                    ? buildRichText(context, "Category: ", currentGoal.category,
+                        Theme.of(context).textTheme.bodyMedium)
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Text("Category",
+                              style: Theme.of(context).textTheme.bodySmall),
+                          DropdownButton<String>(
+                            style: Theme.of(context).textTheme.labelMedium,
+                            value: currentGoal.category,
+                            items: items.keys
+                                .toList()
+                                .map(
+                                  (item) => DropdownMenuItem<String>(
+                                      value: item, child: Text(item)),
+                                )
+                                .toList(),
+                            onChanged: (item) => setState(() {
+                              currentGoal.changeCategory(item ?? "");
+                              context.read<MyAppState>().updatePieChart();
+                            }),
+                          ),
+                        ],
+                      ),
+                // Deadline of goal
+                (!editable)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: buildRichText(
+                            context,
+                            "Deadline: ",
+                            currentGoal.date,
+                            Theme.of(context).textTheme.bodyMedium),
+                      )
+                    : (!editable)
+                        ? buildRichText(context, "Deadline", currentGoal.date,
+                            Theme.of(context).textTheme.bodySmall)
+                        : TextFormField(
+                            // Has to have a value to continue
+                            validator: (value) => noEmptyField(value),
+                            controller: TextEditingController(
+                              text: currentGoal.date,
+                            ),
+                            readOnly: true, // Prevents manual editing
+                            decoration: underlineInputDecoration(
+                                context, "ex. 4/24/2024", "Deadline"),
+                            // Date picker
+                            onTap: () async {
+                              final pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now()
+                                    .subtract(const Duration(days: 365 * 25)),
+                                lastDate: DateTime.now()
+                                    .add(const Duration(days: 365)),
+                              );
+                              if (pickedDate != null) {
+                                setState(() {
+                                  String date = formatDate(pickedDate);
+                                  currentGoal.changeDate(date);
+                                });
+                              }
+                            }),
+                // The description of goal
+                (!editable)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: (currentGoal.description.isEmpty)
+                            ? Text("No description",
+                                style: Theme.of(context).textTheme.bodyMedium)
+                            : buildRichText(
+                                context,
+                                "Description:\n",
+                                currentGoal.description,
+                                Theme.of(context).textTheme.bodyMedium,
+                              ),
+                      )
+                    : TextFormField(
+                        minLines: 1,
+                        maxLines: 4,
+                        initialValue: currentGoal.description,
+                        onChanged: (value) {
+                          setState(
+                            () => currentGoal.changeDescription(value),
+                          );
+                        },
+                        decoration: underlineInputDecoration(
+                            context, "ex. In this I...", "Description"),
+                      ),
+                const SizedBox(height: 40),
+                Text(
+                  "Tasks",
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 150,
+                      // Input field to add tasks
+                      child: TextField(
+                        controller: taskController,
+                        decoration: underlineInputDecoration(
+                          alwaysFloat: false,
+                          context,
+                          'ex. Complete draft of business report',
+                          'Enter Task',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                      child: CircleAvatar(
+                        maxRadius: 17.5,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        child: IconButton(
+                          onPressed: () {
+                            _addTaskAndUpdateList(taskController.text, context);
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            color: Theme.of(context).colorScheme.background,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                // This displays list of all the tasks with a checkbox
+                Expanded(
+                  child: Consumer<MyAppState>(
+                    builder: (context, myAppState, _) {
+                      final goal = myAppState.goals
+                          .firstWhere((goal) => goal.title == widget.title);
+                      final tasks = goal.tasks;
+
+                      return ListView.builder(
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          final task = tasks[index];
+                          return CheckboxListTile(
+                              title: Text(task.task),
+                              value: task.isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  task.isChecked = value!;
+                                  if (value) {
+                                    myAppState.addCompletedTasks(widget.title);
+                                  } else {
+                                    myAppState.uncheck(widget.title);
+                                  }
+                                });
+                              },
+                              secondary: IconButton(
+                                  icon: const Icon(Icons.cancel,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    setState(() {
+                                      myAppState.deleteTask(
+                                          widget.title, index);
+                                    });
+                                  }));
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Row(
+                    children: [
+                      const Text('Completed Your Goal?'),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: CustomElevatedButton(
+                              onPressed:
+                                  (editable || currentGoal.category == 'Other')
+                                      ? null
+                                      : () {
+                                          addXpDialog(context);
+                                        },
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  'Add to Profile as Experience',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.center,
+                                ),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -332,10 +313,145 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     );
   }
 
-  // Takes a date and formats it into month day year
-  String formatDate(String date) {
-    List<String> parts = date.split('-');
-    return '${parts[1]}/${parts[2]}/${parts[0]}';
+  void addXpDialog(BuildContext context) {
+    GoalTile currentGoal = context.read<MyAppState>().goals.firstWhere(
+          (goal) => goal.title == widget.title,
+        );
+    final dialogFormKey = GlobalKey<FormState>();
+    String title = widget.title;
+    String startDate = currentGoal.createdDate;
+    String endDate = currentGoal.date;
+    String description = currentGoal.description;
+    String other = "";
+    String? otherField = items[currentGoal.category];
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        setState(() {});
+        return AlertDialog(
+          title: const Text('Add New Experience'),
+          content: Form(
+            key: dialogFormKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  initialValue: title,
+                  decoration: underlineInputDecoration(context, '', 'Title'),
+                  validator: (value) => noEmptyField(value),
+                  onChanged: (value) {
+                    setState(() {
+                      title = value;
+                    });
+                  },
+                ),
+                TextFormField(
+                  decoration:
+                      underlineInputDecoration(context, '', 'Start Date'),
+                  readOnly: true,
+                  controller: TextEditingController(text: startDate),
+                  validator: (value) => validateStartDate(value, endDate),
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now()
+                          .subtract(const Duration(days: 365 * 25)),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        startDate = formatDate(pickedDate);
+                      });
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: underlineInputDecoration(context, '', 'End Date'),
+                  readOnly: true,
+                  controller: TextEditingController(text: endDate),
+                  validator: (value) => noEmptyField(value),
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now()
+                          .subtract(const Duration(days: 365 * 25)),
+                      lastDate:
+                          DateTime.now().add(const Duration(days: 365 * 25)),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        endDate = formatDate(pickedDate);
+                      });
+                    }
+                  },
+                ),
+                TextFormField(
+                  initialValue: description,
+                  decoration:
+                      underlineInputDecoration(context, '', 'Description'),
+                  minLines: 1,
+                  maxLines: 4,
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
+                ),
+                (otherField == null)
+                    ? Container()
+                    : TextFormField(
+                        decoration:
+                            underlineInputDecoration(context, '', otherField),
+                        validator: (value) =>
+                            (otherField == 'Score' || otherField == 'Hours')
+                                ? nonNegativeValue(value)
+                                : (otherField == "Issuer")
+                                    ? null
+                                    : noEmptyField(value),
+                        onChanged: (value) {
+                          setState(() {
+                            other = value;
+                          });
+                        },
+                      ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (dialogFormKey.currentState!.validate()) {
+                  context.read<MyAppState>().addXpFromGoal(
+                        title,
+                        currentGoal.category,
+                        startDate,
+                        endDate,
+                        other,
+                        description,
+                      );
+                  print('Title: $title');
+                  print('Start Dates: $startDate');
+                  print('End Date: $endDate');
+                  print('Description: $description');
+                  print('$otherField: $other');
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      }),
+    );
   }
 }
 

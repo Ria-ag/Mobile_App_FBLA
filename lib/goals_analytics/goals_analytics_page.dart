@@ -34,12 +34,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               onChanged: (value) {
                 title = value;
               },
-              validator: (value) {
-                if (title.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
-              },
+              validator: (value) => noEmptyField(value),
               decoration: underlineInputDecoration(
                   alwaysFloat: false,
                   context,
@@ -93,17 +88,16 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
     ];
 
     List<PieChartSectionData> pieChartSectionData =
-        List.generate(context.read<MyAppState>().items.length, (index) {
+        List.generate(items.length, (index) {
       return PieChartSectionData(
         value: context.read<MyAppState>().numberOfItems[index].toDouble(),
         color: colors[index],
       );
     });
 
-    List<LegendItem> legendItems =
-        List.generate(context.read<MyAppState>().items.length, (index) {
+    List<LegendItem> legendItems = List.generate(items.length, (index) {
       return LegendItem(
-        name: context.read<MyAppState>().items[index].splitMapJoin(
+        name: items.keys.toList()[index].splitMapJoin(
               RegExp(r'/|\s'),
               onMatch: (m) => '${m.group(0)}\n',
             ),
@@ -171,39 +165,23 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 20, top: 20),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width / 3,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            shadow,
-                          ],
-                        ),
-                        child: Center(
-                          // The first thing in the analytics page is the total number of tasks completed
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 20, right: 20),
-                            child: Text(
-                                context
-                                    .read<MyAppState>()
-                                    .totalCompletedTasks
-                                    .toString(),
-                                style: theme.textTheme.headlineLarge!.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background)),
-                          ),
-                        ),
+                      AnalyticTile(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        displayText: context
+                            .watch<MyAppState>()
+                            .totalCompletedTasks
+                            .toString(),
+                        labelText: "Total Completed Tasks",
                       ),
-                      const SizedBox(height: 3),
-                      Text(
-                        "Total Completed Tasks",
-                        style: theme.textTheme.bodyMedium,
+                      AnalyticTile(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        displayText:
+                            context.watch<MyAppState>().xpNum.toString(),
+                        labelText: "Total Experiences",
                       ),
                     ],
                   ),
@@ -299,5 +277,52 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       }
     }
     return false;
+  }
+}
+
+class AnalyticTile extends StatelessWidget {
+  const AnalyticTile({
+    super.key,
+    required this.backgroundColor,
+    required this.displayText,
+    required this.labelText,
+  });
+
+  final Color backgroundColor;
+  final String displayText;
+  final String labelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          width: MediaQuery.of(context).size.width / 3,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              shadow,
+            ],
+          ),
+          child: Center(
+            // The first thing in the analytics page is the total number of tasks completed
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, bottom: 10, left: 20, right: 20),
+              child: Text(displayText,
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.background)),
+            ),
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          labelText,
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
+    );
   }
 }
