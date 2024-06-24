@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:path/path.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // This class defines an experience and requires a title, id, and type of tile
 // ignore: must_be_immutable
@@ -384,6 +385,11 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. In this I...", "Description"),
                   ),
+
+          IconButton(
+            icon: Image.asset('en_US.png'),
+            onPressed: () => shareToLinkedIn(widget.name, widget.award),
+          )
         ],
       ),
       trailing: SizedBox(
@@ -470,5 +476,13 @@ class _ExperienceState extends State<Experience> {
         ],
       ),
     );
+  }
+  shareToLinkedIn(String name, String award) async {
+    String url =
+        "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
+    final Uri parsed = Uri.parse(url);
+    if (!await launchUrl(parsed)) {
+      throw Exception('Could not launch $parsed');
+    }
   }
 }
