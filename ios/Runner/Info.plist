@@ -49,5 +49,16 @@
     <string>Rise needs access to your photo library to pick images.</string>
     <key>NSCameraUsageDescription</key>
     <string>Rise needs access to your camera to capture new images.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+    	<dict>
+        	<key>CFBundleURLSchemes</key>
+        	<array>
+            	<string>myapp</string>
+        	</array>
+        	<key>CFBundleURLName</key>
+        	<string>com.yourcompany.yourapp</string>
+    	</dict>
+	</array>
 </dict>
 </plist>

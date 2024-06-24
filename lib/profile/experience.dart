@@ -162,7 +162,8 @@ class _ExperienceState extends State<Experience> {
             ],
           ),
         ),
-    )
+    ),
+    );
   }
 
 // This creates a list tile of each experience and has an edit mode
