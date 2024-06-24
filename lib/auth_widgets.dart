@@ -344,18 +344,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   controller: _yearController,
                   decoration:
                       const InputDecoration(labelText: 'Year of Graduation'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    final int? numVal = int.tryParse(value);
-                    if (numVal == null ||
-                        numVal <= 1900 ||
-                        numVal >= DateTime.now().year + 50) {
-                      return "Enter a valid year";
-                    }
-                    return null;
-                  },
+                  validator: (value) => validateGraduationYear(value),
                 ),
                 // This is where the user enters their email
                 TextFormField(

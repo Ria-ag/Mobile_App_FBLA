@@ -6,9 +6,9 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:pdfx/pdfx.dart' as pd;
-import 'main.dart';
 import 'my_app_state.dart';
 import 'profile/experience.dart';
+import 'theme.dart';
 
 // This is the home page of the app
 class HomePage extends StatefulWidget {
@@ -113,19 +113,19 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
-                width: 400,
+                width: MediaQuery.of(context).size.width - 40,
                 child: ElevatedButton(
                   onPressed: () {},
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: (recent != null)
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                recent!.title,
+                                items.keys.toList()[recent!.tileIndex],
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
@@ -139,8 +139,12 @@ class _HomePageState extends State<HomePage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    "${recent!.startDate} - ${recent!.endDate}",
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      "${recent!.startDate} - ${recent!.endDate}",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -167,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                 const Spacer(),
                 FloatingActionButton.large(
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  onPressed: () => createPdf(context),
+                  onPressed: () => makePdf(context, true),
                   child: const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -180,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                 const Spacer(),
                 FloatingActionButton.large(
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  onPressed: () => socialPdf(),
+                  onPressed: () => socialPdf(context),
                   child: const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -203,9 +207,9 @@ class _HomePageState extends State<HomePage> {
 // This is the method that creates the look of a pdf page that is shared
   void addPage(
     pw.Document pdf,
-    String? name,
-    String? school,
-    String? year,
+    String name,
+    String school,
+    String year,
     List<Experience> experiences,
     int i,
   ) {
@@ -222,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      name!,
+                      name,
                       style: pw.TextStyle(
                         fontSize: 24,
                         fontWeight: pw.FontWeight.bold,
@@ -244,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        experience.title,
+                        items.keys.toList()[experience.tileIndex],
                         style: pw.TextStyle(
                           fontSize: 18,
                           fontWeight: pw.FontWeight.bold,
@@ -274,10 +278,10 @@ class _HomePageState extends State<HomePage> {
   }
 
 // Here, the pdf is actually made and saved to the device's directory
-  Future<File> makePdf() async {
-    String? name = prefs.getString('name');
-    String? school = prefs.getString('school');
-    String? year = prefs.getString('year');
+  Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
+    String name = context.read<MyAppState>().appUser.name;
+    String school = context.read<MyAppState>().appUser.school;
+    String year = context.read<MyAppState>().appUser.year.toString();
 
     final pdf = pw.Document();
 
@@ -285,19 +289,25 @@ class _HomePageState extends State<HomePage> {
       List<Experience> experiences =
           context.read<MyAppState>().appUser.xpList[i];
 
-      addPage(pdf, name, school, year, experiences, i);
+      if (experiences.isNotEmpty) {
+        addPage(pdf, name, school, year, experiences, i);
+      }
     }
-    final tempDir = await getTemporaryDirectory();
-    final tempPath = tempDir.path;
-    final tempFile = File('$tempPath/example.pdf');
-    await tempFile.writeAsBytes(await pdf.save());
-    return tempFile;
+    if (returnPdf) {
+      await Printing.sharePdf(bytes: await pdf.save(), filename: 'MyRise.pdf');
+    } else {
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = tempDir.path;
+      final tempFile = File('$tempPath/example.pdf');
+      await tempFile.writeAsBytes(await pdf.save());
+      return tempFile;
+    }
   }
 
 // This method is similar to makePdf(), but is catered towards sharing with social media apps
 // It has a custom message and shares the pdf as jpeg images
-  void socialPdf() async {
-    File pdf = await makePdf();
+  void socialPdf(BuildContext context) async {
+    File pdf = await makePdf(context, false);
     debugPrint(pdf.path);
     List<XFile> tempFiles = [];
 
@@ -317,21 +327,5 @@ class _HomePageState extends State<HomePage> {
     }
     // This is the custom message that is sent to the chosen social media app
     await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
-  }
-
-// Here, the pdf is created to be shared by Bluetooth or printed
-  void createPdf(context) async {
-    String? name = prefs.getString('name');
-    String? school = prefs.getString('school');
-    String? year = prefs.getString('year');
-
-    final pdf = pw.Document();
-
-    for (int i = 0; i < 8; i++) {
-      List<Experience> experiences = context.read<MyAppState>().xpList[i];
-
-      addPage(pdf, name, school, year, experiences, i);
-    }
-    await Printing.sharePdf(bytes: await pdf.save(), filename: 'MyRise.pdf');
   }
 }

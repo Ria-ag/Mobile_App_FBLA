@@ -230,19 +230,7 @@ class _SecurityState extends State<Security> {
                         : TextFormField(
                             // A value must be entered in the field
                             // This value must be a year greater than 1900 and before 50 years ahead of the current year
-                            validator: (value) {
-                              if (value != null) {
-                                final int? numVal = int.tryParse(value);
-                                if (numVal == null ||
-                                    numVal <= 1900 ||
-                                    numVal >= DateTime.now().year + 50) {
-                                  return "Enter a valid year";
-                                }
-                              } else if (value == null || value.isEmpty) {
-                                return "Field cannot be empty";
-                              }
-                              return null;
-                            },
+                            validator: (value) => validateGraduationYear(value),
                             onChanged: (value) => setState(() => year = value),
                             initialValue: year,
                             decoration: underlineInputDecoration(

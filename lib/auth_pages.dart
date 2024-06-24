@@ -40,16 +40,67 @@ class _AuthNavState extends State<AuthNav> {
 }
 
 // This is the error message page
-// TODO: update
 Widget errorMessage(Object? error, BuildContext context) {
   return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Center(
-        child: Text(
-          'Hmm. It looks like something went wrong. क्षम्यताम्!\nError: $error',
-          textAlign: TextAlign.center,
-        ),
+    appBar: appBar,
+    body: Container(
+      color: Theme.of(context).colorScheme.secondary,
+      child: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [shadow],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 80,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Oops! Something went wrong',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'We apologize for the inconvenience. Please try again later.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Error: $error',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    CustomElevatedButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                      child: Text(
+                        'Return to Login',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     ),
   );
@@ -86,7 +137,8 @@ class _AuthPageState extends State<AuthPage> {
                 const Image(image: AssetImage("assets/logo.png"), height: 60),
                 Text(
                   'Rise',
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Theme.of(context).colorScheme.background),
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.background),
                 ),
                 const SizedBox(height: 50),
               ],
@@ -96,7 +148,9 @@ class _AuthPageState extends State<AuthPage> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: login ? LoginWidget(switchToSignUp: toggle) : SignUpWidget(switchtoSignIn: toggle),
+                child: login
+                    ? LoginWidget(switchToSignUp: toggle)
+                    : SignUpWidget(switchtoSignIn: toggle),
               ),
             ),
           ),
@@ -127,52 +181,83 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // A simple app bar that lets the user go back
-      // TODO: add logo?
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        leading: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () {
+            navigatorKey.currentState!.pop();
+          },
+          child: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
         elevation: 0,
-        title: const Text('Reset Password'),
+        title: Text(
+          'Reset Password',
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                color: Colors.white,
+              ),
+        ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(25),
-            child: Form(
-              key: formKey,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 3,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Recieve an email to\nreset your password',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 20),
-                  // This is where the user enters their email to send the reset password link to.
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      errorMaxLines: 3,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, bottom: 20),
+                    child: Text(
+                      'Reset Password',
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                      onPressed: resetPassword,
-                      icon: const Icon(Icons.email_outlined),
-                      label: const Text('Reset Password')),
                 ],
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(25),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Enter your email to receive a password reset link.',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: underlineInputDecoration(
+                        context,
+                        "Enter your email",
+                        "Email",
+                      ),
+                      validator: (value) => noEmptyField(value),
+                    ),
+                    const SizedBox(height: 30),
+                    CustomElevatedButton(
+                      onPressed: resetPassword,
+                      child: Text(
+                        'Reset Password',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,40 +333,83 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         : Scaffold(
             // A simple app bar that lets the user go back
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               elevation: 0,
-              title: const Text('Verify Email'),
+              title: Text(
+                'Verify Email',
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
               leading: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                 },
-                child: const Icon(Icons.arrow_back, color: Colors.black),
+                child: const Icon(Icons.arrow_back, color: Colors.white),
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(25),
+            body: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('A verification email has been sent.'),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed:
-                        // Users can only send a verification email every 5 seconds
-                        canResendEmail ? sendVerificationEmail : null,
-                    icon: const Icon(Icons.email),
-                    label: const Text('Resend Email'),
+                  Container(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, bottom: 20),
+                          child: Text(
+                            'Verify Email',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  TextButton(
-                    onPressed: () {
-                      // The cancel button just signs the user out, but an account is created
-                      FirebaseAuth.instance.signOut();
-                    },
-                    child: const Text('Cancel'),
-                  )
+                  Padding(
+                    padding: const EdgeInsets.all(25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'A verification email has been sent to your email address.',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(height: 30),
+                        CustomElevatedButton(
+                          onPressed: canResendEmail
+                              ? () {
+                                  sendVerificationEmail;
+                                }
+                              : null,
+                          child: Text(
+                            'Resend Email',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomElevatedButton(
+                          onPressed: () => FirebaseAuth.instance.signOut(),
+                          buttonColor: Colors.grey,
+                          child: Text(
+                            'Cancel',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
