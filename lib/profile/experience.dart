@@ -44,7 +44,6 @@ class Experience extends StatefulWidget {
   // Converts an Experience object into a JSON string
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
       'tileIndex': tileIndex,
       'xpID': xpID,
       'name': name,
@@ -162,7 +161,7 @@ class _ExperienceState extends State<Experience> {
             ],
           ),
         ),
-    ),
+      ),
     );
   }
 
@@ -425,10 +424,10 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. In this I...", "Description"),
                   ),
-            
+
           IconButton(
             icon: Image.asset('en_US.png'),
-              onPressed: () => shareToLinkedIn(widget.name, widget.award),
+            onPressed: () => shareToLinkedIn(widget.name, widget.award),
           )
         ],
       ),
@@ -523,12 +522,13 @@ class _ExperienceState extends State<Experience> {
     List<String> parts = date.split('-');
     return '${parts[1]}/${parts[2]}/${parts[0]}';
   }
-  
+
   shareToLinkedIn(String name, String award) async {
-    String url = "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
+    String url =
+        "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
     final Uri parsed = Uri.parse(url);
-   if (!await launchUrl(parsed)) {
-        throw Exception('Could not launch $parsed');
+    if (!await launchUrl(parsed)) {
+      throw Exception('Could not launch $parsed');
     }
   }
 }
