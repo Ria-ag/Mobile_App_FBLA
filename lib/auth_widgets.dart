@@ -39,7 +39,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   StreamSubscription? _sub;
 
-   @override
+  @override
   void initState() {
     super.initState();
     _initDeepLinkListener();
@@ -65,7 +65,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-     _sub?.cancel();
+    _sub?.cancel();
     super.dispose();
   }
 
@@ -186,7 +186,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 height: 50,
                 width: 200,
                 image: const AssetImage('assets/sign_in.png'),
-                onTap: () => loginWithLinkedIn(),
+                onTap: () => signInWithLinkedIn(),
               ),
             ],
           ),
@@ -250,7 +250,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     const clientId = '86w3jl8a5w2h0t';
     const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
 
-    final authorizationUrl = Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
+    final authorizationUrl =
+        Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
       'response_type': 'code',
       'client_id': clientId,
       'redirect_uri': redirectUrl,
@@ -267,10 +268,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       if (code != null) {
         exchangeCodeForToken(code);
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error logging in: $e'),
-      ));
+    } catch (error) {
+      showTextSnackBar('Error logging in: $error');
     }
   }
 
@@ -381,7 +380,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 }
-  
+
 //   Future<void> loginWithLinkedIn() async {
 //   const clientId = '86w3jl8a5w2h0t';
 //   const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
