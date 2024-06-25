@@ -385,8 +385,9 @@ class _LoginWidgetState extends State<LoginWidget> {
   Future<void> loginWithLinkedIn() async {
   const clientId = '86w3jl8a5w2h0t';
   const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-  const redirectUrl = 'https://flutteroauth.onrender.com/callback/rise';
+  // const redirectUrl = 'https://flutteroauth.onrender.com/callback/rise';
   // const redirectUrl = 'http://localhost:64289/auth';
+  const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
   
 
   // Construct the url
