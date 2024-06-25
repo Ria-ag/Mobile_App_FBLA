@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                    android:scheme="mobileapp"
+                    android:scheme="rise"
                     android:host="auth" />
             </intent-filter>
         </activity>
