@@ -194,7 +194,8 @@ class CustomLineChart extends StatelessWidget {
 // ignore: must_be_immutable
 class GoalTile extends StatelessWidget {
   final String title;
-  String category = "Athletics";
+  final String createdDate;
+  String category = "Other";
   String date = "";
   String description = "";
   List<Task> tasks = [];
@@ -205,41 +206,22 @@ class GoalTile extends StatelessWidget {
   GoalTile({
     super.key,
     required this.title,
+    required this.createdDate,
   });
 
-  // Category getter method
-  String getCategory() {
-    return category;
-  }
-
   // This method takes a category and change the current one with the new one
-  void changeCategory(category) {
+  void changeCategory(String category) {
     this.category = category;
   }
 
-  // Date getter method
-  String getDate() {
-    return date;
-  }
-
   // This method takes a date and change the current one with the new one
-  void changeDate(date) {
+  void changeDate(String date) {
     this.date = date;
-  }
-
-  // Description getter method
-  String getDescription() {
-    return description;
   }
 
   // This method takes a description and change the current one with the new one
   void changeDescription(description) {
     this.description = description;
-  }
-
-  // Tasks getter method
-  List<Task> getTasks() {
-    return tasks;
   }
 
   @override
@@ -283,10 +265,9 @@ class GoalTile extends StatelessWidget {
                     ],
                   ),
                   // Creates a bar showing the progess of the goal
-                  Consumer<MyAppState>(
-                  builder: (context, myAppState, _) {
+                  Consumer<MyAppState>(builder: (context, myAppState, _) {
                     final progress = myAppState.calculateProgress(title);
-                
+
                     return LinearProgressIndicator(
                       value: progress,
                       backgroundColor: Colors.grey[200],
@@ -294,8 +275,7 @@ class GoalTile extends StatelessWidget {
                         Theme.of(context).colorScheme.primary,
                       ),
                     );
-                  }
-                ),
+                  }),
                 ],
               ),
             ),
@@ -341,7 +321,10 @@ class CustomLegend extends StatelessWidget {
                       border: Border.all(color: Colors.grey)),
                 ),
                 const SizedBox(width: 8),
-                Text(item.name),
+                Text(
+                  item.name,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
             ),
           );

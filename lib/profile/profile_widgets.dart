@@ -46,7 +46,7 @@ class IconTile extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  modalSheet(context, title, tileIndex).then((value) =>
+                  modalSheet(context, tileIndex).then((value) =>
                       context.read<MyAppState>().saveXpToDB(tileIndex));
                 },
                 child: Container(
@@ -102,38 +102,47 @@ class IconTile extends StatelessWidget {
 }
 
 // This class defines text tiles, like Clubs/Organizations
-class TextTile extends StatelessWidget {
+class TextTile extends StatefulWidget {
   // The class requires a title and index
   const TextTile({super.key, required this.title, required this.tileIndex});
   final String title;
   final int tileIndex;
 
   @override
+  State<TextTile> createState() => _TextTileState();
+}
+
+class _TextTileState extends State<TextTile> {
+  @override
   Widget build(BuildContext context) {
     List<Widget> nameSummary = [];
     List<Widget> dateSummary = [];
 
     for (Experience xp
-        in context.watch<MyAppState>().appUser.xpList[tileIndex]) {
+        in context.watch<MyAppState>().appUser.xpList[widget.tileIndex]) {
       // Displays each experience summary in the body with its name
-      nameSummary.add(
-        Text(
-          xp.name,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      if (!xp.editable) {
+        nameSummary.add(
+          Text(
+            xp.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      );
-      // Displays each experience summary in the body with its date as well
-      dateSummary.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 1.125),
-        child: Text(
-          "${xp.startDate} - ${xp.endDate}",
-          style: const TextStyle(color: Colors.white),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ));
+        );
+        // Displays each experience summary in the body with its date as well
+        dateSummary.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1.125),
+            child: Text(
+              "${xp.startDate} - ${xp.endDate}",
+              style: const TextStyle(color: Colors.white),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        );
+      }
     }
 
     return Padding(
@@ -142,7 +151,7 @@ class TextTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            widget.title,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 5),
@@ -151,8 +160,8 @@ class TextTile extends StatelessWidget {
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
-                modalSheet(context, title, tileIndex).then((value) =>
-                    context.read<MyAppState>().saveXpToDB(tileIndex));
+                modalSheet(context, widget.tileIndex).then((value) =>
+                    context.read<MyAppState>().saveXpToDB(widget.tileIndex));
               },
               child: Container(
                 constraints: const BoxConstraints(minHeight: 40),

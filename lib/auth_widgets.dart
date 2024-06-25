@@ -335,14 +335,16 @@ class _LoginWidgetState extends State<LoginWidget> {
       );
 
       final emailResponse = await http.get(
-        Uri.parse('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
+        Uri.parse(
+            'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       );
 
       final profile = json.decode(profileResponse.body);
-      final email = json.decode(emailResponse.body)['elements'][0]['handle~']['emailAddress'];
+      final email = json.decode(emailResponse.body)['elements'][0]['handle~']
+          ['emailAddress'];
 
       await FirebaseFirestore.instance.collection('users').add({
         'firstName': profile['localizedFirstName'],
@@ -489,7 +491,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   validator: (value) => noEmptyField(value),
                 ),
                 // This is where the user enters their school
-      
+
                 TextFormField(
                   controller: _schoolController,
                   decoration: const InputDecoration(labelText: 'School'),
@@ -500,18 +502,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   controller: _yearController,
                   decoration:
                       const InputDecoration(labelText: 'Year of Graduation'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    }
-                    final int? numVal = int.tryParse(value);
-                    if (numVal == null ||
-                        numVal <= 1900 ||
-                        numVal >= DateTime.now().year + 50) {
-                      return "Enter a valid year";
-                    }
-                    return null;
-                  },
+                  validator: (value) => validateGraduationYear(value),
                 ),
                 // This is where the user enters their email
                 TextFormField(
@@ -618,7 +609,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(height:50),
+                const SizedBox(height: 50),
               ],
             ),
           ),

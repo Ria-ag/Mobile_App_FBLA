@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
@@ -14,12 +13,9 @@ import 'package:url_launcher/url_launcher.dart';
 class Experience extends StatefulWidget {
   Experience({
     super.key,
-    required this.title,
     required this.xpID,
     required this.tileIndex,
   });
-
-  final String title;
   // The index of an experience's category
   final int tileIndex;
   // A unique identification number for each integer
@@ -44,7 +40,6 @@ class Experience extends StatefulWidget {
   // Converts an Experience object into a JSON string
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
       'tileIndex': tileIndex,
       'xpID': xpID,
       'name': name,
@@ -68,7 +63,6 @@ class Experience extends StatefulWidget {
     final Map<String, dynamic> map = Map<String, dynamic>.from(xpMap);
 
     Experience exp = Experience(
-      title: map['title'],
       xpID: map['xpID'],
       tileIndex: map['tileIndex'],
     );
@@ -162,7 +156,7 @@ class _ExperienceState extends State<Experience> {
             ],
           ),
         ),
-    ),
+      ),
     );
   }
 
@@ -174,7 +168,7 @@ class _ExperienceState extends State<Experience> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //name of experience
-          if (widget.title != "Community Service")
+          if (widget.tileIndex != 2)
             (!widget.editable)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +183,7 @@ class _ExperienceState extends State<Experience> {
                       Divider(
                         color: Theme.of(context).colorScheme.secondary,
                         thickness: 2,
-                        endIndent: MediaQuery.of(context).size.width / 4,
+                        endIndent: MediaQuery.of(context).size.width / 8,
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -239,20 +233,8 @@ class _ExperienceState extends State<Experience> {
               ? buildRichText(context, "Start Date: ", widget.startDate)
               : TextFormField(
                   // The value is necessary and the start date should be before the end date to continue
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Field cannot be empty";
-                    } else if (widget.endDate.isNotEmpty) {
-                      DateTime endDate =
-                          DateFormat("MM/dd/yyyy").parse(widget.endDate);
-                      DateTime startDate =
-                          DateFormat("MM/dd/yyyy").parse(value);
-                      if (startDate.compareTo(endDate) > 0) {
-                        return "Start date should be before end date";
-                      }
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      validateStartDate(value, widget.endDate),
                   controller: TextEditingController(text: widget.startDate),
                   readOnly: true, // Prevents manual editing
                   decoration: underlineInputDecoration(
@@ -267,8 +249,7 @@ class _ExperienceState extends State<Experience> {
                     );
                     if (pickedDate != null) {
                       setState(() {
-                        widget.startDate =
-                            formatDate(pickedDate.toString().substring(0, 10));
+                        widget.startDate = formatDate(pickedDate);
                       });
                     }
                   },
@@ -296,8 +277,7 @@ class _ExperienceState extends State<Experience> {
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          widget.endDate = formatDate(
-                              pickedDate.toString().substring(0, 10));
+                          widget.endDate = formatDate(pickedDate);
                         });
                       }
                     },
@@ -305,7 +285,7 @@ class _ExperienceState extends State<Experience> {
           ),
           const SizedBox(width: 10),
           // Role in experience
-          if (widget.title == "Clubs/Organizations")
+          if (widget.tileIndex == 5)
             (!widget.editable)
                 ? buildRichText(context, "Role: ", widget.role)
                 : TextFormField(
@@ -321,7 +301,7 @@ class _ExperienceState extends State<Experience> {
                         context, "ex. President", "Role"),
                   ),
           // Issuer of award
-          if (widget.title == "Awards")
+          if (widget.tileIndex == 3)
             (!widget.editable)
                 ? (widget.award.isEmpty)
                     ? const Text("No issuer")
@@ -336,7 +316,7 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. Woodinville High School", "Issuer")),
           // Service hours
-          if (widget.title == "Community Service")
+          if (widget.tileIndex == 2)
             (!widget.editable)
                 ? buildRichText(context, "Hours: ", widget.hours)
                 : TextFormField(
@@ -351,36 +331,16 @@ class _ExperienceState extends State<Experience> {
                       "ex. 10",
                       "Hours",
                     ),
-                    // Must contain a postive number to continue
-                    validator: (value) {
-                      if (value != null) {
-                        final double? numVal = double.tryParse(value);
-                        if (numVal == null || numVal <= 0) {
-                          return "Enter a positive number";
-                        }
-                      } else if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a non-negative a value to continue
+                    validator: (value) => nonNegativeValue(value),
                   ),
           // Score on test
-          if (widget.title == "Tests")
+          if (widget.tileIndex == 7)
             (!widget.editable)
                 ? buildRichText(context, "Score: ", widget.score)
                 : TextFormField(
-                    // MUst contain a non-negative a value to continue
-                    validator: (value) {
-                      if (value != null) {
-                        final double? numVal = double.tryParse(value);
-                        if (numVal == null || numVal < 0) {
-                          return "Enter a non-negative number";
-                        }
-                      } else if (value == null || value.isEmpty) {
-                        return "Field cannot be empty";
-                      }
-                      return null;
-                    },
+                    // Must contain a non-negative a value to continue
+                    validator: (value) => nonNegativeValue(value),
                     initialValue: widget.score,
                     onChanged: (value) {
                       setState(() {
@@ -391,7 +351,7 @@ class _ExperienceState extends State<Experience> {
                         underlineInputDecoration(context, "ex. 1320", "Score"),
                   ),
           // Grade in class
-          if (widget.title == "Honors Classes")
+          if (widget.tileIndex == 4)
             (!widget.editable)
                 ? buildRichText(context, "Grade: ", widget.grade)
                 : TextFormField(
@@ -407,7 +367,7 @@ class _ExperienceState extends State<Experience> {
                         underlineInputDecoration(context, "ex. A", "Grade"),
                   ),
           // Description of experience
-          if (widget.title != "Tests" && widget.title != "Honors Classes")
+          if (widget.tileIndex != 7 && widget.tileIndex != 5)
             (!widget.editable)
                 ? (widget.description.isEmpty)
                     ? const Text("No description")
@@ -425,15 +385,15 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. In this I...", "Description"),
                   ),
-            
+
           IconButton(
             icon: Image.asset('en_US.png'),
-              onPressed: () => shareToLinkedIn(widget.name, widget.award),
+            onPressed: () => shareToLinkedIn(widget.name, widget.award),
           )
         ],
       ),
       trailing: SizedBox(
-        width: 85,
+        width: 100,
         height: 175,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -517,18 +477,12 @@ class _ExperienceState extends State<Experience> {
       ),
     );
   }
-
-  // This method takes a date and formates it into month, day, and year
-  String formatDate(String date) {
-    List<String> parts = date.split('-');
-    return '${parts[1]}/${parts[2]}/${parts[0]}';
-  }
-  
   shareToLinkedIn(String name, String award) async {
-    String url = "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
+    String url =
+        "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
     final Uri parsed = Uri.parse(url);
-   if (!await launchUrl(parsed)) {
-        throw Exception('Could not launch $parsed');
+    if (!await launchUrl(parsed)) {
+      throw Exception('Could not launch $parsed');
     }
   }
 }

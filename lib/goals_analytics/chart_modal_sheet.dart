@@ -29,7 +29,7 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
             height: MediaQuery.of(context).size.height - 50,
             width: MediaQuery.of(context).size.width - 15,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: Form(
                 key: formKey,
                 child: Column(
@@ -62,7 +62,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.chartName,
                           onChanged: (value) =>
@@ -71,7 +70,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                               "ex. Tasks Completed Last Month", "Chart Name"),
                         ),
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.xLabel,
                           onChanged: (value) =>
@@ -80,7 +78,6 @@ Future<void> chartModalSheet(BuildContext context, String title, int id) {
                               "ex. Days Since Jan 1st", "X-Axis Label"),
                         ),
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
                           validator: (value) => noEmptyField(value),
                           initialValue: chartTile.yLabel,
                           onChanged: (value) =>
@@ -171,7 +168,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
     int index = watchChartState.charts.indexOf(widget.chartTile);
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 330,
+      height: MediaQuery.of(context).size.height - 375,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -183,30 +180,36 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SizedBox(
-                      width: 225,
+                      width: 185,
                       height: 50,
                       child: CustomElevatedButton(
                         onPressed: () => addRow(),
                         buttonColor: Theme.of(context).colorScheme.secondary,
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.add),
-                            Text("Add Row"),
+                            const Icon(Icons.add),
+                            Text(
+                              "Add Row",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      width: 225,
+                      width: 185,
                       height: 50,
                       child: CustomElevatedButton(
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.remove),
-                            Text("Remove Last Row"),
+                            const Icon(Icons.remove),
+                            Text(
+                              "Remove Last Row",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ],
                         ),
                         onPressed: () => removeRow(),
@@ -214,14 +217,17 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      width: 225,
+                      width: 185,
                       height: 50,
                       child: CustomElevatedButton(
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.save),
-                            Text("Save Chart"),
+                            const Icon(Icons.save),
+                            Text(
+                              "Save Chart",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ],
                         ),
                         onPressed: () =>
@@ -267,14 +273,17 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                                             .colorScheme
                                             .secondary))),
                         DataColumn(
-                            label: Text('Y',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary))),
+                          label: Text(
+                            'Y',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
                       ],
                       rows: rows,
                     ),

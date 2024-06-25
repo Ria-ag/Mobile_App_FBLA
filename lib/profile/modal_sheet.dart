@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 // This is a method that builds the modal sheet that opens with every tile
 // It takes the context, title, and type of tile
-Future<void> modalSheet(context, title, tileIndex) {
+Future<void> modalSheet(context, tileIndex) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -36,7 +36,7 @@ Future<void> modalSheet(context, title, tileIndex) {
                         size: 20,
                       ),
                       onPressed: () =>
-                          context.read<MyAppState>().addXp(title, tileIndex),
+                          context.read<MyAppState>().addXp(tileIndex),
                     ),
                     // This button when pressed closes the modal sheet
                     IconButton(
@@ -55,20 +55,23 @@ Future<void> modalSheet(context, title, tileIndex) {
                 Container(
                   child: (xpList[tileIndex].isNotEmpty)
                       ? SingleChildScrollView(
-                          child: ListView.separated(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: xpList[tileIndex].length,
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return const Divider(
-                                color: Colors.grey,
-                                thickness: 1.5,
-                              );
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              return xpList[tileIndex][index];
-                            },
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height - 136,
+                            child: ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: xpList[tileIndex].length,
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const Divider(
+                                  color: Colors.grey,
+                                  thickness: 1.5,
+                                );
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                return xpList[tileIndex][index];
+                              },
+                            ),
                           ),
                         )
                       : const Padding(

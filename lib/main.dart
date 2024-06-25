@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/auth_pages.dart';
 import 'package:mobileapp/my_app_state.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
@@ -15,7 +14,6 @@ import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -27,9 +25,6 @@ void main() async {
 final navigatorKey = GlobalKey<NavigatorState>();
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-// This SharePreferences instance is where app data is locally stored
-late SharedPreferences prefs;
-
 // This is the root of the app; everything runs from here
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -39,7 +34,6 @@ class MyApp extends StatelessWidget {
     // These are the providers used in the app for state management across widgets
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider<MyGoalsAnalytics>(create: (context) => MyGoalsAnalytics()),
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
       ],
       child: MaterialApp(
@@ -55,7 +49,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  // TODO: always starts on first page, call totalHrs()
   const MyHomePage({super.key, required this.title});
 
   final String title;
