@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
                     android:scheme="rise"
-                    android:host="auth" />
+                    android:host="auth/rise" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
