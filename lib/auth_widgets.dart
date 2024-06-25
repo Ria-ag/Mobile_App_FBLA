@@ -49,10 +49,9 @@ class _LoginWidgetState extends State<LoginWidget> {
     _sub = linkStream.listen((String? link) {
       if (link != null) {
         final uri = Uri.parse(link);
-        if (uri.host == 'temp') {
+        if (uri.host == 'ria-ag.github.io' && uri.path == '/Mobile_App_FBLA') {
           final code = uri.queryParameters['code'];
           if (code != null) {
-            // Handle the OAuth code received from LinkedIn
             exchangeCodeForToken(code);
           }
         }
@@ -227,61 +226,140 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Future<void> signInWithLinkedIn() async {
     const clientId = '86w3jl8a5w2h0t';
-    const redirectUrl = 'https://temp'; // Make sure this matches your app's deep link setup
+    const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
 
     final authorizationUrl = Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
       'response_type': 'code',
       'client_id': clientId,
       'redirect_uri': redirectUrl,
-      'scope': 'openid email w_member_social',
-     });
-
-    try {
-       final result = await FlutterWebAuth2.authenticate(
-        url: authorizationUrl.toString(),
-        callbackUrlScheme: 'https',
-    );
-    } catch (e) {
-      print('Error signing in with LinkedIn: $e');
-    }
-  }
-
-  void exchangeCodeForToken(String code) async {
-    const clientId = '86w3jl8a5w2h0t';
-    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-    const redirectUrl = 'https://temp';
-
-    const  tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
-    final response = await http.post(Uri.parse(tokenUrl), body: {
-      'grant_type': 'authorization_code',
-      'code': code,
-      'redirect_uri': redirectUrl,
-      'client_id': clientId,
-      'client_secret': clientSecret,
+      'scope': 'r_liteprofile r_emailaddress',
     });
 
-    if (response.statusCode == 200) {
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: authorizationUrl.toString(),
+        callbackUrlScheme: 'https',
+      );
+
+      final code = Uri.parse(result).queryParameters['code'];
+      if (code != null) {
+        exchangeCodeForToken(code);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error logging in: $e'),
+      ));
+    }
+  }
+
+  // void exchangeCodeForToken(String code) async {
+  //   const clientId = '86w3jl8a5w2h0t';
+  //   const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+  //   const redirectUrl = 'https://temp';
+
+  //   const  tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+  //   final response = await http.post(Uri.parse(tokenUrl), body: {
+  //     'grant_type': 'authorization_code',
+  //     'code': code,
+  //     'redirect_uri': redirectUrl,
+  //     'client_id': clientId,
+  //     'client_secret': clientSecret,
+  //   });
+
+  //   if (response.statusCode == 200) {
+  //     final accessToken = json.decode(response.body)['access_token'];
+  //     fetchLinkedInProfile(accessToken);
+  //   } else {
+  //     print('Failed to exchange code for access token: ${response.statusCode}');
+  //   }
+  // }
+
+  //  void fetchLinkedInProfile(String accessToken) async {
+  //   const profileUrl = 'https://api.linkedin.com/v2/me';
+  //   final headers = {'Authorization': 'Bearer $accessToken'};
+
+  //   final profileResponse = await http.get(Uri.parse(profileUrl), headers: headers);
+  //   if (profileResponse.statusCode == 200) {
+  //     final profileData = json.decode(profileResponse.body);
+  //     print('LinkedIn Profile: $profileData');
+  //     saveProfileToFirebase(profileData);
+  //   } else {
+  //     print('Failed to fetch LinkedIn profile: ${profileResponse.statusCode}');
+  //   }
+  // }
+
+  // void saveProfileToFirebase(Map<String, dynamic> profileData) async {
+  //   try {
+  //     final FirebaseAuth auth = FirebaseAuth.instance;
+  //     final UserCredential userCredential = await auth.signInAnonymously();
+  //     final User? user = userCredential.user;
+
+  //     if (user != null) {
+  //       final firestore = FirebaseFirestore.instance;
+  //       await firestore.collection('users').doc(user.uid).set({
+  //         'linkedin_profile': profileData,
+  //         'last_sign_in': DateTime.now(),
+  //       });
+
+  //       print('Profile saved to Firebase successfully');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to save profile to Firebase: $e');
+  //   }
+  // }
+
+  Future<void> exchangeCodeForToken(String code) async {
+    const clientId = '86w3jl8a5w2h0t';
+    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://www.linkedin.com/oauth/v2/accessToken'),
+        body: {
+          'grant_type': 'authorization_code',
+          'code': code,
+          'redirect_uri': redirectUrl,
+          'client_id': clientId,
+          'client_secret': clientSecret,
+        },
+      );
+
       final accessToken = json.decode(response.body)['access_token'];
-      // Use the accessToken to fetch user data from LinkedIn API
-      fetchLinkedInProfile(accessToken);
-    } else {
-      print('Failed to exchange code for access token: ${response.statusCode}');
+
+      final profileResponse = await http.get(
+        Uri.parse('https://api.linkedin.com/v2/me'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final emailResponse = await http.get(
+        Uri.parse('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final profile = json.decode(profileResponse.body);
+      final email = json.decode(emailResponse.body)['elements'][0]['handle~']['emailAddress'];
+
+      await FirebaseFirestore.instance.collection('users').add({
+        'firstName': profile['localizedFirstName'],
+        'lastName': profile['localizedLastName'],
+        'email': email,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Successfully logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}'),
+      ));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error exchanging code: $e'),
+      ));
     }
   }
-
-   void fetchLinkedInProfile(String accessToken) async {
-    const profileUrl = 'https://api.linkedin.com/v2/me';
-    final headers = {'Authorization': 'Bearer $accessToken'};
-
-    final profileResponse = await http.get(Uri.parse(profileUrl), headers: headers);
-    if (profileResponse.statusCode == 200) {
-      final profileData = json.decode(profileResponse.body);
-      print('LinkedIn Profile: $profileData');
-      // Process the profile data, e.g., sign in the user using FirebaseAuth
-    } else {
-      print('Failed to fetch LinkedIn profile: ${profileResponse.statusCode}');
-    }
-  }
+}
   
 //   Future<void> loginWithLinkedIn() async {
 //   const clientId = '86w3jl8a5w2h0t';
@@ -350,7 +428,6 @@ class _LoginWidgetState extends State<LoginWidget> {
 //       ));
 //     }
 //   }
-}
 
 // This widget displays and handles signing up
 class SignUpWidget extends StatefulWidget {

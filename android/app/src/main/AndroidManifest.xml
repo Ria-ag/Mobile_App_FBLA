@@ -28,7 +28,9 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="rise" android:host="linkedin"/>
+                <data
+                    android:scheme="rise"
+                    android:host="auth" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
