@@ -282,7 +282,6 @@ class _LoginWidgetState extends State<LoginWidget> {
         'lastName': profile['localizedLastName'],
         'email': email,
       });
-//TODO: change to showTextSnackBar
       showTextSnackBar(
         'Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}',
       );

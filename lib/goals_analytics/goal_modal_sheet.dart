@@ -353,14 +353,16 @@ class GoalModalSheetState extends State<GoalModalSheet> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
-                  child: Row(
+                  child: Column(
                     children: [
                       const Text('Goal Complete?'),
-                      const SizedBox(width: 17.5),
-                      Expanded(
-                        child: CustomElevatedButton(
-                            onPressed: () =>
-                                (editable || currentGoal.category == 'Other')
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomElevatedButton(
+                                onPressed: () => (editable ||
+                                        currentGoal.category == 'Other')
                                     ? Future.delayed(
                                         Duration.zero,
                                         () => showTextDialog(
@@ -369,18 +371,20 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                                         ),
                                       )
                                     : addXpDialog(context),
-                            child: Text(
-                              'Add to Profile as Experience',
-                              style: Theme.of(context).textTheme.bodySmall,
-                              textAlign: TextAlign.center,
-                            )),
-                      ),
-                      const SizedBox(width: 17.5),
-                      CustomImageButton(
-                        image: const AssetImage('assets/share.png'),
-                        onTap: () => shareOnLinkedIn(context),
-                        height: 35,
-                        width: 145,
+                                child: Text(
+                                  'Add to Profile as Experience',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.center,
+                                )),
+                          ),
+                          const SizedBox(width: 20),
+                          CustomImageButton(
+                            image: const AssetImage('assets/share.png'),
+                            onTap: () => shareOnLinkedIn(context),
+                            height: 35,
+                            width: 150,
+                          ),
+                        ],
                       ),
                     ],
                   ),

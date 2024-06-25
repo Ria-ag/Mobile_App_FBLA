@@ -25,8 +25,8 @@ Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
   final appState = context.read<MyAppState>();
   final user = appState.appUser;
 
-  final font = await PdfGoogleFonts.nunitoRegular();
-  final boldFont = await PdfGoogleFonts.nunitoBold();
+  final font = await PdfGoogleFonts.montserratRegular();
+  final boldFont = await PdfGoogleFonts.montserratSemiBold();
 
   pdf.addPage(pw.MultiPage(
     pageFormat: PdfPageFormat.a4,
@@ -120,60 +120,60 @@ pw.Widget buildExperienceSection(
       widgets.add(pw.SizedBox(height: 8));
 
       for (var experience in experiences) {
-        widgets.add(buildExperienceItem(experience, i, font, boldFont));
-        widgets.add(pw.SizedBox(height: 12));
+        if (!experience.editable) {
+          widgets.add(buildExperienceItem(experience, i, font, boldFont));
+          widgets.add(pw.SizedBox(height: 12));
+        }
       }
     }
   }
 
-  return pw.Padding(
-    padding: const pw.EdgeInsets.only(left: 16), // Slight indent
-    child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start, // Align to the start
-        children: widgets),
-  );
+  return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start, children: widgets);
 }
 
 pw.Widget buildExperienceItem(
     Experience experience, int categoryIndex, pw.Font font, pw.Font boldFont) {
-  return pw.Column(
-    crossAxisAlignment:
-        pw.CrossAxisAlignment.start, // Align content to the start
-    children: [
-      pw.Text(
-        experience.name,
-        style: pw.TextStyle(font: boldFont, fontSize: 14, color: primaryColor),
-      ),
-      pw.Text(
-        '${experience.startDate} - ${experience.endDate}',
-        style: pw.TextStyle(font: font, fontSize: 12, color: secondaryColor),
-      ),
-      pw.SizedBox(height: 4),
-      if (categoryIndex != 7 &&
-          categoryIndex != 4 &&
-          experience.description.isNotEmpty)
-        pw.Text(experience.description,
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 4)
-        pw.Text("Grade: ${experience.grade}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 5)
-        pw.Text("Role: ${experience.role}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 2)
-        pw.Text("Hours: ${experience.hours}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 7)
-        pw.Text("Score: ${experience.score}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 3)
-        pw.Text("Issuer: ${experience.award}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-      if (categoryIndex == 2)
-        pw.Text("Location: ${experience.location}",
-            style: pw.TextStyle(font: font, fontSize: 12)),
-    ],
-  );
+  return pw.Padding(
+      padding: const pw.EdgeInsets.only(left: 5),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            (categoryIndex == 2)
+                ? "Community Service at ${experience.location}"
+                : experience.name,
+            style:
+                pw.TextStyle(font: boldFont, fontSize: 14, color: primaryColor),
+          ),
+          pw.Text(
+            '${experience.startDate} - ${experience.endDate}',
+            style:
+                pw.TextStyle(font: font, fontSize: 12, color: secondaryColor),
+          ),
+          pw.SizedBox(height: 4),
+          if (categoryIndex != 7 &&
+              categoryIndex != 4 &&
+              experience.description.isNotEmpty)
+            pw.Text(experience.description,
+                style: pw.TextStyle(font: font, fontSize: 12)),
+          if (categoryIndex == 4)
+            pw.Text("Grade: ${experience.grade}",
+                style: pw.TextStyle(font: font, fontSize: 12)),
+          if (categoryIndex == 5)
+            pw.Text("Role: ${experience.role}",
+                style: pw.TextStyle(font: font, fontSize: 12)),
+          if (categoryIndex == 2)
+            pw.Text("Hours: ${experience.hours}",
+                style: pw.TextStyle(font: font, fontSize: 12)),
+          if (categoryIndex == 7)
+            pw.Text("Score: ${experience.score}",
+                style: pw.TextStyle(font: font, fontSize: 12)),
+          if (categoryIndex == 3 && experience.award.isNotEmpty)
+            pw.Text("Issuer: ${experience.award}",
+                style: pw.TextStyle(font: font, fontSize: 12)),
+        ],
+      ));
 }
 
 // This method is similar to makePdf(), but is catered towards sharing with social media apps
