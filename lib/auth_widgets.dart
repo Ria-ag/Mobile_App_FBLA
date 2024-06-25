@@ -37,35 +37,35 @@ class _LoginWidgetState extends State<LoginWidget> {
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
 
-  // StreamSubscription? _sub;
+  StreamSubscription? _sub;
 
   @override
   void initState() {
     super.initState();
-    // _initDeepLinkListener();
+    _initDeepLinkListener();
   }
 
-  // void _initDeepLinkListener() {
-  //   _sub = linkStream.listen((String? link) {
-  //     if (link != null) {
-  //       final uri = Uri.parse(link);
-  //       if (/*uri.host == 'ria-ag.github.i' && */uri.path == '/auth') {
-  //         final code = uri.queryParameters['code'];
-  //         if (code != null) {
-  //           exchangeCodeForToken(code);
-  //         }
-  //       }
-  //     }
-  //   }, onError: (err) {
-  //     print('Failed to receive deep link: $err');
-  //   });
-  // }
+  void _initDeepLinkListener() {
+    _sub = linkStream.listen((String? link) {
+      if (link != null) {
+        final uri = Uri.parse(link);
+        if (uri.host == 'auth') {
+          final code = uri.queryParameters['code'];
+          if (code != null) {
+            exchangeCodeForToken(code);
+          }
+        }
+      }
+    }, onError: (err) {
+      print('Failed to receive deep link: $err');
+    });
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    //  _sub?.cancel();
+     _sub?.cancel();
     super.dispose();
   }
 
@@ -330,64 +330,64 @@ class _LoginWidgetState extends State<LoginWidget> {
   //   }
   // }
 
-  // Future<void> exchangeCodeForToken(String code) async {
-  //   const clientId = '86w3jl8a5w2h0t';
-  //   const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-  //   const redirectUrl = 'http://localhost:64289/auth';
+  Future<void> exchangeCodeForToken(String code) async {
+    const clientId = '86w3jl8a5w2h0t';
+    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const redirectUrl = 'https://flutteroauth.onrender.com/callback';
 
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse('https://www.linkedin.com/oauth/v2/accessToken'),
-  //       body: {
-  //         'grant_type': 'authorization_code',
-  //         'code': code,
-  //         'redirect_uri': redirectUrl,
-  //         'client_id': clientId,
-  //         'client_secret': clientSecret,
-  //       },
-  //     );
+    try {
+      final response = await http.post(
+        Uri.parse('https://www.linkedin.com/oauth/v2/accessToken'),
+        body: {
+          'grant_type': 'authorization_code',
+          'code': code,
+          'redirect_uri': redirectUrl,
+          'client_id': clientId,
+          'client_secret': clientSecret,
+        },
+      );
 
-  //     final accessToken = json.decode(response.body)['access_token'];
+      final accessToken = json.decode(response.body)['access_token'];
 
-  //     final profileResponse = await http.get(
-  //       Uri.parse('https://api.linkedin.com/v2/me'),
-  //       headers: {
-  //         'Authorization': 'Bearer $accessToken',
-  //       },
-  //     );
+      final profileResponse = await http.get(
+        Uri.parse('https://api.linkedin.com/v2/me'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-  //     final emailResponse = await http.get(
-  //       Uri.parse(
-  //           'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
-  //       headers: {
-  //         'Authorization': 'Bearer $accessToken',
-  //       },
-  //     );
+      final emailResponse = await http.get(
+        Uri.parse(
+            'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-  //     final profile = json.decode(profileResponse.body);
-  //     final email = json.decode(emailResponse.body)['elements'][0]['handle~']
-  //         ['emailAddress'];
+      final profile = json.decode(profileResponse.body);
+      final email = json.decode(emailResponse.body)['elements'][0]['handle~']
+          ['emailAddress'];
 
-  //     await FirebaseFirestore.instance.collection('users').add({
-  //       'firstName': profile['localizedFirstName'],
-  //       'lastName': profile['localizedLastName'],
-  //       'email': email,
-  //     });
-  //     showTextSnackBar(
-  //       'Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}',
-  //     );
-  //   } catch (error) {
-  //     showTextSnackBar('Error logging in: $error');
-  //   }
-  // }
+      await FirebaseFirestore.instance.collection('users').add({
+        'firstName': profile['localizedFirstName'],
+        'lastName': profile['localizedLastName'],
+        'email': email,
+      });
+      showTextSnackBar(
+        'Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}',
+      );
+    } catch (error) {
+      showTextSnackBar('Error logging in: $error');
+    }
+  }
 
   
   Future<void> loginWithLinkedIn() async {
   const clientId = '86w3jl8a5w2h0t';
   const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-  // const redirectUrl = 'https://flutteroauth.onrender.com/callback/rise';
+  const redirectUrl = 'https://flutteroauth.onrender.com/callback';
   // const redirectUrl = 'http://localhost:64289/auth';
-  const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
+  // const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
   
 
   // Construct the url
