@@ -148,9 +148,11 @@ class _AuthPageState extends State<AuthPage> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: login
-                    ? LoginWidget(switchToSignUp: toggle)
-                    : SignUpWidget(switchtoSignIn: toggle),
+                child: SingleChildScrollView(
+                  child: login
+                      ? LoginWidget(switchToSignUp: toggle)
+                      : SignUpWidget(switchtoSignIn: toggle),
+                ),
               ),
             ),
           ),
@@ -277,7 +279,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       showTextSnackBar("A reset password email was sent.");
 
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    } on Exception catch (error) {
+    } catch (error) {
       showTextSnackBar(
         "Error sending email: $error",
       );
@@ -426,7 +428,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       setState(() => canResendEmail = false);
       await Future.delayed(const Duration(seconds: 5));
       setState(() => canResendEmail = true);
-    } on Exception catch (error) {
+    } catch (error) {
       showTextSnackBar('Error sending email: $error');
     }
   }

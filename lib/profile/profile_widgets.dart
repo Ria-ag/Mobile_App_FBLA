@@ -29,15 +29,16 @@ class IconTile extends StatelessWidget {
           children: [
             Text(
               title,
-              style: (title == "Community Service")
-                  ? Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .apply(fontSizeFactor: 0.925, color: Colors.white)
-                  : Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: Colors.white),
+              style:
+                  (title == "Community Service" || title == "Performing Arts")
+                      ? Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .apply(fontSizeFactor: 0.925, color: Colors.white)
+                      : Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 5),

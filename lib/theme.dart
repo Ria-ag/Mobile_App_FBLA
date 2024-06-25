@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'main.dart';
 
 // This is a list of items, the order they follow, and the type of field that is shown for each
-// TODO: no validation for issuer in addGoal from XP
 final Map<String, String?> items = {
   "Athletics": null,
   "Performing Arts": null,
@@ -275,6 +274,24 @@ showTextSnackBar(String message) {
   );
 }
 
+showTextDialog(String title, String message) {
+  showDialog(
+    context: navigatorKey.currentContext!,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 // This is a commonly used validation method in the app
 String? noEmptyField(String? value) {
   if (value == null || value.isEmpty) {
@@ -358,6 +375,59 @@ class CustomElevatedButton extends StatelessWidget {
                 backgroundColor: buttonColor, shape: const StadiumBorder())
             : null,
         child: child,
+      ),
+    );
+  }
+}
+
+class CustomImageButton extends StatelessWidget {
+  const CustomImageButton({
+    super.key,
+    required this.image,
+    this.onTap,
+    required this.height,
+    required this.width,
+  });
+  final AssetImage image;
+  final Function()? onTap;
+  final double height;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(height / 7), boxShadow: [shadow]),
+      height: height,
+      width: width,
+      child: Stack(
+        children: [
+          // The image
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(height / 7),
+              child: Image(
+                image: image,
+                fit: BoxFit.cover,
+                height: height,
+                width: width,
+              ),
+            ),
+          ),
+          // The InkWell
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(height / 7),
+                ),
+                onTap: onTap,
+                splashColor: Colors.blue[900]!.withOpacity(0.25),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

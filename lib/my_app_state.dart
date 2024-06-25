@@ -123,7 +123,6 @@ class MyAppState extends ChangeNotifier {
     goalXP.editable = false;
     if (items[category] != null) {
       String xpCategory = items[category] ?? '';
-      print(xpCategory);
       switch (xpCategory) {
         case "Hours":
           goalXP.hours = otherInfo!;
@@ -135,7 +134,6 @@ class MyAppState extends ChangeNotifier {
           goalXP.role = otherInfo!;
           break;
         case "Score":
-          print('called');
           goalXP.score = otherInfo!;
           break;
         case "Issuer":

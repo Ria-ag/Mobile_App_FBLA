@@ -162,9 +162,31 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ],
                 ),
               ),
-              IconButton(
-                icon: Image.asset('signIn.png'),
-                onPressed:() => signInWithLinkedIn(),
+              const SizedBox(height: 12.5),
+              const Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Divider(color: Colors.grey),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2.5),
+                    child: Text(
+                      "OR",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.5),
+
+              CustomImageButton(
+                height: 50,
+                width: 200,
+                image: const AssetImage('assets/sign_in.png'),
+                onTap: () => loginWithLinkedIn(),
               ),
             ],
           ),
@@ -351,14 +373,11 @@ class _LoginWidgetState extends State<LoginWidget> {
         'lastName': profile['localizedLastName'],
         'email': email,
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Successfully logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}'),
-      ));
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error exchanging code: $e'),
-      ));
+      showTextSnackBar(
+        'Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}',
+      );
+    } catch (error) {
+      showTextSnackBar('Error logging in: $error');
     }
   }
 }
@@ -464,157 +483,155 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            // This is the header
+            Text(
+              'Sign up',
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        Form(
+          key: _formKey,
+          child: Column(
             children: [
-              // This is the header
-              Text(
-                'Sign up',
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall!
-                    .copyWith(fontWeight: FontWeight.bold),
+              // This is where the user enters their name
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) => noEmptyField(value),
               ),
+              // This is where the user enters their school
+
+              TextFormField(
+                controller: _schoolController,
+                decoration: const InputDecoration(labelText: 'School'),
+                validator: (value) => noEmptyField(value),
+              ),
+              // This is where the user enters their year
+              TextFormField(
+                controller: _yearController,
+                decoration:
+                    const InputDecoration(labelText: 'Year of Graduation'),
+                validator: (value) => validateGraduationYear(value),
+              ),
+              // This is where the user enters their email
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  errorMaxLines: 3,
+                  errorText:
+                      _emailErrorMessage.isEmpty ? null : _emailErrorMessage,
+                ),
+                validator: (value) => noEmptyField(value),
+              ),
+              // This is where the user enters their passowrd
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  errorMaxLines: 3,
+                  errorText: _passwordErrorMessage.isEmpty
+                      ? null
+                      : _passwordErrorMessage,
+                ),
+                obscureText: true,
+                validator: (value) => noEmptyField(value),
+              ),
+              // This is where the user confirms their password
+              TextFormField(
+                controller: _confirmPasswordController,
+                decoration:
+                    const InputDecoration(labelText: 'Confirm Password'),
+                obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please confirm your password';
+                  } else if (value == _passwordController.text) {
+                    return null;
+                  }
+                  return 'Passwords do not match';
+                },
+              ),
+              CheckboxListTile(
+                value: isChecked,
+                onChanged: (value) {
+                  setState(() {
+                    isChecked = value!;
+                  });
+                },
+                title: const Text("I accept the terms and conditions"),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(4, 4),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    showTermsAndConditionsDialog(context);
+                  },
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.white),
+                  ),
+                  child: const Text('View Terms and Conditions'),
+                ),
+              ),
+              const SizedBox(height: 30),
+              // This is the sign up button
+              ElevatedButton(
+                onPressed: () {
+                  if (isChecked) {
+                    if (_formKey.currentState!.validate()) {
+                      signUp();
+                    }
+                  } else {
+                    showTextSnackBar(
+                        'Please accept terms and conditions to continue');
+                  }
+                },
+                child: const Text('Sign up'),
+              ),
+              const SizedBox(height: 10),
+              // This is the button to switch to logging in
+              RichText(
+                text: TextSpan(
+                  text: 'Already have an account? ',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  children: [
+                    TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = widget.switchtoSignIn,
+                      text: 'Sign in',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Theme.of(context).primaryColorLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 50),
             ],
           ),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                // This is where the user enters their name
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: (value) => noEmptyField(value),
-                ),
-                // This is where the user enters their school
-
-                TextFormField(
-                  controller: _schoolController,
-                  decoration: const InputDecoration(labelText: 'School'),
-                  validator: (value) => noEmptyField(value),
-                ),
-                // This is where the user enters their year
-                TextFormField(
-                  controller: _yearController,
-                  decoration:
-                      const InputDecoration(labelText: 'Year of Graduation'),
-                  validator: (value) => validateGraduationYear(value),
-                ),
-                // This is where the user enters their email
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    errorMaxLines: 3,
-                    errorText:
-                        _emailErrorMessage.isEmpty ? null : _emailErrorMessage,
-                  ),
-                  validator: (value) => noEmptyField(value),
-                ),
-                // This is where the user enters their passowrd
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    errorMaxLines: 3,
-                    errorText: _passwordErrorMessage.isEmpty
-                        ? null
-                        : _passwordErrorMessage,
-                  ),
-                  obscureText: true,
-                  validator: (value) => noEmptyField(value),
-                ),
-                // This is where the user confirms their password
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  decoration:
-                      const InputDecoration(labelText: 'Confirm Password'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please confirm your password';
-                    } else if (value == _passwordController.text) {
-                      return null;
-                    }
-                    return 'Passwords do not match';
-                  },
-                ),
-                CheckboxListTile(
-                  value: isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      isChecked = value!;
-                    });
-                  },
-                  title: const Text("I accept the terms and conditions"),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(4, 4),
-                        blurRadius: 5,
-                        spreadRadius: 0,
-                      )
-                    ],
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      showTermsAndConditionsDialog(context);
-                    },
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                    ),
-                    child: const Text('View Terms and Conditions'),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                // This is the sign up button
-                ElevatedButton(
-                  onPressed: () {
-                    if (isChecked) {
-                      if (_formKey.currentState!.validate()) {
-                        signUp();
-                      }
-                    } else {
-                      showTextSnackBar(
-                          'Please accept terms and conditions to continue');
-                    }
-                  },
-                  child: const Text('Sign up'),
-                ),
-                const SizedBox(height: 10),
-                // This is the button to switch to logging in
-                RichText(
-                  text: TextSpan(
-                    text: 'Already have an account? ',
-                    style: Theme.of(context).textTheme.bodySmall,
-                    children: [
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = widget.switchtoSignIn,
-                        text: 'Sign in',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorLight,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Theme.of(context).primaryColorLight,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 50),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
