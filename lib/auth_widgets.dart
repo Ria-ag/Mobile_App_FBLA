@@ -65,7 +65,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-     _sub?.cancel();
+    _sub?.cancel();
     super.dispose();
   }
 
@@ -333,7 +333,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   Future<void> exchangeCodeForToken(String code) async {
     const clientId = '86w3jl8a5w2h0t';
     const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-    const redirectUrl = 'https://flutteroauth.onrender.com/callback';
+    const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
 
     try {
       final response = await http.post(
@@ -381,33 +381,32 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
-  
   Future<void> loginWithLinkedIn() async {
-  const clientId = '86w3jl8a5w2h0t';
-  const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-  const redirectUrl = 'https://flutteroauth.onrender.com/callback';
-  // const redirectUrl = 'http://localhost:64289/auth';
-  // const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
-  
+    const clientId = '86w3jl8a5w2h0t';
+    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
+    // const redirectUrl = 'http://localhost:64289/auth';
+    // const redirectUrl = 'https://ria-ag.github.io/Mobile_App_FBLA/';
 
-  // Construct the url
-  final authorizationUrl = Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
-    'response_type': 'code',
-    'client_id': clientId,
-    'redirect_uri': redirectUrl,
-    'scope': 'openid email w_member_social',
-  });
+    // Construct the url
+    final authorizationUrl =
+        Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
+      'response_type': 'code',
+      'client_id': clientId,
+      'redirect_uri': redirectUrl,
+      'scope': 'openid email w_member_social',
+    });
 
-  try {
-    final result = await FlutterWebAuth2.authenticate(
-      url: authorizationUrl.toString(),
-      callbackUrlScheme: 'https',
-    );
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: authorizationUrl.toString(),
+        callbackUrlScheme: 'https',
+      );
 
-    // Extract authorization code from the result URL
-    final code = Uri.parse(result).queryParameters['code'];
+      // Extract authorization code from the result URL
+      final code = Uri.parse(result).queryParameters['code'];
 
-    final response = await http.post(
+      final response = await http.post(
         Uri.parse('https://www.linkedin.com/oauth/v2/accessToken'),
         body: {
           'grant_type': 'authorization_code',
@@ -418,9 +417,9 @@ class _LoginWidgetState extends State<LoginWidget> {
         },
       );
 
-    final accessToken = json.decode(response.body)['access_token'];
+      final accessToken = json.decode(response.body)['access_token'];
 
-    final profileResponse = await http.get(
+      final profileResponse = await http.get(
         Uri.parse('https://api.linkedin.com/v2/me'),
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -428,23 +427,26 @@ class _LoginWidgetState extends State<LoginWidget> {
       );
 
       final emailResponse = await http.get(
-        Uri.parse('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
+        Uri.parse(
+            'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       );
 
       final profile = json.decode(profileResponse.body);
-      final email = json.decode(emailResponse.body)['elements'][0]['handle~']['emailAddress'];
+      final email = json.decode(emailResponse.body)['elements'][0]['handle~']
+          ['emailAddress'];
 
-    await FirebaseFirestore.instance.collection('users').add({
+      await FirebaseFirestore.instance.collection('users').add({
         'firstName': profile['localizedFirstName'],
         'lastName': profile['localizedLastName'],
         'email': email,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}'),
+        content: Text(
+            'Logged in as ${profile['localizedFirstName']} ${profile['localizedLastName']}'),
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -453,6 +455,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 }
+
 // This widget displays and handles signing up
 class SignUpWidget extends StatefulWidget {
   const SignUpWidget({super.key, required this.switchtoSignIn});

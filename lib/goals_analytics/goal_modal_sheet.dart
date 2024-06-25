@@ -32,8 +32,8 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   }
 
   Future<String?> getAccessToken() async {
-    const clientId = '86w3jl8a5w2h0t';
-    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const clientId = '7862z3h817owqa';
+    const clientSecret = '7862z3h817owqa';
     const redirectUrl = 'http://localhost:51914/';
 
     // Build authorization URL
