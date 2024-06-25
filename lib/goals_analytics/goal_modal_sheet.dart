@@ -32,145 +32,94 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   }
 
   Future<String?> getAccessToken() async {
-  const clientId = '86w3jl8a5w2h0t';
-  const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
-  const redirectUrl = 'http://localhost:51914/';
+    const clientId = '86w3jl8a5w2h0t';
+    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
+    const redirectUrl = 'http://localhost:51914/';
 
-  // Build authorization URL
-  const authorizationUrl =
-      'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=r_liteprofile%20w_member_social';
+    // Build authorization URL
+    const authorizationUrl =
+        'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=r_liteprofile%20w_member_social';
 
-  try {
-    final result = await FlutterWebAuth2.authenticate(
-      url: authorizationUrl,
-      callbackUrlScheme: redirectUrl,
-    );
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: authorizationUrl,
+        callbackUrlScheme: redirectUrl,
+      );
 
-    // Extract authorization code from the result URL
-    final code = Uri.parse(result).queryParameters['code'];
+      // Extract authorization code from the result URL
+      final code = Uri.parse(result).queryParameters['code'];
 
-    // Exchange authorization code for access token
-    const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
-    final tokenResponse = await http.post(
-      Uri.parse(tokenUrl),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: {
-        'grant_type': 'authorization_code',
-        'code': code!,
-        'redirect_uri': redirectUrl,
-        'client_id': clientId,
-        'client_secret': clientSecret,
-      },
-    );
-
-    // Parse and return access token from response
-    if (tokenResponse.statusCode == 200) {
-      final data = jsonDecode(tokenResponse.body);
-      return data['access_token'];
-    } else {
-      throw Exception('Failed to retrieve access token');
-    }
-  } catch (e) {
-    print('Error: $e');
-    return null;
-  }
-}
-
-Future<void> shareOnLinkedIn(BuildContext context) async {
-  try {
-    String? accessToken = await getAccessToken();
-
-    if (accessToken != null) {
-      const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      };
-
-      final postData = {
-        "author": "urn:li:person:ria-agarwal-b7a57b27b",
-        "lifecycleState": "PUBLISHED",
-        "specificContent": {
-          "com.linkedin.ugc.ShareContent": {
-            "shareCommentary": {
-              "text": "I completed my goal!"
-            },
-            "shareMediaCategory": "NONE"
-          }
+      // Exchange authorization code for access token
+      const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+      final tokenResponse = await http.post(
+        Uri.parse(tokenUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {
+          'grant_type': 'authorization_code',
+          'code': code!,
+          'redirect_uri': redirectUrl,
+          'client_id': clientId,
+          'client_secret': clientSecret,
         },
-        "visibility": {
-          "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-        }
-      };
-
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: headers,
-        body: jsonEncode(postData),
       );
 
-      if (response.statusCode == 201) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Post shared successfully on LinkedIn.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        );
+      // Parse and return access token from response
+      if (tokenResponse.statusCode == 200) {
+        final data = jsonDecode(tokenResponse.body);
+        return data['access_token'];
       } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to share post on LinkedIn. Status Code: ${response.statusCode}'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        );
+        throw Exception('Failed to retrieve access token');
       }
-    } else {
-      // Handle case where access token is null (user canceled authentication)
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Failed to obtain access token for LinkedIn.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
+    } catch (error) {
+      return null;
     }
-  } catch (e) {
-    // Handle generic error
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: Text('Failed to share post on LinkedIn. Error: $e'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
   }
-}
+
+  Future<void> shareOnLinkedIn(BuildContext context) async {
+    try {
+      String? accessToken = await getAccessToken();
+
+      if (accessToken != null) {
+        const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        };
+
+        final postData = {
+          "author": "urn:li:person:ria-agarwal-b7a57b27b",
+          "lifecycleState": "PUBLISHED",
+          "specificContent": {
+            "com.linkedin.ugc.ShareContent": {
+              "shareCommentary": {"text": "I completed my goal!"},
+              "shareMediaCategory": "NONE"
+            }
+          },
+          "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+        };
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: headers,
+          body: jsonEncode(postData),
+        );
+
+        if (response.statusCode == 201) {
+          showTextDialog('Success', 'Post shared successfully on LinkedIn.');
+        } else {
+          showTextDialog('Error',
+              'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
+        }
+      } else {
+        // Handle case where access token is null (user canceled authentication)
+        showTextDialog('Error', 'Failed to obtain access token for LinkedIn.');
+      }
+    } catch (error) {
+      // Handle generic errors
+      showTextDialog(
+          'Error', 'Failed to share post on LinkedIn. Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -317,32 +266,27 @@ Future<void> shareOnLinkedIn(BuildContext context) async {
                             () => currentGoal.changeDescription(value),
                           );
                         },
-                                             decoration: underlineInputDecoration(
-                          context, "ex. In this I...", "Description"),
-                    ),
-              const SizedBox(height: 50),
-              IconButton(
-                icon: Image.asset('Share.png'),
-                onPressed: () => shareOnLinkedIn(context),
-              ),
-              const SizedBox(height: 50),
-              Text("Tasks",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall!
-                      .copyWith(color: Theme.of(context).primaryColor)),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 150,
-                    // Input field to add tasks
-                    child: TextField(
-                      controller: taskController,
-                      decoration: underlineInputDecoration(
-                        alwaysFloat: false,
-                        context,
-                        'ex. Complete draft of business report',
-                        'Enter Task',
+                        decoration: underlineInputDecoration(
+                            context, "ex. In this I...", "Description"),
+                      ),
+                const SizedBox(height: 100),
+                Text("Tasks",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall!
+                        .copyWith(color: Theme.of(context).primaryColor)),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 150,
+                      // Input field to add tasks
+                      child: TextField(
+                        controller: taskController,
+                        decoration: underlineInputDecoration(
+                          alwaysFloat: false,
+                          context,
+                          'ex. Complete draft of business report',
+                          'Enter Task',
                         ),
                       ),
                     ),
@@ -411,27 +355,33 @@ Future<void> shareOnLinkedIn(BuildContext context) async {
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Row(
                     children: [
-                      const Text('Completed Your Goal?'),
+                      const Text('Goal Complete?'),
+                      const SizedBox(width: 17.5),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: CustomElevatedButton(
-                              onPressed:
-                                  (editable || currentGoal.category == 'Other')
-                                      ? null
-                                      : () {
-                                          addXpDialog(context);
-                                        },
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  'Add to Profile as Experience',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  textAlign: TextAlign.center,
-                                ),
-                              )),
-                        ),
-                      )
+                        child: CustomElevatedButton(
+                            onPressed: () =>
+                                (editable || currentGoal.category == 'Other')
+                                    ? Future.delayed(
+                                        Duration.zero,
+                                        () => showTextDialog(
+                                          'Error',
+                                          'Please save the goal and select a valid category before continuing.',
+                                        ),
+                                      )
+                                    : addXpDialog(context),
+                            child: Text(
+                              'Add to Profile as Experience',
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.center,
+                            )),
+                      ),
+                      const SizedBox(width: 17.5),
+                      CustomImageButton(
+                        image: const AssetImage('assets/share.png'),
+                        onTap: () => shareOnLinkedIn(context),
+                        height: 35,
+                        width: 145,
+                      ),
                     ],
                   ),
                 ),
@@ -586,11 +536,6 @@ Future<void> shareOnLinkedIn(BuildContext context) async {
                         other,
                         description,
                       );
-                  print('Title: $title');
-                  print('Start Dates: $startDate');
-                  print('End Date: $endDate');
-                  print('Description: $description');
-                  print('$otherField: $other');
                   Navigator.of(context).pop();
                 }
               },

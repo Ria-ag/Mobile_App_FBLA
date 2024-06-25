@@ -227,8 +227,10 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 height: MediaQuery.of(context).size.height / 2 - 100,
                 child: (context.watch<MyAppState>().charts.isNotEmpty)
                     ? SingleChildScrollView(
-                        child: Column(
-                            children: context.watch<MyAppState>().charts),
+                        child: Column(children: [
+                          ...context.watch<MyAppState>().charts,
+                          const SizedBox(height: 100),
+                        ]),
                       )
                     : const Padding(
                         padding: EdgeInsets.all(10.0),
@@ -238,7 +240,6 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                       ),
               ),
             ),
-            const SizedBox(height: 100),
           ],
         ),
       ),

@@ -1,13 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:printing/printing.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
-import 'package:pdfx/pdfx.dart' as pd;
 import 'my_app_state.dart';
 import 'profile/experience.dart';
+import 'profile_sharing.dart';
 import 'theme.dart';
 
 // This is the home page of the app
@@ -202,130 +197,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-// This is the method that creates the look of a pdf page that is shared
-  void addPage(
-    pw.Document pdf,
-    String name,
-    String school,
-    String year,
-    List<Experience> experiences,
-    int i,
-  ) {
-    return pdf.addPage(
-      pw.Page(
-        build: (context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              // This is the header section of the pdf resume
-              pw.Container(
-                margin: const pw.EdgeInsets.only(bottom: 10.0),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      name,
-                      style: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.Text(
-                      '$school - Class of $year',
-                      style: const pw.TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Here is where all the experiences are displayed
-              for (var experience in experiences) ...[
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10.0),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text(
-                        items.keys.toList()[experience.tileIndex],
-                        style: pw.TextStyle(
-                          fontSize: 18,
-                          fontWeight: pw.FontWeight.bold,
-                        ),
-                      ),
-                      pw.Text(
-                        '${experience.startDate} - ${experience.endDate}',
-                        style: const pw.TextStyle(fontSize: 16),
-                      ),
-                      pw.SizedBox(height: 5),
-                      if (i != 7 && i != 4) pw.Text(experience.description),
-                      if (i == 4) pw.Text("Grade: ${experience.grade}"),
-                      if (i == 5) pw.Text("Role: ${experience.role}"),
-                      if (i == 2) pw.Text("Hours: ${experience.hours}"),
-                      if (i == 7) pw.Text("Score: ${experience.score}"),
-                      if (i == 3) pw.Text("Issuer: ${experience.award}"),
-                      if (i == 2) pw.Text("Location: ${experience.location}"),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-// Here, the pdf is actually made and saved to the device's directory
-  Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
-    String name = context.read<MyAppState>().appUser.name;
-    String school = context.read<MyAppState>().appUser.school;
-    String year = context.read<MyAppState>().appUser.year.toString();
-
-    final pdf = pw.Document();
-
-    for (int i = 0; i < 8; i++) {
-      List<Experience> experiences =
-          context.read<MyAppState>().appUser.xpList[i];
-
-      if (experiences.isNotEmpty) {
-        addPage(pdf, name, school, year, experiences, i);
-      }
-    }
-    if (returnPdf) {
-      await Printing.sharePdf(bytes: await pdf.save(), filename: 'MyRise.pdf');
-    } else {
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = tempDir.path;
-      final tempFile = File('$tempPath/example.pdf');
-      await tempFile.writeAsBytes(await pdf.save());
-      return tempFile;
-    }
-  }
-
-// This method is similar to makePdf(), but is catered towards sharing with social media apps
-// It has a custom message and shares the pdf as jpeg images
-  void socialPdf(BuildContext context) async {
-    File pdf = await makePdf(context, false);
-    debugPrint(pdf.path);
-    List<XFile> tempFiles = [];
-
-    final document = await pd.PdfDocument.openFile(pdf.path);
-    for (int i = 1; i <= document.pagesCount; i++) {
-      final page = await document.getPage(i);
-      final pageImage = await page.render(
-          width: page.width,
-          height: page.height,
-          format: pd.PdfPageImageFormat.jpeg);
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = tempDir.path;
-      final tempFile = File('$tempPath/temp_$i.jpeg');
-      await tempFile.writeAsBytes(pageImage!.bytes);
-      await page.close();
-      tempFiles.add(XFile(tempFile.path));
-    }
-    // This is the custom message that is sent to the chosen social media app
-    await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
   }
 }

@@ -385,13 +385,23 @@ class _ExperienceState extends State<Experience> {
                     decoration: underlineInputDecoration(
                         context, "ex. In this I...", "Description"),
                   ),
-
-          IconButton(
-            icon: Image.asset('en_US.png'),
-            onPressed: () => shareToLinkedIn(widget.name, widget.award),
-          )
+          const SizedBox(height: 10),
         ],
       ),
+      subtitle: (widget.tileIndex == 3)
+          ? Row(
+              children: [
+                const Text('Export:'),
+                const SizedBox(width: 10),
+                CustomImageButton(
+                  image: const AssetImage('assets/add_to_profile.png'),
+                  onTap: () => shareToLinkedIn(widget.name, widget.award),
+                  height: 25,
+                  width: 110,
+                ),
+              ],
+            )
+          : null,
       trailing: SizedBox(
         width: 100,
         height: 175,
@@ -477,6 +487,7 @@ class _ExperienceState extends State<Experience> {
       ),
     );
   }
+
   shareToLinkedIn(String name, String award) async {
     String url =
         "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";
