@@ -18,7 +18,7 @@ final Map<String, String?> items = {
 
 // This is the theme data used throughout the app
 final theme = ThemeData(
-  // This app adopts a color scheme of bronze, light pastel blue, black, and white
+  // This app adopts a color scheme of coral, blue, and white
   useMaterial3: true,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   primaryColor: const Color.fromARGB(255, 218, 124, 96),
@@ -297,6 +297,7 @@ showTextSnackBar(String message) {
   );
 }
 
+// This is a method for showing a text dialog for errors and such
 showTextDialog(String title, String message) {
   showDialog(
     context: navigatorKey.currentContext!,
@@ -403,6 +404,7 @@ class CustomElevatedButton extends StatelessWidget {
   }
 }
 
+// This is a custom image button used for all the LinkedIn buttons
 class CustomImageButton extends StatelessWidget {
   const CustomImageButton({
     super.key,
@@ -456,6 +458,7 @@ class CustomImageButton extends StatelessWidget {
   }
 }
 
+// This method displays the loading gif for wait times
 class AnimatedLogo extends StatelessWidget {
   const AnimatedLogo({super.key});
 

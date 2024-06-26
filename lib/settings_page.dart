@@ -49,6 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Column(
                     children: [
+                      //this button takes you to the users data
                       SettingsElevatedButton(
                         text: "Account and Security",
                         onPressed: () {
@@ -59,6 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                       ),
                       const SizedBox(height: 20),
+                      //this button takes you to the terms and conditions
                       SettingsElevatedButton(
                         text: "Terms and Conditions",
                         onPressed: () {
@@ -314,6 +316,7 @@ class Terms extends StatelessWidget {
   }
 }
 
+//This class customizes and standarizes the settings elevated buttons
 class SettingsElevatedButton extends StatelessWidget {
   const SettingsElevatedButton({
     super.key,
