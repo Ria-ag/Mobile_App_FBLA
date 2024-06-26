@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +26,29 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   bool editable = true;
   TextEditingController taskController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String? token = '';
+  StreamSubscription? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDeepLinkListener();
+  }
+
+  void _initDeepLinkListener() {
+    _sub = linkStream.listen((String? link) {
+      if (link != null) {
+        final uri = Uri.parse(link);
+        if (uri.host == 'auth') {
+          setState(() {
+            token = uri.queryParameters['access_token'];
+          });
+        }
+      }
+    }, onError: (error) {
+      showTextSnackBar('Failed to receive deep link: $error');
+    });
+  }
 
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
@@ -29,50 +57,86 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     FocusScope.of(context).unfocus();
   }
 
-  // Future<void> shareOnLinkedIn(BuildContext context) async {
-  //   String token = context.watch<MyAppState>().token;
-  //   try {
-  //     if (token != "") {
-  //       const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
-  //       final headers = {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $token',
-  //       };
+  Future<String> fetchLinkedInUserID(String accessToken) async {
+    var url = Uri.parse('https://api.linkedin.com/v2/userinfo');
+    var headers = {'Authorization': 'Bearer $accessToken'};
 
-  //       final postData = {
-  //         "author": "urn:li:person:ria-agarwal-b7a57b27b",
-  //         "lifecycleState": "PUBLISHED",
-  //         "specificContent": {
-  //           "com.linkedin.ugc.ShareContent": {
-  //             "shareCommentary": {"text": "I completed my goal!"},
-  //             "shareMediaCategory": "NONE"
-  //           }
-  //         },
-  //         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
-  //       };
+    var response = await http.get(url, headers: headers);
 
-  //       final response = await http.post(
-  //         Uri.parse(apiUrl),
-  //         headers: headers,
-  //         body: jsonEncode(postData),
-  //       );
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var linkedinUserID = jsonResponse['sub'];
+      return linkedinUserID;
+    } else {
+      throw Exception('Failed to fetch LinkedIn user ID: ${response.statusCode} - ${response.body}');
+    }
+  }
 
-  //       if (response.statusCode == 201) {
-  //         showTextDialog('Success', 'Post shared successfully on LinkedIn.');
-  //       } else {
-  //         showTextDialog('Error',
-  //             'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
-  //       }
-  //     } else {
-  //       // Handle case where access token is null (user canceled authentication)
-  //       showTextDialog('Error', 'Failed to obtain access token for LinkedIn.');
-  //     }
-  //   } catch (error) {
-  //     // Handle generic errors
-  //     showTextDialog(
-  //         'Error', 'Failed to share post on LinkedIn. Error: $error');
-  //   }
-  // }
+  Future<void> getAccessToken() async{
+    try {
+      const clientId = '86w3jl8a5w2h0t';
+      const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
+
+      // Construct the url
+      final authorizationUrl =
+          Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
+        'response_type': 'code',
+        'client_id': clientId,
+        'redirect_uri': redirectUrl,
+        'scope': 'w_member_social',
+      });
+
+      await launchUrl(authorizationUrl);
+    } catch (error) {
+      showTextSnackBar('Error connecting with LinkedIn: $error');
+    }
+  }
+
+  Future<void> shareOnLinkedIn(BuildContext context) async {
+    String? token = context.watch<MyAppState>().token;
+    if (token == null){
+      getAccessToken();
+    }
+    try {
+      var userId = await fetchLinkedInUserID(token!);
+
+      const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+        'X-Restli-Protocol-Version': '2.0.0'
+      };
+
+      final postData = {
+        "author": "urn:li:person:$userId",
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+          "com.linkedin.ugc.ShareContent": {
+            "shareCommentary": {"text": "I completed my goal!"},
+            "shareMediaCategory": "NONE"
+          }
+        },
+        "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+      };
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(postData),
+      );
+
+      if (response.statusCode == 201) {
+        showTextDialog('Success', 'Post shared successfully on LinkedIn.');
+      } else {
+        showTextDialog('Error',
+            'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
+      }
+        } catch (error) {
+      // Handle generic errors
+      showTextDialog(
+          'Error', 'Failed to share post on LinkedIn. Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +397,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           const SizedBox(width: 20),
                           CustomImageButton(
                             image: const AssetImage('assets/share.png'),
-                            // onTap: () {shareOnLinkedIn(context);},
+                             onTap: () {shareOnLinkedIn(context);},
                             height: 35,
                             width: 150,
                           ),
