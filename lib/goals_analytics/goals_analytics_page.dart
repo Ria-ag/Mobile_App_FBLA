@@ -308,20 +308,21 @@ class AnalyticTile extends StatelessWidget {
             ],
           ),
           child: Center(
-            // The first thing in the analytics page is the total number of tasks completed
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 10, bottom: 10, left: 20, right: 20),
               child: Text(displayText,
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.background)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(color: Colors.white)),
             ),
           ),
         ),
         const SizedBox(height: 3),
         Text(
           labelText,
-          style: theme.textTheme.bodyMedium,
+          style: theme.textTheme.bodySmall,
         ),
       ],
     );

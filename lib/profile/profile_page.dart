@@ -153,7 +153,8 @@ class _ProfilePageState extends State<ProfilePage> {
             style: Theme.of(context).textTheme.displaySmall!.copyWith(
                   color: Colors.white,
                 ),
-            softWrap: true,
+            overflow: TextOverflow.fade,
+            softWrap: false,
           ),
           const SizedBox(height: 8),
           Text(
@@ -161,7 +162,8 @@ class _ProfilePageState extends State<ProfilePage> {
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   color: Colors.white,
                 ),
-            softWrap: true,
+            overflow: TextOverflow.fade,
+            softWrap: false,
           ),
           const SizedBox(height: 8),
           Text(
@@ -169,7 +171,8 @@ class _ProfilePageState extends State<ProfilePage> {
             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   color: Colors.white,
                 ),
-            softWrap: true,
+            overflow: TextOverflow.fade,
+            softWrap: false,
           ),
         ],
       ),

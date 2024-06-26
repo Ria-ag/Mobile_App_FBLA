@@ -330,8 +330,8 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                                 )),
                           ),
                           const SizedBox(width: 20),
-                          CustomImageButton(
-                            image: const AssetImage('assets/share.png'),
+                          const CustomImageButton(
+                            image: AssetImage('assets/share_info.png'),
                             // onTap: () {shareOnLinkedIn(context);},
                             height: 35,
                             width: 150,
@@ -385,93 +385,96 @@ class GoalModalSheetState extends State<GoalModalSheet> {
         setState(() {});
         return AlertDialog(
           title: const Text('Add New Experience'),
-          content: Form(
-            key: dialogFormKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  initialValue: title,
-                  decoration: underlineInputDecoration(context, '', 'Title'),
-                  validator: (value) => noEmptyField(value),
-                  onChanged: (value) {
-                    setState(() {
-                      title = value;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      underlineInputDecoration(context, '', 'Start Date'),
-                  readOnly: true,
-                  controller: TextEditingController(text: startDate),
-                  validator: (value) => validateStartDate(value, endDate),
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now()
-                          .subtract(const Duration(days: 365 * 25)),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (pickedDate != null) {
+          content: SingleChildScrollView(
+            child: Form(
+              key: dialogFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    initialValue: title,
+                    decoration: underlineInputDecoration(context, '', 'Title'),
+                    validator: (value) => noEmptyField(value),
+                    onChanged: (value) {
                       setState(() {
-                        startDate = formatDate(pickedDate);
+                        title = value;
                       });
-                    }
-                  },
-                ),
-                TextFormField(
-                  decoration: underlineInputDecoration(context, '', 'End Date'),
-                  readOnly: true,
-                  controller: TextEditingController(text: endDate),
-                  validator: (value) => noEmptyField(value),
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now()
-                          .subtract(const Duration(days: 365 * 25)),
-                      lastDate:
-                          DateTime.now().add(const Duration(days: 365 * 25)),
-                    );
-                    if (pickedDate != null) {
+                    },
+                  ),
+                  TextFormField(
+                    decoration:
+                        underlineInputDecoration(context, '', 'Start Date'),
+                    readOnly: true,
+                    controller: TextEditingController(text: startDate),
+                    validator: (value) => validateStartDate(value, endDate),
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now()
+                            .subtract(const Duration(days: 365 * 25)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          startDate = formatDate(pickedDate);
+                        });
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    decoration:
+                        underlineInputDecoration(context, '', 'End Date'),
+                    readOnly: true,
+                    controller: TextEditingController(text: endDate),
+                    validator: (value) => noEmptyField(value),
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now()
+                            .subtract(const Duration(days: 365 * 25)),
+                        lastDate:
+                            DateTime.now().add(const Duration(days: 365 * 25)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          endDate = formatDate(pickedDate);
+                        });
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: description,
+                    decoration:
+                        underlineInputDecoration(context, '', 'Description'),
+                    minLines: 1,
+                    maxLines: 4,
+                    onChanged: (value) {
                       setState(() {
-                        endDate = formatDate(pickedDate);
+                        description = value;
                       });
-                    }
-                  },
-                ),
-                TextFormField(
-                  initialValue: description,
-                  decoration:
-                      underlineInputDecoration(context, '', 'Description'),
-                  minLines: 1,
-                  maxLines: 4,
-                  onChanged: (value) {
-                    setState(() {
-                      description = value;
-                    });
-                  },
-                ),
-                (otherField == null)
-                    ? Container()
-                    : TextFormField(
-                        decoration:
-                            underlineInputDecoration(context, '', otherField),
-                        validator: (value) =>
-                            (otherField == 'Score' || otherField == 'Hours')
-                                ? nonNegativeValue(value)
-                                : (otherField == "Issuer")
-                                    ? null
-                                    : noEmptyField(value),
-                        onChanged: (value) {
-                          setState(() {
-                            other = value;
-                          });
-                        },
-                      ),
-              ],
+                    },
+                  ),
+                  (otherField == null)
+                      ? Container()
+                      : TextFormField(
+                          decoration:
+                              underlineInputDecoration(context, '', otherField),
+                          validator: (value) =>
+                              (otherField == 'Score' || otherField == 'Hours')
+                                  ? nonNegativeValue(value)
+                                  : (otherField == "Issuer")
+                                      ? null
+                                      : noEmptyField(value),
+                          onChanged: (value) {
+                            setState(() {
+                              other = value;
+                            });
+                          },
+                        ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[

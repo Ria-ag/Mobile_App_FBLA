@@ -40,9 +40,9 @@ class _AuthNavState extends State<AuthNav> {
             }
           });
     } else {
-      print("token: ${context.read<MyAppState>().token}");
-      return Placeholder();
-      // FutureBuilder(future: future, builder: builder);
+      return LinkedInAuthPage(
+        profileInfo: context.read<MyAppState>().profileInfo,
+      );
     }
   }
 }
@@ -456,12 +456,62 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 }
 
-class LinkedInAuthPage extends StatelessWidget {
-  const LinkedInAuthPage({super.key});
+class LinkedInAuthPage extends StatefulWidget {
+  const LinkedInAuthPage({super.key, required this.profileInfo});
+  final Map<String, dynamic> profileInfo;
+
+  @override
+  State<LinkedInAuthPage> createState() => _LinkedInAuthPageState();
+}
+
+class _LinkedInAuthPageState extends State<LinkedInAuthPage> {
+  late Future<bool> _future;
+
+  // An initState() is used so these methods are not called multiple times
+  @override
+  void initState() {
+    super.initState();
+    _future = context.read<MyAppState>().checkIfUserExists(
+          widget.profileInfo["email"],
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return errorMessage(snapshot.error, context);
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const AnimatedLogo();
+        } else {
+          if (snapshot.data == true) {
+            // User exists, proceed to home page
+            return const VerifiedHomePage(newUser: false);
+          } else {
+            // User doesn't exist, show sign up page
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                elevation: 0,
+                title: Text(
+                  'Sign Up With LinkedIn',
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+              body: SingleChildScrollView(
+                child: LinkedInSignUpWidget(
+                  email: widget.profileInfo["email"],
+                  name: widget.profileInfo["name"] ?? "",
+                ),
+              ),
+            );
+          }
+        }
+      },
+    );
   }
 }

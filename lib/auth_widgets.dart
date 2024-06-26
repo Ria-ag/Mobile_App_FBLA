@@ -47,14 +47,12 @@ class _LoginWidgetState extends State<LoginWidget> {
   void _initDeepLinkListener() {
     _sub = linkStream.listen((String? link) async {
       if (link != null) {
-        print(link);
         final uri = Uri.parse(link);
         if (uri.host == 'auth') {
           await fetchLinkedInProfile(uri.queryParameters['access_token']!);
           setState(() {
             token = uri.queryParameters['access_token'];
           });
-          print("Token: $token");
         }
       }
     }, onError: (error) {
@@ -476,29 +474,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  // In this dialog box, the terms and conditions are shown
-  void showTermsAndConditionsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Terms and Conditions'),
-          content: SingleChildScrollView(
-            child: termsConditions,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
 // This method creates a new user account
   void signUp() async {
     // After the method is called, a loading page is shown
@@ -586,10 +561,202 @@ class _VerifiedHomePageState extends State<VerifiedHomePage> {
           return const AnimatedLogo();
         } else {
           return const MyHomePage(
-            title: '5 Minute संस्कृतम्',
+            title: 'Mobile App FBLA',
           );
         }
       },
+    );
+  }
+}
+
+class LinkedInSignUpWidget extends StatefulWidget {
+  final String email;
+  final String name;
+
+  const LinkedInSignUpWidget({
+    super.key,
+    required this.email,
+    required this.name,
+  });
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _LinkedInSignUpWidgetState createState() => _LinkedInSignUpWidgetState();
+}
+
+class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  final _schoolController = TextEditingController();
+  final _yearController = TextEditingController();
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.name);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _schoolController.dispose();
+    _yearController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          color: Theme.of(context).colorScheme.secondary,
+          width: double.infinity,
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Please provide additional information to finish setting up your account.',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Email',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+                Text(
+                  widget.email,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: underlineInputDecoration(
+                    context,
+                    "Enter your name",
+                    "Name",
+                  ),
+                  validator: (value) => noEmptyField(value),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _schoolController,
+                  decoration: underlineInputDecoration(
+                    context,
+                    "Enter your school",
+                    "School",
+                  ),
+                  validator: (value) => noEmptyField(value),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _yearController,
+                  decoration: underlineInputDecoration(
+                    context,
+                    "Enter your graduation year",
+                    "Year of Graduation",
+                  ),
+                  validator: (value) => validateGraduationYear(value),
+                ),
+                const SizedBox(height: 20),
+                CheckboxListTile(
+                  value: isChecked,
+                  onChanged: (value) {
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },
+                  title: Text(
+                    "I accept the terms and conditions",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(4, 4),
+                          blurRadius: 5,
+                          spreadRadius: 0,
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        showTermsAndConditionsDialog(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.primary),
+                      ),
+                      child: const Text('View Terms and Conditions'),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Center(
+                  child: CustomElevatedButton(
+                    onPressed: () {
+                      if (isChecked) {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<MyAppState>().createLocalUser(
+                                _nameController.text.trim(),
+                                _schoolController.text.trim(),
+                                int.parse(_yearController.text.trim()),
+                              );
+                          Navigator.pushAndRemoveUntil<dynamic>(
+                            context,
+                            MaterialPageRoute<dynamic>(
+                              builder: (BuildContext context) =>
+                                  const VerifiedHomePage(newUser: true),
+                            ),
+                            (route) =>
+                                false, //if you want to disable back feature set to false
+                          );
+                        }
+                      } else {
+                        showTextSnackBar(
+                            'Please accept terms and conditions to continue');
+                      }
+                    },
+                    child: Text(
+                      'Sign up',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

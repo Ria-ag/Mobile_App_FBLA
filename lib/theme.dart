@@ -43,7 +43,7 @@ final theme = ThemeData(
     headlineSmall:
         GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18),
     bodySmall: GoogleFonts.poppins(fontSize: 12),
-    labelSmall: GoogleFonts.poppins(fontSize: 14),
+    labelSmall: GoogleFonts.poppins(fontSize: 12),
     labelMedium: GoogleFonts.poppins(fontSize: 14),
 
     // This style is the default for Text widgets
@@ -210,6 +210,29 @@ final termsConditions = RichText(
     ],
   ),
 );
+
+// In this dialog box, the terms and conditions are shown
+void showTermsAndConditionsDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Terms and Conditions'),
+        content: SingleChildScrollView(
+          child: termsConditions,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 // This is the input decoration used by most fields in the app
 InputDecoration underlineInputDecoration(
