@@ -76,6 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: "Sign Out",
                         onPressed: () async {
                           await FirebaseAuth.instance.signOut();
+                          context.read<MyAppState>().setProfile(null, null);
                         },
                       )),
                       const SizedBox(height: 100),

@@ -5,7 +5,6 @@ import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
@@ -42,7 +41,8 @@ class GoalModalSheetState extends State<GoalModalSheet> {
       var linkedinUserID = jsonResponse['sub'];
       return linkedinUserID;
     } else {
-      throw Exception('Failed to fetch LinkedIn user ID: ${response.statusCode} - ${response.body}');
+      throw Exception(
+          'Failed to fetch LinkedIn user ID: ${response.statusCode} - ${response.body}');
     }
   }
 
@@ -68,15 +68,15 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
 ''';
   }
 
-
-  Future<void> shareOnLinkedIn(BuildContext context, {
+  Future<void> shareOnLinkedIn(
+    BuildContext context, {
     required String goalTitle,
     required String goalCategory,
     required String goalDescription,
     required List<Task> goalTasks,
   }) async {
     String? token = context.read<MyAppState>().token;
-  
+
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -126,7 +126,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
         showTextDialog('Error',
             'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
       }
-        } catch (error) {
+    } catch (error) {
       // Handle generic errors
       showTextDialog(
           'Error', 'Failed to share post on LinkedIn. Error: $error');
@@ -391,8 +391,8 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                           ),
                           const SizedBox(width: 20),
                           CustomImageButton(
-                            image: const AssetImage('assets/Share.png'),
-                             onTap: () {
+                            image: const AssetImage('assets/share.png'),
+                            onTap: () {
                               shareOnLinkedIn(
                                 context,
                                 goalTitle: widget.title,
@@ -453,93 +453,96 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
         setState(() {});
         return AlertDialog(
           title: const Text('Add New Experience'),
-          content: Form(
-            key: dialogFormKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  initialValue: title,
-                  decoration: underlineInputDecoration(context, '', 'Title'),
-                  validator: (value) => noEmptyField(value),
-                  onChanged: (value) {
-                    setState(() {
-                      title = value;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      underlineInputDecoration(context, '', 'Start Date'),
-                  readOnly: true,
-                  controller: TextEditingController(text: startDate),
-                  validator: (value) => validateStartDate(value, endDate),
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now()
-                          .subtract(const Duration(days: 365 * 25)),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (pickedDate != null) {
+          content: SingleChildScrollView(
+            child: Form(
+              key: dialogFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    initialValue: title,
+                    decoration: underlineInputDecoration(context, '', 'Title'),
+                    validator: (value) => noEmptyField(value),
+                    onChanged: (value) {
                       setState(() {
-                        startDate = formatDate(pickedDate);
+                        title = value;
                       });
-                    }
-                  },
-                ),
-                TextFormField(
-                  decoration: underlineInputDecoration(context, '', 'End Date'),
-                  readOnly: true,
-                  controller: TextEditingController(text: endDate),
-                  validator: (value) => noEmptyField(value),
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now()
-                          .subtract(const Duration(days: 365 * 25)),
-                      lastDate:
-                          DateTime.now().add(const Duration(days: 365 * 25)),
-                    );
-                    if (pickedDate != null) {
+                    },
+                  ),
+                  TextFormField(
+                    decoration:
+                        underlineInputDecoration(context, '', 'Start Date'),
+                    readOnly: true,
+                    controller: TextEditingController(text: startDate),
+                    validator: (value) => validateStartDate(value, endDate),
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now()
+                            .subtract(const Duration(days: 365 * 25)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          startDate = formatDate(pickedDate);
+                        });
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    decoration:
+                        underlineInputDecoration(context, '', 'End Date'),
+                    readOnly: true,
+                    controller: TextEditingController(text: endDate),
+                    validator: (value) => noEmptyField(value),
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now()
+                            .subtract(const Duration(days: 365 * 25)),
+                        lastDate:
+                            DateTime.now().add(const Duration(days: 365 * 25)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          endDate = formatDate(pickedDate);
+                        });
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: description,
+                    decoration:
+                        underlineInputDecoration(context, '', 'Description'),
+                    minLines: 1,
+                    maxLines: 4,
+                    onChanged: (value) {
                       setState(() {
-                        endDate = formatDate(pickedDate);
+                        description = value;
                       });
-                    }
-                  },
-                ),
-                TextFormField(
-                  initialValue: description,
-                  decoration:
-                      underlineInputDecoration(context, '', 'Description'),
-                  minLines: 1,
-                  maxLines: 4,
-                  onChanged: (value) {
-                    setState(() {
-                      description = value;
-                    });
-                  },
-                ),
-                (otherField == null)
-                    ? Container()
-                    : TextFormField(
-                        decoration:
-                            underlineInputDecoration(context, '', otherField),
-                        validator: (value) =>
-                            (otherField == 'Score' || otherField == 'Hours')
-                                ? nonNegativeValue(value)
-                                : (otherField == "Issuer")
-                                    ? null
-                                    : noEmptyField(value),
-                        onChanged: (value) {
-                          setState(() {
-                            other = value;
-                          });
-                        },
-                      ),
-              ],
+                    },
+                  ),
+                  (otherField == null)
+                      ? Container()
+                      : TextFormField(
+                          decoration:
+                              underlineInputDecoration(context, '', otherField),
+                          validator: (value) =>
+                              (otherField == 'Score' || otherField == 'Hours')
+                                  ? nonNegativeValue(value)
+                                  : (otherField == "Issuer")
+                                      ? null
+                                      : noEmptyField(value),
+                          onChanged: (value) {
+                            setState(() {
+                              other = value;
+                            });
+                          },
+                        ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[

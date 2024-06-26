@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/my_app_state.dart';
+import 'package:provider/provider.dart';
 import 'auth_widgets.dart';
 import 'main.dart';
 import 'theme.dart';
@@ -18,24 +20,30 @@ class AuthNav extends StatefulWidget {
 class _AuthNavState extends State<AuthNav> {
   @override
   Widget build(BuildContext context) {
-    // Root-level navigation depends on a stream of user authentication state changes
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            // If there's an error, display the error message page
-            return errorMessage(snapshot.error, context);
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            // If waiting, display a non-animated-logo loading page
-            return const AnimatedLogo();
-          } else if (snapshot.hasData) {
-            // If the user is signed in, send navigation to the verify email page
-            return const VerifyEmailPage();
-          } else {
-            // Else, take the user to the authentication page (log in or sign up)
-            return const AuthPage();
-          }
-        });
+    if (context.watch<MyAppState>().token == null) {
+      // Root-level navigation depends on a stream of user authentication state changes
+      return StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              // If there's an error, display the error message page
+              return errorMessage(snapshot.error, context);
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              // If waiting, display a non-animated-logo loading page
+              return const AnimatedLogo();
+            } else if (snapshot.hasData) {
+              // If the user is signed in, send navigation to the verify email page
+              return const VerifyEmailPage();
+            } else {
+              // Else, take the user to the authentication page (log in or sign up)
+              return const AuthPage();
+            }
+          });
+    } else {
+      return LinkedInAuthPage(
+        profileInfo: context.read<MyAppState>().profileInfo,
+      );
+    }
   }
 }
 
@@ -445,5 +453,65 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (emailVerified) {
       timer?.cancel();
     }
+  }
+}
+
+class LinkedInAuthPage extends StatefulWidget {
+  const LinkedInAuthPage({super.key, required this.profileInfo});
+  final Map<String, dynamic> profileInfo;
+
+  @override
+  State<LinkedInAuthPage> createState() => _LinkedInAuthPageState();
+}
+
+class _LinkedInAuthPageState extends State<LinkedInAuthPage> {
+  late Future<bool> _future;
+
+  // An initState() is used so these methods are not called multiple times
+  @override
+  void initState() {
+    super.initState();
+    _future = context.read<MyAppState>().checkIfUserExists(
+          widget.profileInfo["email"],
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return errorMessage(snapshot.error, context);
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const AnimatedLogo();
+        } else {
+          if (snapshot.data == true) {
+            // User exists, proceed to home page
+            return const VerifiedHomePage(newUser: false);
+          } else {
+            // User doesn't exist, show sign up page
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                elevation: 0,
+                title: Text(
+                  'Sign Up With LinkedIn',
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+              body: SingleChildScrollView(
+                child: LinkedInSignUpWidget(
+                  email: widget.profileInfo["email"],
+                  name: widget.profileInfo["name"] ?? "",
+                ),
+              ),
+            );
+          }
+        }
+      },
+    );
   }
 }
