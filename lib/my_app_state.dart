@@ -75,6 +75,8 @@ class MyAppState extends ChangeNotifier {
       DocumentSnapshot<Map<String, dynamic>> value = await getUserRef().get();
       Map<String, dynamic> userMap = value.data()!;
       appUser = AppUser.fromMap(userMap);
+      totalHrs();
+      totalXps();
       appUser.pfp = (appUser.pfpPath.isEmpty) ? null : File(appUser.pfpPath);
       return Future.value(appUser);
     } catch (error, stackTrace) {
