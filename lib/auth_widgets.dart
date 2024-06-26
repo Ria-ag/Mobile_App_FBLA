@@ -5,10 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'auth_pages.dart';
 import 'main.dart';
 import 'my_app_state.dart';
 import 'theme.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:uni_links/uni_links.dart';
 
 // This widget displays and handles login
 class LoginWidget extends StatefulWidget {
@@ -30,7 +34,52 @@ class _LoginWidgetState extends State<LoginWidget> {
   // These string variables are used to display error text below the username and password
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
+  StreamSubscription? _sub;
 
+  @override
+  void initState() {
+    super.initState();
+    _initDeepLinkListener();
+  }
+
+  void _initDeepLinkListener() {
+    _sub = linkStream.listen((String? link) {
+      if (link != null) {
+        print(link);
+        final uri = Uri.parse(link);
+        if (uri.host == 'auth') {
+          final token = uri.queryParameters['access_token'];
+          print("Token: $token");
+          fetchLinkedInProfile(token!);
+        }
+      }
+    }, onError: (err) {
+      print('Failed to receive deep link: $err');
+    });
+  }
+
+  void fetchLinkedInProfile(String accessToken) async {
+    const profileUrl = 'https://api.linkedin.com/v2/userinfo';
+    final headers = {'Authorization': 'Bearer $accessToken'};
+
+    final profileResponse =
+        await http.get(Uri.parse(profileUrl), headers: headers);
+    if (profileResponse.statusCode == 200) {
+      final profileData = json.decode(profileResponse.body);
+      print('LinkedIn Profile: $profileData');
+    } else {
+      print(
+          'Failed to fetch LinkedIn profile: ${profileResponse.statusCode}, ${profileResponse.body}');
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _sub?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -199,6 +248,22 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     // Once this method is completed, the loading page is no longer shown
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+  
+  Future<void> loginWithLinkedIn() async {
+    const clientId = '86w3jl8a5w2h0t';
+    const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
+
+    // Construct the url
+    final authorizationUrl =
+        Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
+      'response_type': 'code',
+      'client_id': clientId,
+      'redirect_uri': redirectUrl,
+      'scope': 'openid email w_member_social',
+    });
+
+    await launchUrl(authorizationUrl);
   }
 }
 
