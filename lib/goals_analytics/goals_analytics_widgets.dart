@@ -14,13 +14,13 @@ class ChartTile extends StatefulWidget {
   String chartName;
   String xLabel = "";
   String yLabel = "";
-  List<Map<String, double>> dataPoints =
-      []; // List of maps containing x and y values
+  // List of maps containing x and y values
+  List<Map<String, double>> dataPoints = [];
 
   @override
   State<ChartTile> createState() => _ChartTileState();
 
-  // toMap method to convert the ChartTile instance to a Map
+  // A method to convert the ChartTile instance to a Map
   Map<String, dynamic> toMap() {
     return {
       'chartID': chartID,
@@ -31,7 +31,7 @@ class ChartTile extends StatefulWidget {
     };
   }
 
-  // fromMap method to create a ChartTile instance from a Map
+  // A method to create a ChartTile instance from a Map
   static ChartTile fromMap(Map<String, dynamic> map) {
     List<Map<String, double>> dataPoints =
         List<Map<String, double>>.from(map['dataPoints']);
@@ -286,6 +286,7 @@ class GoalTile extends StatelessWidget {
   }
 }
 
+// This is custom legend item class, storing the legend's name and color
 class LegendItem {
   final String name;
   final Color color;
@@ -296,6 +297,8 @@ class LegendItem {
   });
 }
 
+// This is a custom legend widget, showing a list of legend items
+// It is used for the pie chart in our application
 class CustomLegend extends StatelessWidget {
   final List<LegendItem> legendItems;
 

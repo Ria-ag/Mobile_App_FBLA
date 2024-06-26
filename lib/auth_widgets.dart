@@ -44,6 +44,9 @@ class _LoginWidgetState extends State<LoginWidget> {
     _initDeepLinkListener();
   }
 
+  // This is the initialization of _sub, which is a StreamSubscription to deep links in the app
+  // If the deep link has an 'auth' host, then the app recognizes it as coming from the server and parses it
+  // The access token is then extracted and stored
   void _initDeepLinkListener() {
     _sub = linkStream.listen((String? link) async {
       if (link != null) {
@@ -60,6 +63,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     });
   }
 
+  // This method fetches a user's LinkedIn profile with the access token
   Future fetchLinkedInProfile(String accessToken) async {
     const profileUrl = 'https://api.linkedin.com/v2/userinfo';
     final headers = {'Authorization': 'Bearer $accessToken'};
@@ -79,6 +83,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
+  // The dispose method disposes and cancels the stream and controllers to prevent unnecessary storage and memory use.
   @override
   void dispose() {
     _emailController.dispose();
@@ -89,6 +94,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // If a profile was set, then it is
     if (token != null && profileInfo != null) {
       Future.delayed(Duration.zero, () async {
         context.read<MyAppState>().setProfile(token!, profileInfo!);
@@ -186,6 +192,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
               ),
               const SizedBox(height: 12.5),
+              // Here, the page provides an alternate option of using LinkedIn to sign in/sign up
               const Row(
                 children: <Widget>[
                   Expanded(
@@ -203,6 +210,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                 ],
               ),
+              // The sign in with LinkedIn button
               const SizedBox(height: 12.5),
               CustomImageButton(
                 height: 50,
@@ -268,9 +276,11 @@ class _LoginWidgetState extends State<LoginWidget> {
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
+  // This is the method to log in with LinkedIn
   Future<void> loginWithLinkedIn() async {
     try {
       const clientId = '86w3jl8a5w2h0t';
+      // Our custom server that LinkedIn redirects to
       const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
 
       // Construct the url
@@ -282,6 +292,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         'scope': 'openid email w_member_social profile',
       });
 
+      // Launch thw URL
       await launchUrl(authorizationUrl);
     } catch (error) {
       showTextSnackBar('Error connecting with LinkedIn: $error');
@@ -300,6 +311,7 @@ class SignUpWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<SignUpWidget> {
+  // Various controllers that are used to track values in different fields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -312,11 +324,15 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
 
+  // Disposing all the controllers to save storage and memory
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _confirmPasswordController.dispose();
+    _schoolController.dispose();
+    _yearController.dispose();
     super.dispose();
   }
 
@@ -400,6 +416,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   return 'Passwords do not match';
                 },
               ),
+              // This is where the user can read and must accept the terms and conditions
               CheckboxListTile(
                 value: isChecked,
                 onChanged: (value) {
@@ -569,6 +586,7 @@ class _VerifiedHomePageState extends State<VerifiedHomePage> {
   }
 }
 
+// This is the sign up widget that is shown if the user decides to sign up through LinkedIn
 class LinkedInSignUpWidget extends StatefulWidget {
   final String email;
   final String name;
@@ -633,6 +651,7 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // The email is not modifiable
                 Text(
                   'Email',
                   style: Theme.of(context).textTheme.labelSmall,
@@ -645,6 +664,8 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
                       ),
                 ),
                 const SizedBox(height: 20),
+                // These are the fields that the user must fill out or confirm
+                // Name is prefilled from LinkedIn information
                 TextFormField(
                   controller: _nameController,
                   decoration: underlineInputDecoration(
@@ -675,6 +696,7 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
                   validator: (value) => validateGraduationYear(value),
                 ),
                 const SizedBox(height: 20),
+                // View and accept terms and conditions
                 CheckboxListTile(
                   value: isChecked,
                   onChanged: (value) {
@@ -719,6 +741,7 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
                 ),
                 const SizedBox(height: 30),
                 Center(
+                  // The button creates an account and redirects the user to the home page
                   child: CustomElevatedButton(
                     onPressed: () {
                       if (isChecked) {
@@ -734,8 +757,7 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
                               builder: (BuildContext context) =>
                                   const VerifiedHomePage(newUser: true),
                             ),
-                            (route) =>
-                                false, //if you want to disable back feature set to false
+                            (route) => false,
                           );
                         }
                       } else {

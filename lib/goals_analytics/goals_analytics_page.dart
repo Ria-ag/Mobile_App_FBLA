@@ -87,6 +87,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       Colors.white
     ];
 
+    // This is a generated list of pie chart data based on other data in the method and previous values in MyAppState
     List<PieChartSectionData> pieChartSectionData =
         List.generate(items.length, (index) {
       return PieChartSectionData(
@@ -95,6 +96,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
       );
     });
 
+    // This is the legend that is shown next to the pie chart
     List<LegendItem> legendItems = List.generate(items.length, (index) {
       return LegendItem(
         name: items.keys.toList()[index].splitMapJoin(
@@ -122,6 +124,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // This is the goals section
                   Padding(
                     padding: const EdgeInsets.only(left: 25),
                     child: Text("Goals",
@@ -155,6 +158,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                 ],
               ),
             ),
+            // This is the analytics section
             Padding(
               padding: const EdgeInsets.only(left: 25, top: 10),
               child: Text("Analytics",
@@ -168,6 +172,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      // This analytics tile show the total number of completed tasks
                       AnalyticTile(
                         backgroundColor:
                             Theme.of(context).colorScheme.secondary,
@@ -177,6 +182,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                             .toString(),
                         labelText: "Total Completed Tasks",
                       ),
+                      // This analytics tile shows the total number of current experiences
                       AnalyticTile(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         displayText:
@@ -186,7 +192,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     ],
                   ),
                 ),
-                // Afterwards, it shows the pie chart created previously with data from the MyGoals provider
+                // Afterwards, it shows the pie chart created previously with data from the MyAppState provider
                 Row(
                   children: [
                     Padding(
@@ -281,6 +287,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   }
 }
 
+// This custom anayltics tile widget is to display a large number or text with a smaller label in a tile
 class AnalyticTile extends StatelessWidget {
   const AnalyticTile({
     super.key,

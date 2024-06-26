@@ -81,6 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     "Looks a little empty in here. Click on the add button in the bottom right to get started!"),
               );
 
+    // The profile picture
     Widget profilePic = SizedBox(
       height: width,
       width: width,
@@ -96,7 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               )
             : Container(
-                padding: const EdgeInsets.all(6), // Border width
+                // Picture border width
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.primary,
                     shape: BoxShape.circle),
@@ -141,6 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
 
+    // The profile information: name, school, and year of graduation
     Widget profileInfo = Container(
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 230),
@@ -178,9 +181,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
 
+    // This is where the profile page contents are laid out
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
+        // The stack first has the blue profile header with the profile picture and main information
         child: Stack(children: [
           Container(
             color: Theme.of(context).colorScheme.secondary,
@@ -210,6 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
+                    // This is the logo on the profile page, since there is no app bar
                     const Align(
                       alignment: Alignment.topRight,
                       child: Padding(
@@ -243,6 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
+          // After the profile header, the profile tiles are shown, where the icon tiles overlap the blue header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: Column(
@@ -294,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
+            children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 25, 165),
                 child: Container(
@@ -308,6 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       shadow,
                     ],
                   ),
+                  // This is the checklist of which tiles to show
                   child: Material(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -334,6 +342,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         );
       },
+      // Once the checklist is closed, its settings are saved to Firestore
     ).then((value) {
       context.read<MyAppState>().saveChecklistInDB();
     });

@@ -20,30 +20,31 @@ class AuthNav extends StatefulWidget {
 class _AuthNavState extends State<AuthNav> {
   @override
   Widget build(BuildContext context) {
-    if (context.watch<MyAppState>().token == null) {
-      // Root-level navigation depends on a stream of user authentication state changes
-      return StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              // If there's an error, display the error message page
-              return errorMessage(snapshot.error, context);
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              // If waiting, display a non-animated-logo loading page
-              return const AnimatedLogo();
-            } else if (snapshot.hasData) {
-              // If the user is signed in, send navigation to the verify email page
-              return const VerifyEmailPage();
-            } else {
-              // Else, take the user to the authentication page (log in or sign up)
-              return const AuthPage();
-            }
-          });
-    } else {
-      return LinkedInAuthPage(
-        profileInfo: context.read<MyAppState>().profileInfo,
-      );
-    }
+    return ValueListenableBuilder<String?>(
+      valueListenable: context.read<MyAppState>().tokenNotifier,
+      builder: (context, token, child) {
+        if (token == null) {
+          return StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return errorMessage(snapshot.error, context);
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const AnimatedLogo();
+              } else if (snapshot.hasData) {
+                return const VerifyEmailPage();
+              } else {
+                return const AuthPage();
+              }
+            },
+          );
+        } else {
+          return LinkedInAuthPage(
+            profileInfo: context.read<MyAppState>().profileInfo,
+          );
+        }
+      },
+    );
   }
 }
 
@@ -320,6 +321,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
     if (!emailVerified) {
       sendVerificationEmail();
+    } else {
+      timer?.cancel();
     }
 
     timer = Timer.periodic(
@@ -445,6 +448,9 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 // It reloads the current user's data, and if they are verfied, cancels the timer
   Future checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser!.reload();
+    if (!mounted) {
+      return;
+    }
     setState(() {
       emailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
       newUser = true;
