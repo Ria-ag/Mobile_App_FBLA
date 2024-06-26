@@ -56,8 +56,8 @@ class _LoginWidgetState extends State<LoginWidget> {
           fetchLinkedInProfile(token!);
         }
       }
-    }, onError: (err) {
-      print('Failed to receive deep link: $err');
+    }, onError: (error) {
+      showTextSnackBar('Failed to receive deep link: $error');
     });
   }
 
@@ -71,8 +71,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       final profileData = json.decode(profileResponse.body);
       print('LinkedIn Profile: $profileData');
     } else {
-      print(
-          'Failed to fetch LinkedIn profile: ${profileResponse.statusCode}, ${profileResponse.body}');
+      showTextSnackBar(
+          'Failed to fetch LinkedIn profile: ${profileResponse.statusCode}\nError: ${profileResponse.body}');
     }
   }
 
@@ -266,19 +266,23 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   Future<void> loginWithLinkedIn() async {
-    const clientId = '86w3jl8a5w2h0t';
-    const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
+    try {
+      const clientId = '86w3jl8a5w2h0t';
+      const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
 
-    // Construct the url
-    final authorizationUrl =
-        Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
-      'response_type': 'code',
-      'client_id': clientId,
-      'redirect_uri': redirectUrl,
-      'scope': 'openid email w_member_social',
-    });
+      // Construct the url
+      final authorizationUrl =
+          Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
+        'response_type': 'code',
+        'client_id': clientId,
+        'redirect_uri': redirectUrl,
+        'scope': 'openid email w_member_social',
+      });
 
-    await launchUrl(authorizationUrl);
+      await launchUrl(authorizationUrl);
+    } catch (error) {
+      showTextSnackBar('Error connecting with LinkedIn: $error');
+    }
   }
 }
 
