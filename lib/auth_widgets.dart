@@ -207,7 +207,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               CustomImageButton(
                 height: 50,
                 width: 200,
-                image: const AssetImage('assets/sign_in.png'),
+                image: const AssetImage('assets/signIn.png'),
                 onTap: () => loginWithLinkedIn(),
               ),
             ],

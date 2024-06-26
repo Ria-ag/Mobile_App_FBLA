@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
 import '../my_app_state.dart';
@@ -28,50 +30,108 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     FocusScope.of(context).unfocus();
   }
 
-  // Future<void> shareOnLinkedIn(BuildContext context) async {
-  //   String token = context.watch<MyAppState>().token;
-  //   try {
-  //     if (token != "") {
-  //       const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
-  //       final headers = {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $token',
-  //       };
+  Future<String> fetchLinkedInUserID(String accessToken) async {
+    var url = Uri.parse('https://api.linkedin.com/v2/userinfo');
+    var headers = {'Authorization': 'Bearer $accessToken'};
 
-  //       final postData = {
-  //         "author": "urn:li:person:ria-agarwal-b7a57b27b",
-  //         "lifecycleState": "PUBLISHED",
-  //         "specificContent": {
-  //           "com.linkedin.ugc.ShareContent": {
-  //             "shareCommentary": {"text": "I completed my goal!"},
-  //             "shareMediaCategory": "NONE"
-  //           }
-  //         },
-  //         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
-  //       };
+    var response = await http.get(url, headers: headers);
 
-  //       final response = await http.post(
-  //         Uri.parse(apiUrl),
-  //         headers: headers,
-  //         body: jsonEncode(postData),
-  //       );
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var linkedinUserID = jsonResponse['sub'];
+      return linkedinUserID;
+    } else {
+      throw Exception(
+          'Failed to fetch LinkedIn user ID: ${response.statusCode} - ${response.body}');
+    }
+  }
 
-  //       if (response.statusCode == 201) {
-  //         showTextDialog('Success', 'Post shared successfully on LinkedIn.');
-  //       } else {
-  //         showTextDialog('Error',
-  //             'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
-  //       }
-  //     } else {
-  //       // Handle case where access token is null (user canceled authentication)
-  //       showTextDialog('Error', 'Failed to obtain access token for LinkedIn.');
-  //     }
-  //   } catch (error) {
-  //     // Handle generic errors
-  //     showTextDialog(
-  //         'Error', 'Failed to share post on LinkedIn. Error: $error');
-  //   }
-  // }
+  String createLinkedInPost({
+    required String goalTitle,
+    required String goalCategory,
+    required String goalDescription,
+    required List<Task> goalTasks,
+  }) {
+    return '''
+Goal Achieved!
+
+I'm thrilled to share that I've successfully completed my goal: $goalTitle.
+
+Description: $goalDescription
+
+Key Tasks Completed:
+${goalTasks.map((task) => '- $task').join('\n')}
+
+This journey has been incredibly rewarding, and I'm excited to continue pushing forward with new goals in $goalCategory.
+
+#GoalAchieved #LinkedInGoals #PersonalGrowth #Achievement
+''';
+  }
+
+  Future<void> shareOnLinkedIn(
+    BuildContext context, {
+    required String goalTitle,
+    required String goalCategory,
+    required String goalDescription,
+    required List<Task> goalTasks,
+  }) async {
+    String? token = context.read<MyAppState>().token;
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You must be signed in with LinkedIn to share a post.'),
+        ),
+      );
+      return;
+    }
+    try {
+      var userId = await fetchLinkedInUserID(token);
+
+      const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+        'X-Restli-Protocol-Version': '2.0.0'
+      };
+
+      final postData = {
+        "author": "urn:li:person:$userId",
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+          "com.linkedin.ugc.ShareContent": {
+            "shareCommentary": {
+              "text": createLinkedInPost(
+                goalTitle: goalTitle,
+                goalCategory: goalCategory,
+                goalDescription: goalDescription,
+                goalTasks: goalTasks,
+              )
+            },
+            "shareMediaCategory": "NONE"
+          }
+        },
+        "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+      };
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(postData),
+      );
+
+      if (response.statusCode == 201) {
+        showTextDialog('Success', 'Post shared successfully on LinkedIn.');
+      } else {
+        showTextDialog('Error',
+            'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle generic errors
+      showTextDialog(
+          'Error', 'Failed to share post on LinkedIn. Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -330,9 +390,17 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                                 )),
                           ),
                           const SizedBox(width: 20),
-                          const CustomImageButton(
-                            image: AssetImage('assets/share_info.png'),
-                            // onTap: () {shareOnLinkedIn(context);},
+                          CustomImageButton(
+                            image: const AssetImage('assets/share.png'),
+                            onTap: () {
+                              shareOnLinkedIn(
+                                context,
+                                goalTitle: widget.title,
+                                goalCategory: currentGoal.category,
+                                goalDescription: currentGoal.description,
+                                goalTasks: currentGoal.tasks,
+                              );
+                            },
                             height: 35,
                             width: 150,
                           ),

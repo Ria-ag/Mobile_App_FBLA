@@ -394,7 +394,7 @@ class _ExperienceState extends State<Experience> {
                 const Text('Export:'),
                 const SizedBox(width: 10),
                 CustomImageButton(
-                  image: const AssetImage('assets/add_to_profile.png'),
+                  image: const AssetImage('assets/add.png'),
                   onTap: () => shareToLinkedIn(widget.name, widget.award),
                   height: 25,
                   width: 110,
