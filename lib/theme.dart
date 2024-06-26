@@ -324,6 +324,7 @@ String? noEmptyField(String? value) {
   return null;
 }
 
+// The start date must be a properly formatted date and before the end date
 String? validateStartDate(String? value, String end) {
   if (value == null || value.isEmpty) {
     return 'Field cannot be empty';
@@ -337,6 +338,7 @@ String? validateStartDate(String? value, String end) {
   return null;
 }
 
+// Graduation year must be after 1900 and in less than 50 years from now
 String? validateGraduationYear(String? value) {
   if (value != null) {
     final int? numVal = int.tryParse(value);
@@ -458,7 +460,7 @@ class CustomImageButton extends StatelessWidget {
   }
 }
 
-// This method displays the loading gif for wait times
+// This method displays the loading GIF while the app is writing or retrieving data
 class AnimatedLogo extends StatelessWidget {
   const AnimatedLogo({super.key});
 
