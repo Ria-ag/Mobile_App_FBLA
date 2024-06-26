@@ -37,7 +37,7 @@ class Experience extends StatefulWidget {
   DateTime updateTime = DateTime.now();
   final _formKey = GlobalKey<FormState>();
 
-  // Converts an Experience object into a JSON string
+  // Converts an Experience object into a Map with a string key and dynamic values
   Map<String, dynamic> toMap() {
     return {
       'tileIndex': tileIndex,
@@ -78,7 +78,9 @@ class Experience extends StatefulWidget {
     exp.location = map['location'];
     exp.imagePath = map['image'] ?? "";
     exp.editable = map['editable'];
+    // This is the time that the experience was most recently updated
     exp.updateTime = DateTime.tryParse(map['updateTime']) ?? DateTime.now();
+    // This is the image added to the experience, which it gets based on the image path
     exp._image = (exp.imagePath.isEmpty) ? null : File(exp.imagePath);
 
     return exp;
@@ -99,7 +101,7 @@ class _ExperienceState extends State<Experience> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [shadow],
         ),
-        // This form is used for validation of experiences
+        // This form is used for the validation of experiences
         child: Form(
           key: widget._formKey,
           child: Column(
@@ -107,7 +109,7 @@ class _ExperienceState extends State<Experience> {
               xpListTile(context),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                //can add an image to the experience by camera or gallery
+                // Here, users can add an image to the experience by camera or gallery
                 child: (!widget.editable)
                     ? widget._image == null
                         ? const Text("No images selected")
@@ -388,6 +390,8 @@ class _ExperienceState extends State<Experience> {
           const SizedBox(height: 10),
         ],
       ),
+      // If the experiences being edited are awards, then they can be added to LinkedIn
+      // They are added as certifcations using LinkedIn's Add Certification API
       subtitle: (widget.tileIndex == 3)
           ? Row(
               children: [
@@ -470,6 +474,7 @@ class _ExperienceState extends State<Experience> {
     await widget._image!.copy('$path/${basename(pickedImage.path)}');
   }
 
+  // A custom widget to rich text builder widget, to refactor code
   Widget buildRichText(BuildContext context, String label, String value) {
     final TextStyle style = Theme.of(context).textTheme.bodyMedium!;
     return RichText(
@@ -488,6 +493,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
+  // The share to LinkedIn method to add an award as a cetification to LinkedIn
   shareToLinkedIn(String name, String award) async {
     String url =
         "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";

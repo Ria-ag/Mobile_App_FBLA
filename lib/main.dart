@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // These are the providers used in the app for state management across widgets
+    // Currently, there's only one, but the option of creating mutliple is kept
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),
@@ -95,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // The bottomNavigationBar is the primary form of app navigation
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
+        // An imported DotNavigationBar package is used
         child: DotNavigationBar(
           enableFloatingNavBar: true,
           enablePaddingAnimation: false,
@@ -273,7 +275,8 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 35),
 
-            // This section of the code uses the sharePlus and pdfx packages to save the profile as a pdf or share it to social media
+            // This section of the code uses the sharePlus and pdfx packages
+            // The packages are used  to save the profile as a custom pdf resume or share it to social media
             Row(
               children: [
                 Padding(

@@ -24,6 +24,7 @@ class AppUser {
   List<GoalTile> goals;
   int totalCompletedTasks;
 
+  // The constructor for AppUser requrires all field values except for profile picture and its path.
   AppUser({
     required this.name,
     required this.school,
@@ -36,6 +37,7 @@ class AppUser {
     required this.totalCompletedTasks,
   });
 
+  // This is a constructor for a new user
   AppUser.newUser(
       {required String name, required String school, required int year})
       : this(
@@ -50,6 +52,7 @@ class AppUser {
           totalCompletedTasks: 0,
         );
 
+  // This is a constructor to create an AppUser from a map
   factory AppUser.fromMap(Map<String, dynamic> userMap) {
     List<List<Experience>> convertedXpList = List.generate(8, (index) {
       String key = index.toString();
@@ -71,6 +74,7 @@ class AppUser {
       numberOfItems: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       goals: [],
       totalCompletedTasks: 0,
+      // These fields have not been implemented in Firebase yet
       // DO NOT DELETE: may implement later
       //   charts: userMap['charts'],
       //   numberOfItems: userMap['numberOfItems'],
@@ -81,6 +85,7 @@ class AppUser {
     return appUser;
   }
 
+  // This method converts the current instance of an AppUser to a map
   Map<String, dynamic> toMap() {
     return {
       'name': name,

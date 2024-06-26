@@ -7,7 +7,7 @@ import 'modal_sheet.dart';
 
 // This class defines icon tiles, like Athletics
 class IconTile extends StatelessWidget {
-  // Needs an icon, the title, and which tile it is
+  // Needs an icon, title and tile index (which indicates the type of title)
   const IconTile(
       {super.key,
       required this.icon,
@@ -30,6 +30,7 @@ class IconTile extends StatelessWidget {
             Text(
               title,
               style:
+                  // If the IconTile has a long name, the fon size will be smaller
                   (title == "Community Service" || title == "Performing Arts")
                       ? Theme.of(context)
                           .textTheme

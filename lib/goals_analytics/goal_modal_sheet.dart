@@ -31,6 +31,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     FocusScope.of(context).unfocus();
   }
 
+  // This method fetches the LinkedIn user ID to create a post
   Future<String> fetchLinkedInUserID(String accessToken) async {
     var url = Uri.parse('https://api.linkedin.com/v2/userinfo');
     var headers = {'Authorization': 'Bearer $accessToken'};
@@ -47,6 +48,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     }
   }
 
+// This is a method that returns a multililne string, which will be used for the post
   String createLinkedInPost({
     required String goalTitle,
     required String goalCategory,
@@ -69,6 +71,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
 ''';
   }
 
+// This method connects with LinkedIn's API to share a post
   Future<void> shareOnLinkedIn(
     BuildContext context, {
     required String goalTitle,
@@ -79,11 +82,8 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
     String? token = context.read<MyAppState>().token;
 
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You must be signed in with LinkedIn to share a post.'),
-        ),
-      );
+      showTextDialog(
+          'Error', 'You must be signed in with LinkedIn to share a post.');
       return;
     }
     try {
@@ -114,13 +114,12 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
         },
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
       };
-
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: headers,
         body: jsonEncode(postData),
       );
-
+      // A text dialog is shown based on sucess or failure
       if (response.statusCode == 201) {
         showTextDialog('Success', 'Post shared successfully on LinkedIn.');
       } else {
@@ -139,7 +138,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
     GoalTile currentGoal = context.read<MyAppState>().goals.firstWhere(
           (goal) => goal.title == widget.title,
         );
-
+    // A scroll view of text fields where the details goal can be updated and tasks can be added
     return SingleChildScrollView(
       child: SizedBox(
         height: MediaQuery.of(context).size.height - 50,
@@ -349,6 +348,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                                   }
                                 });
                               },
+                              // This button is to delete a task
                               secondary: IconButton(
                                   icon: const Icon(Icons.cancel,
                                       color: Colors.red),
@@ -373,7 +373,9 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                       Row(
                         children: [
                           Expanded(
+                            // Here, users can add their goal as an experience after filling out necessary ingotmation
                             child: CustomElevatedButton(
+                                // To add a goal as an experience, the goal must be saved and the category cannot be 'Other'
                                 onPressed: () => (editable ||
                                         currentGoal.category == 'Other')
                                     ? Future.delayed(
@@ -391,6 +393,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                                 )),
                           ),
                           const SizedBox(width: 20),
+                          // This button lets a user share their goal on LinkedIn
                           CustomImageButton(
                             image: const AssetImage('assets/share.png'),
                             onTap: () {
@@ -418,6 +421,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
     );
   }
 
+  // This method refactors building rich text
   Widget buildRichText(
       BuildContext context, String label, String value, TextStyle? style) {
     return RichText(
@@ -436,6 +440,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
     );
   }
 
+  // This text dialog allows users to add their goal as an experience
   void addXpDialog(BuildContext context) {
     GoalTile currentGoal = context.read<MyAppState>().goals.firstWhere(
           (goal) => goal.title == widget.title,
@@ -455,6 +460,8 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
         return AlertDialog(
           title: const Text('Add New Experience'),
           content: SingleChildScrollView(
+            // Users confirm and fill out various fields necessary for an experience
+            // Some, like start date, end date, and name, are prefilled
             child: Form(
               key: dialogFormKey,
               child: Column(
@@ -525,6 +532,8 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                       });
                     },
                   ),
+                  // Based on the category of the field an extra field may or may not be added
+                  // This field will also use the same validation as it would on the profile page
                   (otherField == null)
                       ? Container()
                       : TextFormField(
@@ -546,6 +555,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
               ),
             ),
           ),
+          // Here, the user either cancels or perofrms this action
           actions: <Widget>[
             TextButton(
               onPressed: () {

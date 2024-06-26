@@ -19,15 +19,18 @@ final PdfColor secondaryColor =
 final PdfColor primaryColor =
     PdfColor.fromInt(const Color.fromARGB(255, 218, 124, 96).value);
 
+// This is the method that creates a pdf resume
 Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
   final pdf = pw.Document();
 
   final appState = context.read<MyAppState>();
   final user = appState.appUser;
 
+  // These are the fonts used in the resume
   final font = await PdfGoogleFonts.montserratRegular();
   final boldFont = await PdfGoogleFonts.montserratSemiBold();
 
+  // By using MultiPage, space is automatically optimized and new pages are created as necessary
   pdf.addPage(pw.MultiPage(
     pageFormat: PdfPageFormat.a4,
     margin: const pw.EdgeInsets.all(32),
@@ -38,6 +41,7 @@ Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
     ],
   ));
 
+  // The pdf is either sent to be shared or returned as a file
   if (returnPdf) {
     await Printing.sharePdf(
         bytes: await pdf.save(), filename: 'MyRise_Resume.pdf');
@@ -50,6 +54,7 @@ Future<dynamic> makePdf(BuildContext context, bool returnPdf) async {
   }
 }
 
+// This is the method that builds the pdf header
 pw.Widget buildHeader(
   String name,
   String school,
@@ -58,6 +63,7 @@ pw.Widget buildHeader(
   pw.Font boldFont,
   File? profileImageFile,
 ) {
+  // If provided, the profile picture is used in the header
   Uint8List? profileImage;
   if (profileImageFile != null && profileImageFile.existsSync()) {
     profileImage = profileImageFile.readAsBytesSync();
@@ -102,6 +108,7 @@ pw.Widget buildHeader(
   );
 }
 
+// This is the method to create an entire experience section
 pw.Widget buildExperienceSection(
     MyAppState appState, pw.Font font, pw.Font boldFont) {
   final widgets = <pw.Widget>[];
@@ -132,6 +139,7 @@ pw.Widget buildExperienceSection(
       crossAxisAlignment: pw.CrossAxisAlignment.start, children: widgets);
 }
 
+// This is the method to create a single experience item
 pw.Widget buildExperienceItem(
     Experience experience, int categoryIndex, pw.Font font, pw.Font boldFont) {
   return pw.Padding(
@@ -198,5 +206,5 @@ void socialPdf(BuildContext context) async {
     tempFiles.add(XFile(tempFile.path));
   }
   // This is the custom message that is sent to the chosen social media app
-  await Share.shareXFiles(tempFiles, text: 'Check out my Accomplishments!');
+  await Share.shareXFiles(tempFiles, text: 'Check out my Resume!');
 }

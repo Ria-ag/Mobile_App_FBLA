@@ -14,17 +14,23 @@ import 'profile/experience.dart';
 // This is the ChangeNotifier model used to manage profile page states
 class MyAppState extends ChangeNotifier {
   late AppUser appUser;
-  String? token;
+  final ValueNotifier<String?> tokenNotifier = ValueNotifier<String?>(null);
   Map<String, dynamic> profileInfo = {};
   double serviceHrs = 0;
   int xpNum = 0;
+
+  String? get token => tokenNotifier.value;
+
+  set token(String? newToken) {
+    tokenNotifier.value = newToken;
+    notifyListeners();
+  }
 
   void setProfile(String? newToken, Map<String, dynamic>? newProfileInfo) {
     token = newToken;
     if (newProfileInfo != null) {
       profileInfo = newProfileInfo;
     }
-
     notifyListeners();
   }
 
