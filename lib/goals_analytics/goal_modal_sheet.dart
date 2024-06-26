@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
@@ -26,29 +23,6 @@ class GoalModalSheetState extends State<GoalModalSheet> {
   bool editable = true;
   TextEditingController taskController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? token = '';
-  StreamSubscription? _sub;
-
-  @override
-  void initState() {
-    super.initState();
-    _initDeepLinkListener();
-  }
-
-  void _initDeepLinkListener() {
-    _sub = linkStream.listen((String? link) {
-      if (link != null) {
-        final uri = Uri.parse(link);
-        if (uri.host == 'auth') {
-          setState(() {
-            token = uri.queryParameters['access_token'];
-          });
-        }
-      }
-    }, onError: (error) {
-      showTextSnackBar('Failed to receive deep link: $error');
-    });
-  }
 
   // This method takes a value and context and adds a task to the goal
   void _addTaskAndUpdateList(String value, BuildContext context) {
@@ -72,33 +46,47 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     }
   }
 
-  Future<void> getAccessToken() async{
-    try {
-      const clientId = '86w3jl8a5w2h0t';
-      const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
+  String createLinkedInPost({
+    required String goalTitle,
+    required String goalCategory,
+    required String goalDescription,
+    required List<Task> goalTasks,
+  }) {
+    return '''
+Goal Achieved!
 
-      // Construct the url
-      final authorizationUrl =
-          Uri.https('www.linkedin.com', '/oauth/v2/authorization', {
-        'response_type': 'code',
-        'client_id': clientId,
-        'redirect_uri': redirectUrl,
-        'scope': 'w_member_social',
-      });
+I'm thrilled to share that I've successfully completed my goal: $goalTitle.
 
-      await launchUrl(authorizationUrl);
-    } catch (error) {
-      showTextSnackBar('Error connecting with LinkedIn: $error');
-    }
+Description: $goalDescription
+
+Key Tasks Completed:
+${goalTasks.map((task) => '- $task').join('\n')}
+
+This journey has been incredibly rewarding, and I'm excited to continue pushing forward with new goals in $goalCategory.
+
+#GoalAchieved #LinkedInGoals #PersonalGrowth #Achievement
+''';
   }
 
-  Future<void> shareOnLinkedIn(BuildContext context) async {
-    String? token = context.watch<MyAppState>().token;
-    if (token == null){
-      getAccessToken();
+
+  Future<void> shareOnLinkedIn(BuildContext context, {
+    required String goalTitle,
+    required String goalCategory,
+    required String goalDescription,
+    required List<Task> goalTasks,
+  }) async {
+    String? token = context.read<MyAppState>().token;
+  
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You must be signed in with LinkedIn to share a post.'),
+        ),
+      );
+      return;
     }
     try {
-      var userId = await fetchLinkedInUserID(token!);
+      var userId = await fetchLinkedInUserID(token);
 
       const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
       final headers = {
@@ -112,7 +100,14 @@ class GoalModalSheetState extends State<GoalModalSheet> {
         "lifecycleState": "PUBLISHED",
         "specificContent": {
           "com.linkedin.ugc.ShareContent": {
-            "shareCommentary": {"text": "I completed my goal!"},
+            "shareCommentary": {
+              "text": createLinkedInPost(
+                goalTitle: goalTitle,
+                goalCategory: goalCategory,
+                goalDescription: goalDescription,
+                goalTasks: goalTasks,
+              )
+            },
             "shareMediaCategory": "NONE"
           }
         },
@@ -396,8 +391,16 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           ),
                           const SizedBox(width: 20),
                           CustomImageButton(
-                            image: const AssetImage('assets/share.png'),
-                             onTap: () {shareOnLinkedIn(context);},
+                            image: const AssetImage('assets/Share.png'),
+                             onTap: () {
+                              shareOnLinkedIn(
+                                context,
+                                goalTitle: widget.title,
+                                goalCategory: currentGoal.category,
+                                goalDescription: currentGoal.description,
+                                goalTasks: currentGoal.tasks,
+                              );
+                            },
                             height: 35,
                             width: 150,
                           ),
