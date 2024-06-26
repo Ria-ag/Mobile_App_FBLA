@@ -351,7 +351,13 @@ class MyAppState extends ChangeNotifier {
 
   //This method removes the task from the task list entirely
   void deleteTask(title, index) {
+    if (findGoal(title).tasks[index].isChecked) {
+      findGoal(title).completedTasks--;
+      totalCompletedTasks--;
+    }
     findGoal(title).tasks.removeAt(index);
+    findGoal(title).totalTasks--;
+
     notifyListeners();
   }
 
