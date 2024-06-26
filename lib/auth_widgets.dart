@@ -11,7 +11,6 @@ import 'main.dart';
 import 'my_app_state.dart';
 import 'theme.dart';
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 import 'package:uni_links/uni_links.dart';
 
@@ -35,7 +34,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   // These string variables are used to display error text below the username and password
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
-
   StreamSubscription? _sub;
 
   @override
@@ -82,7 +80,6 @@ class _LoginWidgetState extends State<LoginWidget> {
     _sub?.cancel();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -195,13 +192,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ],
               ),
               const SizedBox(height: 12.5),
-
-              CustomImageButton(
-                height: 50,
-                width: 200,
-                image: const AssetImage('assets/sign_in.png'),
-                onTap: () => loginWithLinkedIn(),
-              ),
             ],
           ),
         ),
@@ -259,7 +249,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     // Once this method is completed, the loading page is no longer shown
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
-
+  
   Future<void> loginWithLinkedIn() async {
     const clientId = '86w3jl8a5w2h0t';
     const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
