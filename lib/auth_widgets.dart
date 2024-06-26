@@ -34,7 +34,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   // These string variables are used to display error text below the username and password
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
-  String? token = '';
+  String? token;
+  Map<String, dynamic>? profileInfo;
   StreamSubscription? _sub;
 
   @override
@@ -44,16 +45,16 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   void _initDeepLinkListener() {
-    _sub = linkStream.listen((String? link) {
+    _sub = linkStream.listen((String? link) async {
       if (link != null) {
         print(link);
         final uri = Uri.parse(link);
         if (uri.host == 'auth') {
+          await fetchLinkedInProfile(uri.queryParameters['access_token']!);
           setState(() {
             token = uri.queryParameters['access_token'];
           });
           print("Token: $token");
-          fetchLinkedInProfile(token!);
         }
       }
     }, onError: (error) {
@@ -61,7 +62,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     });
   }
 
-  void fetchLinkedInProfile(String accessToken) async {
+  Future fetchLinkedInProfile(String accessToken) async {
     const profileUrl = 'https://api.linkedin.com/v2/userinfo';
     final headers = {'Authorization': 'Bearer $accessToken'};
 
@@ -69,7 +70,11 @@ class _LoginWidgetState extends State<LoginWidget> {
         await http.get(Uri.parse(profileUrl), headers: headers);
     if (profileResponse.statusCode == 200) {
       final profileData = json.decode(profileResponse.body);
-      print('LinkedIn Profile: $profileData');
+
+      setState(() {
+        profileInfo = profileData as Map<String, dynamic>;
+        print('LinkedIn Profile: $profileInfo');
+      });
     } else {
       showTextSnackBar(
           'Failed to fetch LinkedIn profile: ${profileResponse.statusCode}\nError: ${profileResponse.body}');
@@ -86,9 +91,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (token != null) {
+    if (token != null && profileInfo != null) {
       Future.delayed(Duration.zero, () async {
-        context.read<MyAppState>().setToken(token!);
+        context.read<MyAppState>().setProfile(token!, profileInfo!);
       });
     }
     return Column(
@@ -276,7 +281,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         'response_type': 'code',
         'client_id': clientId,
         'redirect_uri': redirectUrl,
-        'scope': 'openid email w_member_social',
+        'scope': 'openid email w_member_social profile',
       });
 
       await launchUrl(authorizationUrl);

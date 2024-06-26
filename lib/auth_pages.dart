@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileapp/my_app_state.dart';
+import 'package:provider/provider.dart';
 import 'auth_widgets.dart';
 import 'main.dart';
 import 'theme.dart';
@@ -18,24 +20,30 @@ class AuthNav extends StatefulWidget {
 class _AuthNavState extends State<AuthNav> {
   @override
   Widget build(BuildContext context) {
-    // Root-level navigation depends on a stream of user authentication state changes
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            // If there's an error, display the error message page
-            return errorMessage(snapshot.error, context);
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            // If waiting, display a non-animated-logo loading page
-            return const AnimatedLogo();
-          } else if (snapshot.hasData) {
-            // If the user is signed in, send navigation to the verify email page
-            return const VerifyEmailPage();
-          } else {
-            // Else, take the user to the authentication page (log in or sign up)
-            return const AuthPage();
-          }
-        });
+    if (context.watch<MyAppState>().token == null) {
+      // Root-level navigation depends on a stream of user authentication state changes
+      return StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              // If there's an error, display the error message page
+              return errorMessage(snapshot.error, context);
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              // If waiting, display a non-animated-logo loading page
+              return const AnimatedLogo();
+            } else if (snapshot.hasData) {
+              // If the user is signed in, send navigation to the verify email page
+              return const VerifyEmailPage();
+            } else {
+              // Else, take the user to the authentication page (log in or sign up)
+              return const AuthPage();
+            }
+          });
+    } else {
+      print("token: ${context.read<MyAppState>().token}");
+      return Placeholder();
+      // FutureBuilder(future: future, builder: builder);
+    }
   }
 }
 
@@ -445,5 +453,15 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (emailVerified) {
       timer?.cancel();
     }
+  }
+}
+
+class LinkedInAuthPage extends StatelessWidget {
+  const LinkedInAuthPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }

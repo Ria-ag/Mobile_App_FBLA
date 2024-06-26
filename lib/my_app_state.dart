@@ -15,11 +15,14 @@ import 'profile/experience.dart';
 class MyAppState extends ChangeNotifier {
   late AppUser appUser;
   String? token;
+  Map<String, dynamic> profileInfo = {};
   double serviceHrs = 0;
   int xpNum = 0;
 
-  void setToken(String newToken) {
+  void setProfile(String newToken, Map<String, dynamic> newProfileInfo) {
     token = newToken;
+    profileInfo = newProfileInfo;
+
     notifyListeners();
   }
 
