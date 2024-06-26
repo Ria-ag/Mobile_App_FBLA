@@ -34,6 +34,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   // These string variables are used to display error text below the username and password
   String _emailErrorMessage = '';
   String _passwordErrorMessage = '';
+  String? token = '';
   StreamSubscription? _sub;
 
   @override
@@ -48,7 +49,9 @@ class _LoginWidgetState extends State<LoginWidget> {
         print(link);
         final uri = Uri.parse(link);
         if (uri.host == 'auth') {
-          final token = uri.queryParameters['access_token'];
+          setState(() {
+            token = uri.queryParameters['access_token'];
+          });
           print("Token: $token");
           fetchLinkedInProfile(token!);
         }
@@ -83,6 +86,11 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (token != null) {
+      Future.delayed(Duration.zero, () async {
+        context.read<MyAppState>().setToken(token!);
+      });
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

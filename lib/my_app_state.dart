@@ -13,12 +13,15 @@ import 'profile/experience.dart';
 
 // This is the ChangeNotifier model used to manage profile page states
 class MyAppState extends ChangeNotifier {
-  final userRef = FirebaseFirestore.instance.collection('users').doc(
-        FirebaseAuth.instance.currentUser!.email!,
-      );
   late AppUser appUser;
+  String? token;
   double serviceHrs = 0;
   int xpNum = 0;
+
+  void setToken(String newToken) {
+    token = newToken;
+    notifyListeners();
+  }
 
   void createLocalUser(String name, String school, int year) {
     appUser = AppUser.newUser(name: name, school: school, year: year);
@@ -27,7 +30,12 @@ class MyAppState extends ChangeNotifier {
   Future createUserInDB() async {
     print('Creating user in database...');
     try {
-      await userRef.set(appUser.toMap());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser!.email!,
+          )
+          .set(appUser.toMap());
       return Future.value();
     } catch (error, stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
@@ -38,7 +46,13 @@ class MyAppState extends ChangeNotifier {
   Future readUser() async {
     print('Retrieving user data from database...');
     try {
-      DocumentSnapshot<Map<String, dynamic>> value = await userRef.get();
+      DocumentSnapshot<Map<String, dynamic>> value =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(
+                FirebaseAuth.instance.currentUser!.email!,
+              )
+              .get();
       Map<String, dynamic> userMap = value.data()!;
       appUser = AppUser.fromMap(userMap);
       appUser.pfp = (appUser.pfpPath.isEmpty) ? null : File(appUser.pfpPath);
@@ -58,7 +72,12 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await userRef.update({"isChecked": appUser.isChecked});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser!.email!,
+          )
+          .update({"isChecked": appUser.isChecked});
       showTextSnackBar('Account info saved');
     } catch (error) {
       showTextSnackBar('Error saving account info to database: $error');
@@ -73,7 +92,12 @@ class MyAppState extends ChangeNotifier {
 
   saveChecklistInDB() async {
     try {
-      await userRef.update({"isChecked": appUser.isChecked});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser!.email!,
+          )
+          .update({"isChecked": appUser.isChecked});
       showTextSnackBar('Page settings saved');
     } catch (error) {
       showTextSnackBar('Error saving page settings to database: $error');
@@ -99,7 +123,12 @@ class MyAppState extends ChangeNotifier {
 
       await appUser.pfp!.copy('$path/${basename(pickedImage.path)}');
       appUser.pfpPath = appUser.pfp!.path;
-      await userRef.update({'pfpPath': appUser.pfpPath});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser!.email!,
+          )
+          .update({'pfpPath': appUser.pfpPath});
     } catch (error) {
       showTextSnackBar('Error retrieving or saving image: $error');
     }
@@ -167,7 +196,12 @@ class MyAppState extends ChangeNotifier {
         totalHrs();
       }
       notifyListeners();
-      await userRef.update({'xpList.$tileIndex': xps});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser!.email!,
+          )
+          .update({'xpList.$tileIndex': xps});
       showTextSnackBar('Experiences saved');
     } catch (error) {
       showTextSnackBar('Error saving experiences to database: $error');
