@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
 // This class builds the modal sheet for each goal and requires a title
 class GoalModalSheet extends StatefulWidget {
@@ -31,95 +29,50 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     FocusScope.of(context).unfocus();
   }
 
-  Future<String?> getAccessToken() async {
-    const clientId = '7862z3h817owqa';
-    const clientSecret = '7862z3h817owqa';
-    const redirectUrl = 'http://localhost:51914/';
+  // Future<void> shareOnLinkedIn(BuildContext context) async {
+  //   String token = context.watch<MyAppState>().token;
+  //   try {
+  //     if (token != "") {
+  //       const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
+  //       final headers = {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       };
 
-    // Build authorization URL
-    const authorizationUrl =
-        'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=r_liteprofile%20w_member_social';
+  //       final postData = {
+  //         "author": "urn:li:person:ria-agarwal-b7a57b27b",
+  //         "lifecycleState": "PUBLISHED",
+  //         "specificContent": {
+  //           "com.linkedin.ugc.ShareContent": {
+  //             "shareCommentary": {"text": "I completed my goal!"},
+  //             "shareMediaCategory": "NONE"
+  //           }
+  //         },
+  //         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+  //       };
 
-    try {
-      final result = await FlutterWebAuth2.authenticate(
-        url: authorizationUrl,
-        callbackUrlScheme: redirectUrl,
-      );
+  //       final response = await http.post(
+  //         Uri.parse(apiUrl),
+  //         headers: headers,
+  //         body: jsonEncode(postData),
+  //       );
 
-      // Extract authorization code from the result URL
-      final code = Uri.parse(result).queryParameters['code'];
-
-      // Exchange authorization code for access token
-      const tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
-      final tokenResponse = await http.post(
-        Uri.parse(tokenUrl),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: {
-          'grant_type': 'authorization_code',
-          'code': code!,
-          'redirect_uri': redirectUrl,
-          'client_id': clientId,
-          'client_secret': clientSecret,
-        },
-      );
-
-      // Parse and return access token from response
-      if (tokenResponse.statusCode == 200) {
-        final data = jsonDecode(tokenResponse.body);
-        return data['access_token'];
-      } else {
-        throw Exception('Failed to retrieve access token');
-      }
-    } catch (error) {
-      return null;
-    }
-  }
-
-  Future<void> shareOnLinkedIn(BuildContext context) async {
-    try {
-      String? accessToken = await getAccessToken();
-
-      if (accessToken != null) {
-        const apiUrl = 'https://api.linkedin.com/v2/ugcPosts';
-        final headers = {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        };
-
-        final postData = {
-          "author": "urn:li:person:ria-agarwal-b7a57b27b",
-          "lifecycleState": "PUBLISHED",
-          "specificContent": {
-            "com.linkedin.ugc.ShareContent": {
-              "shareCommentary": {"text": "I completed my goal!"},
-              "shareMediaCategory": "NONE"
-            }
-          },
-          "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
-        };
-
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          headers: headers,
-          body: jsonEncode(postData),
-        );
-
-        if (response.statusCode == 201) {
-          showTextDialog('Success', 'Post shared successfully on LinkedIn.');
-        } else {
-          showTextDialog('Error',
-              'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
-        }
-      } else {
-        // Handle case where access token is null (user canceled authentication)
-        showTextDialog('Error', 'Failed to obtain access token for LinkedIn.');
-      }
-    } catch (error) {
-      // Handle generic errors
-      showTextDialog(
-          'Error', 'Failed to share post on LinkedIn. Error: $error');
-    }
-  }
+  //       if (response.statusCode == 201) {
+  //         showTextDialog('Success', 'Post shared successfully on LinkedIn.');
+  //       } else {
+  //         showTextDialog('Error',
+  //             'Failed to share post on LinkedIn. Status Code: ${response.statusCode}');
+  //       }
+  //     } else {
+  //       // Handle case where access token is null (user canceled authentication)
+  //       showTextDialog('Error', 'Failed to obtain access token for LinkedIn.');
+  //     }
+  //   } catch (error) {
+  //     // Handle generic errors
+  //     showTextDialog(
+  //         'Error', 'Failed to share post on LinkedIn. Error: $error');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -380,7 +333,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
                           const SizedBox(width: 20),
                           CustomImageButton(
                             image: const AssetImage('assets/share.png'),
-                            onTap: () => shareOnLinkedIn(context),
+                            // onTap: () {shareOnLinkedIn(context);},
                             height: 35,
                             width: 150,
                           ),
