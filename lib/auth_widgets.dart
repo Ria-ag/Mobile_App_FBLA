@@ -1,11 +1,9 @@
 // This file contains smaller widgets used during the user authentication flow
 
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'auth_pages.dart';
@@ -13,6 +11,7 @@ import 'main.dart';
 import 'my_app_state.dart';
 import 'theme.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 import 'package:uni_links/uni_links.dart';
 
@@ -48,19 +47,32 @@ class _LoginWidgetState extends State<LoginWidget> {
   void _initDeepLinkListener() {
     _sub = linkStream.listen((String? link) {
       if (link != null) {
-        print("in listener");
         print(link);
         final uri = Uri.parse(link);
         if (uri.host == 'auth') {
           final token = uri.queryParameters['access_token'];
-          final String profile = jsonDecode(uri.queryParameters['profile']!);
           print("Token: $token");
-          print("Profile: $profile");
+          fetchLinkedInProfile(token!);
         }
       }
     }, onError: (err) {
       print('Failed to receive deep link: $err');
     });
+  }
+
+  void fetchLinkedInProfile(String accessToken) async {
+    const profileUrl = 'https://api.linkedin.com/v2/userinfo';
+    final headers = {'Authorization': 'Bearer $accessToken'};
+
+    final profileResponse =
+        await http.get(Uri.parse(profileUrl), headers: headers);
+    if (profileResponse.statusCode == 200) {
+      final profileData = json.decode(profileResponse.body);
+      print('LinkedIn Profile: $profileData');
+    } else {
+      print(
+          'Failed to fetch LinkedIn profile: ${profileResponse.statusCode}, ${profileResponse.body}');
+    }
   }
 
   @override
@@ -250,7 +262,6 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Future<void> loginWithLinkedIn() async {
     const clientId = '86w3jl8a5w2h0t';
-    const clientSecret = 'WPL_AP1.8nMUdjJTIywYcbwN.d6Z3lw==';
     const redirectUrl = 'https://linkedin-oauth-server.onrender.com/auth';
 
     // Construct the url
@@ -262,10 +273,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       'scope': 'openid email w_member_social',
     });
 
-    await FlutterWebAuth2.authenticate(
-      url: authorizationUrl.toString(),
-      callbackUrlScheme: 'mobileapp',
-    );
+    await launchUrl(authorizationUrl);
   }
 }
 
