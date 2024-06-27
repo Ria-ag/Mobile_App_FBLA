@@ -6,8 +6,13 @@ By Jishnu Mehta, Ria Agarwal
 Woodinville High School  
 Woodinville, WA
 
+RISE, available on both iOS and Android, is a portfolio application designed to assist high school students in planning their futures, from college applications to resume development and beyond. Created for the FBLA Mobile Application 2023-2024 event, RISE enables students to create a personalized portfolio showcasing their high school experiences, including athletics, art, clubs, community service, classes, awards, and more.
 
-RISE, available on both iOS and Android, is catered to assisting high school students with planning their future, from college applications to resume development and beyond. The app was created for the FBLA Mobile Application 2023-2024 event and enables students to create a personalized portfolio to display all of their high school experiences, including athletics, performing arts, clubs and organizations, community service hours, honors classes, tests, awards, and projects. Furthermore, these experiences can be converted to a file to print or share with others through social media. The app takes in very limited personal information and only stores data locally, making it a safe app for high schoolers. To foster a personal vision and goal-setting habits, the app also contains unique goals and analytics features, using research-backed methods to help them set and track goals. Download the app today to rise up!
+The app features a sleek, intuitive UI and leverages Firebase for robust database and authentication services. Users can create aesthetic, professional resumes to represent their experiences, which can be printed or shared on social media. Integration with various LinkedIn APIs, from creating posts to exporting experiences to LinkedIn profiles, further streamlines the process of connecting students with future opportunities.
+
+Prioritizing safety and privacy, RISE collects minimal personal information and adheres to best security practices, using data solely for app functionality. To foster personal vision and goal-setting habits, the app includes unique goals and analytics tools based on research-backed methods, helping students set and track their goals effectively.
+
+Download the app today and RISE up towards your future!
 
 
 ## Features:
@@ -33,8 +38,8 @@ RISE, available on both iOS and Android, is catered to assisting high school stu
 **/lib**  
 > This folder contains all the files that create the app. It has a folder in it for all the files for the goals page and a folder for all the files for the profile page, as well as single files for the rest of the pages of the app.
 
-**/Documentation**
-> Contains a PDF overview of the app along with 
+**/compiled_app**
+> Contains old and new apk versions of tha app as well as a documentation PDF.  
 
 **/assets**
 > This folder includes all images used in the app.
@@ -52,6 +57,8 @@ Flutter                 | App Development Framework
 VS Code                 | IDE  
 Android Studio, Chrome  | Supports Flutter Testing  
 GitHub                  | VCS  
+Javascript, Render      | Web Server Script and Deployment
+Firebase                | Auth and Database Services
 
 To use our app, download app-release.apk in the compliled_app folder and open it to install.
 
@@ -61,20 +68,27 @@ To use our app, download app-release.apk in the compliled_app folder and open it
 **Development Environment:** Visual Studio Code (VS Code)  
 **Platform:** Android, iOS, limited web functionality  
 **Dependencies:**
-- Image_picker 1.0.2
-- Pdf 3.10.8
-- Printing 5.12.0
-- Cupertino_icons 1.0.6
-- Provider 6.1.2
-- Google_fonts 6.2.0
-- Shared_preferences 2.2.3
-- Intl 0.19.0
-- Path_provider 2.1.3
-- Path 1.9.0
-- Flutter_expandable_fab 2.0.0
-- Fl_chart 0.67.0
-- Share_plus 9.0.0
-- Pdfx 2.6.0
+- image_picker: ^1.0.2
+- pdf: ^3.10.8
+- printing: ^5.12.0
+- cupertino_icons: ^1.0.6
+- provider: ^6.1.2
+- google_fonts: ^6.2.0
+- intl: ^0.19.0
+- path_provider: ^2.1.3
+- path: ^1.9.0
+- flutter_expandable_fab: ^2.0.0
+- fl_chart: ^0.67.0
+- share_plus: ^9.0.0
+- pdfx: ^2.6.0
+- dot_navigation_bar: ^1.0.2
+- firebase_core: ^3.0.0
+- firebase_auth: ^5.0.0
+- cloud_firestore: ^5.0.1
+- http: ^1.2.1
+- url_launcher: ^6.3.0
+- uni_links: ^0.5
+
 
  
 ## Getting Started
@@ -100,13 +114,9 @@ Run the App:
 flutter run
 ````
 
-## Resources Used  
+## Other Resources Used  
 **Software**  
-Dart, Git, Procreate
-
-**Packages**  
-Image_picker 1.0.2, Pdf 3.10.8, Printing 5.12.0, Cupertino_icons 1.0.6, Provider 6.1.2, Google_fonts 6.2.0, Shared_preferences 2.2.3, Intl 0.19.0, Path_provider 2.1.3, Path 1.9.0, Flutter_expandable_fab 2.0.0, Fl_chart 0.67.0, Share_plus 9.0.0, Pdfx 2.6.0
-
+Dart, Javascript, Git, Procreate, Figma
 
 ## License
 MIT License
