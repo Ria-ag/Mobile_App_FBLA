@@ -331,7 +331,7 @@ class MyAppState extends ChangeNotifier {
     if (findGoal(title).totalTasks == 0) {
       return 0.0;
     }
-    notifyListeners();
+    // No notifyListeners(); in this method
     return findGoal(title).completedTasks / findGoal(title).totalTasks;
   }
 

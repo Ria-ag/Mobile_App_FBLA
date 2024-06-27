@@ -226,62 +226,60 @@ class GoalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              title: Column(
-                children: [
-                  Row(
+    return Consumer<MyAppState>(
+      builder: (context, myAppState, _) {
+        final progress = myAppState.calculateProgress(title);
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  title: Column(
                     children: [
-                      Text(title,
-                          style: Theme.of(context).textTheme.headlineSmall),
-                      const Spacer(),
-                      // This button opens a modal sheet for each goal with its data
-                      IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) {
-                                return GoalModalSheet(title: title);
+                      Row(
+                        children: [
+                          Text(title,
+                              style: Theme.of(context).textTheme.headlineSmall),
+                          const Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return GoalModalSheet(title: title);
+                                  },
+                                );
                               },
-                            );
-                          },
-                          icon: const Icon(Icons.edit)),
-                      // This button removes the goal from the list
-                      IconButton(
-                        onPressed: () {
-                          context.read<MyAppState>().removeGoal(title);
-                        },
-                        icon: const Icon(Icons.remove),
+                              icon: const Icon(Icons.edit)),
+                          IconButton(
+                            onPressed: () {
+                              myAppState.removeGoal(title);
+                            },
+                            icon: const Icon(Icons.remove),
+                          ),
+                        ],
+                      ),
+                      LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ],
                   ),
-                  // Creates a bar showing the progess of the goal
-                  Consumer<MyAppState>(builder: (context, myAppState, _) {
-                    final progress = myAppState.calculateProgress(title);
-
-                    return LinearProgressIndicator(
-                      value: progress,
-                      backgroundColor: Colors.grey[200],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.primary,
-                      ),
-                    );
-                  }),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
