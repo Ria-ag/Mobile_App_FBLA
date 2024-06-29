@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 import 'goals_analytics/goals_analytics_page.dart';
 import 'profile/experience.dart';
 import 'profile/profile_page.dart';
-import 'profile_sharing.dart';
+import 'home_page.dart';
 import 'settings_page.dart';
 import 'theme.dart';
 
