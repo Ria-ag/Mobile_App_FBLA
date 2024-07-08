@@ -4,7 +4,7 @@
 
 By Jishnu Mehta, Ria Agarwal  
 Woodinville High School  
-Woodinville, WA
+Woodinville, WA  
 2023-2024 Mobile App Development National Champions
 
 RISE, available on both iOS and Android, is a portfolio application designed to assist high school students in planning their futures, from college applications to resume development and beyond. Created for the FBLA Mobile Application 2023-2024 event, RISE enables students to create a personalized portfolio showcasing their high school experiences, including athletics, art, clubs, community service, classes, awards, and more.
