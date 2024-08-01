@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/profile/experience.dart';
+import 'experience.dart';
 import '../my_app_state.dart';
 import 'package:provider/provider.dart';
 

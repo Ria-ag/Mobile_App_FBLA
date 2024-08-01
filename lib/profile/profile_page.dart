@@ -183,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // This is where the profile page contents are laid out
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
         // The stack first has the blue profile header with the profile picture and main information
         child: Stack(children: [

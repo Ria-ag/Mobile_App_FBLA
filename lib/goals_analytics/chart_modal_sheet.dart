@@ -137,15 +137,15 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
               TextField(
                   controller: TextEditingController(),
                   decoration: underlineInputDecoration(context),
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.background)),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.surface)),
             ),
             DataCell(
               TextField(
                   controller: TextEditingController(),
                   decoration: underlineInputDecoration(context),
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.background)),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.surface)),
             ),
           ],
         ),
@@ -260,7 +260,7 @@ class _ChartDataInputWidgetState extends State<ChartDataInputWidget> {
                             style: BorderStyle.solid,
                             color: Colors.grey),
                       ),
-                      dataRowColor: MaterialStateColor.resolveWith(
+                      dataRowColor: WidgetStateColor.resolveWith(
                           (states) => const Color.fromARGB(255, 88, 108, 139)),
                       columns: [
                         DataColumn(

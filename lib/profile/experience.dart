@@ -97,7 +97,7 @@ class _ExperienceState extends State<Experience> {
       padding: const EdgeInsets.symmetric(vertical: 7.5),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [shadow],
         ),
@@ -391,7 +391,7 @@ class _ExperienceState extends State<Experience> {
         ],
       ),
       // If the experiences being edited are awards, then they can be added to LinkedIn
-      // They are added as certifcations using LinkedIn's Add Certification API
+      // They are added as certifications using LinkedIn's Add Certification API
       subtitle: (widget.tileIndex == 3)
           ? Row(
               children: [
@@ -493,7 +493,7 @@ class _ExperienceState extends State<Experience> {
     );
   }
 
-  // The share to LinkedIn method to add an award as a cetification to LinkedIn
+  // The share to LinkedIn method to add an award as a certification to LinkedIn
   shareToLinkedIn(String name, String award) async {
     String url =
         "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=$name&organizationName=$award";

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/my_app_state.dart';
+import 'my_app_state.dart';
 import 'package:provider/provider.dart';
 import 'theme.dart';
 
@@ -126,7 +126,7 @@ class _SecurityState extends State<Security> {
           onPressed: () {
             final formState = _formKey.currentState;
             if (formState != null && formState.validate()) {
-              context.read<MyAppState>().saveUserInfoLocalandDB(
+              context.read<MyAppState>().saveUserInfoLocalAndDB(
                     name,
                     school,
                     int.parse(year),
@@ -316,7 +316,7 @@ class Terms extends StatelessWidget {
   }
 }
 
-// This class customizes and standarizes the settings elevated buttons
+// This class customizes and standardizes the settings elevated buttons
 class SettingsElevatedButton extends StatelessWidget {
   const SettingsElevatedButton({
     super.key,

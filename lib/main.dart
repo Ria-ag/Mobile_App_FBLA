@@ -1,7 +1,7 @@
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/auth_pages.dart';
-import 'package:mobileapp/my_app_state.dart';
+import 'auth_pages.dart';
+import 'my_app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // These are the providers used in the app for state management across widgets
-    // Currently, there's only one, but the option of creating mutliple is kept
+    // Currently, there's only one, but the option of creating multiple is kept
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<MyAppState>(create: (context) => MyAppState()),

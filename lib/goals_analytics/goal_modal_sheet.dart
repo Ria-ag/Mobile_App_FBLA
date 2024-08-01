@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/goals_analytics/goals_analytics_widgets.dart';
+import 'goals_analytics_widgets.dart';
 import '../my_app_state.dart';
 import '../theme.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +48,7 @@ class GoalModalSheetState extends State<GoalModalSheet> {
     }
   }
 
-// This is a method that returns a multililne string, which will be used for the post
+// This is a method that returns a multiline string, which will be used for the post
   String createLinkedInPost({
     required String goalTitle,
     required String goalCategory,
@@ -119,7 +119,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
         headers: headers,
         body: jsonEncode(postData),
       );
-      // A text dialog is shown based on sucess or failure
+      // A text dialog is shown based on success or failure
       if (response.statusCode == 201) {
         showTextDialog('Success', 'Post shared successfully on LinkedIn.');
       } else {
@@ -314,7 +314,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                           },
                           icon: Icon(
                             Icons.add,
-                            color: Theme.of(context).colorScheme.background,
+                            color: Theme.of(context).colorScheme.surface,
                             size: 15,
                           ),
                         ),
@@ -373,7 +373,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
                       Row(
                         children: [
                           Expanded(
-                            // Here, users can add their goal as an experience after filling out necessary ingotmation
+                            // Here, users can add their goal as an experience after filling out necessary information
                             child: CustomElevatedButton(
                                 // To add a goal as an experience, the goal must be saved and the category cannot be 'Other'
                                 onPressed: () => (editable ||
@@ -555,7 +555,7 @@ This journey has been incredibly rewarding, and I'm excited to continue pushing 
               ),
             ),
           ),
-          // Here, the user either cancels or perofrms this action
+          // Here, the user either cancels or performs this action
           actions: <Widget>[
             TextButton(
               onPressed: () {

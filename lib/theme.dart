@@ -25,7 +25,7 @@ final theme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey).copyWith(
     secondary: const Color.fromARGB(255, 20, 49, 92),
     primary: const Color.fromARGB(255, 218, 124, 96),
-    background: Colors.white,
+    surface: Colors.white,
   ),
   // These are the text styles in the app
   // The font used is Poppins, retrieved from Google Fonts
@@ -73,7 +73,7 @@ final theme = ThemeData(
   ),
   textButtonTheme: const TextButtonThemeData(
     style: ButtonStyle(
-      iconColor: MaterialStatePropertyAll(Colors.black),
+      iconColor: WidgetStatePropertyAll(Colors.black),
     ),
   ),
   iconButtonTheme: const IconButtonThemeData(),
@@ -91,9 +91,9 @@ final theme = ThemeData(
     textStyle: GoogleFonts.poppins(fontSize: 14),
   ),
   checkboxTheme: CheckboxThemeData(
-    fillColor: MaterialStateProperty.resolveWith<Color>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.selected)) {
+    fillColor: WidgetStateProperty.resolveWith<Color>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
           return const Color.fromARGB(255, 20, 49, 92);
         }
         return Colors.white;
@@ -242,21 +242,20 @@ InputDecoration underlineInputDecoration(
     hintText: hint,
     labelText: label,
     floatingLabelBehavior: (alwaysFloat) ? FloatingLabelBehavior.always : null,
-    labelStyle: MaterialStateTextStyle.resolveWith((states) {
+    labelStyle: WidgetStateTextStyle.resolveWith((states) {
       final Color color;
-      color =
-          (states.contains(MaterialState.error)) ? Colors.red : Colors.black;
+      color = (states.contains(WidgetState.error)) ? Colors.red : Colors.black;
       return TextStyle(color: color);
     }),
-    floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+    floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
       final Color color;
-      if (states.contains(MaterialState.focused)) {
-        color = (states.contains(MaterialState.error)
+      if (states.contains(WidgetState.focused)) {
+        color = (states.contains(WidgetState.error)
             ? Colors.red
             : Theme.of(context).colorScheme.secondary);
       } else {
         color =
-            (states.contains(MaterialState.error)) ? Colors.red : Colors.black;
+            (states.contains(WidgetState.error)) ? Colors.red : Colors.black;
       }
       return TextStyle(color: color, height: 0.5);
     }),

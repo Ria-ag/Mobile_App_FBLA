@@ -75,7 +75,6 @@ class _LoginWidgetState extends State<LoginWidget> {
 
       setState(() {
         profileInfo = profileData as Map<String, dynamic>;
-        print('LinkedIn Profile: $profileInfo');
       });
     } else {
       showTextSnackBar(
@@ -156,7 +155,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               const SizedBox(height: 10),
               // This is the forgot password button
               MouseRegion(
-                cursor: MaterialStateMouseCursor.clickable,
+                cursor: WidgetStateMouseCursor.clickable,
                 child: GestureDetector(
                   child: Text(
                     'Forgot Password?',
@@ -302,9 +301,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
 // This widget displays and handles signing up
 class SignUpWidget extends StatefulWidget {
-  const SignUpWidget({super.key, required this.switchtoSignIn});
+  const SignUpWidget({super.key, required this.switchToSignIn});
 
-  final VoidCallback switchtoSignIn;
+  final VoidCallback switchToSignIn;
 
   @override
   State<SignUpWidget> createState() => _SignUpWidgetState();
@@ -388,7 +387,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ),
                 validator: (value) => noEmptyField(value),
               ),
-              // This is where the user enters their passowrd
+              // This is where the user enters their password
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(
@@ -443,7 +442,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     showTermsAndConditionsDialog(context);
                   },
                   style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.white),
+                    backgroundColor: WidgetStatePropertyAll(Colors.white),
                   ),
                   child: const Text('View Terms and Conditions'),
                 ),
@@ -472,7 +471,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   children: [
                     TextSpan(
                       recognizer: TapGestureRecognizer()
-                        ..onTap = widget.switchtoSignIn,
+                        ..onTap = widget.switchToSignIn,
                       text: 'Sign in',
                       style: TextStyle(
                         color: Theme.of(context).primaryColorLight,
@@ -730,9 +729,8 @@ class _LinkedInSignUpWidgetState extends State<LinkedInSignUpWidget> {
                         showTermsAndConditionsDialog(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        foregroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(Colors.white),
+                        foregroundColor: WidgetStateProperty.all(
                             Theme.of(context).colorScheme.primary),
                       ),
                       child: const Text('View Terms and Conditions'),

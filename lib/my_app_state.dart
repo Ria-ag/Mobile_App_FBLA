@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobileapp/goals_analytics/goal_modal_sheet.dart';
-import 'package:mobileapp/theme.dart';
+import 'goals_analytics/goal_modal_sheet.dart';
+import 'theme.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'appuser.dart';
@@ -59,7 +59,6 @@ class MyAppState extends ChangeNotifier {
   }
 
   Future createUserInDB() async {
-    print('Creating user in database...');
     try {
       await getUserRef().set(appUser.toMap());
       return Future.value();
@@ -70,7 +69,6 @@ class MyAppState extends ChangeNotifier {
   }
 
   Future readUser() async {
-    print('Retrieving user data from database...');
     try {
       DocumentSnapshot<Map<String, dynamic>> value = await getUserRef().get();
       Map<String, dynamic> userMap = value.data()!;
@@ -85,7 +83,7 @@ class MyAppState extends ChangeNotifier {
     }
   }
 
-  saveUserInfoLocalandDB(String name, String school, int year) async {
+  saveUserInfoLocalAndDB(String name, String school, int year) async {
     appUser.name = name;
     appUser.school = school;
     appUser.year = year;
@@ -343,7 +341,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // This method takes a title and addes to the completed tasks
+  // This method takes a title and adds to the completed tasks
   void addCompletedTasks(title) {
     findGoal(title).completedTasks++;
     totalCompletedTasks++;

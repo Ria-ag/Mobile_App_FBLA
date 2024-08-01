@@ -125,7 +125,7 @@ class _ChartTileState extends State<ChartTile> {
 }
 
 // This is where data about the chart itself is stored
-//The widget mplements the fl_charts package to store chart data
+//The widget implements the fl_charts package to store chart data
 class CustomLineChart extends StatelessWidget {
   const CustomLineChart({required this.id, super.key});
 
@@ -235,7 +235,7 @@ class GoalTile extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 15),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListTile(

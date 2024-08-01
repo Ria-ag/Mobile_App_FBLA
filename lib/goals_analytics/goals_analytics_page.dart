@@ -129,7 +129,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                     padding: const EdgeInsets.only(left: 25),
                     child: Text("Goals",
                         style: theme.textTheme.displayMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.background)),
+                            color: Theme.of(context).colorScheme.surface)),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 25,
@@ -147,11 +147,11 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
                         : Padding(
                             padding: const EdgeInsets.only(left: 25, top: 15),
                             child: Text(
-                                "Looks a little empty in here. Click on the add button in the bottom right to get started!",
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background)),
+                              "Looks a little empty in here. Click on the add button in the bottom right to get started!",
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                            ),
                           ),
                   ),
                   const SizedBox(height: 10),
@@ -287,7 +287,7 @@ class _GoalsAnalyticsPageState extends State<GoalsAnalyticsPage> {
   }
 }
 
-// This custom anayltics tile widget is to display a large number or text with a smaller label in a tile
+// This custom analytics tile widget is to display a large number or text with a smaller label in a tile
 class AnalyticTile extends StatelessWidget {
   const AnalyticTile({
     super.key,

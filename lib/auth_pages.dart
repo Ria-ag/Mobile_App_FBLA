@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileapp/my_app_state.dart';
+import 'my_app_state.dart';
 import 'package:provider/provider.dart';
 import 'auth_widgets.dart';
 import 'main.dart';
@@ -146,8 +146,10 @@ class _AuthPageState extends State<AuthPage> {
                 const Image(image: AssetImage("assets/logo.png"), height: 60),
                 Text(
                   'Rise',
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.background),
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayMedium!
+                      .copyWith(color: Theme.of(context).colorScheme.surface),
                 ),
                 const SizedBox(height: 50),
               ],
@@ -160,7 +162,7 @@ class _AuthPageState extends State<AuthPage> {
                 child: SingleChildScrollView(
                   child: login
                       ? LoginWidget(switchToSignUp: toggle)
-                      : SignUpWidget(switchtoSignIn: toggle),
+                      : SignUpWidget(switchToSignIn: toggle),
                 ),
               ),
             ),
@@ -445,7 +447,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
 // This method checks whether the user is verified
-// It reloads the current user's data, and if they are verfied, cancels the timer
+// It reloads the current user's data, and if they are verified, cancels the timer
   Future checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser!.reload();
     if (!mounted) {

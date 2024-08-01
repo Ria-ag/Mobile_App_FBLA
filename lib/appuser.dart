@@ -14,7 +14,7 @@ class AppUser {
   // List of which tiles are checked to be shown, starts off empty and updates list as it's checked
   List<bool> isChecked;
 
-  // Experiences are stored in a list of lists, with each sublist containing the experiences of a category
+  // Experiences are stored in a list of lists, with each sub-list containing the experiences of a category
   List<List<Experience>> xpList;
 
   // These are referred to as "tiles" simply because they are directly shown on the goals page. Experiences are technically "tiles", too
@@ -24,7 +24,7 @@ class AppUser {
   List<GoalTile> goals;
   int totalCompletedTasks;
 
-  // The constructor for AppUser requrires all field values except for profile picture and its path.
+  // The constructor for AppUser requires all field values except for profile picture and its path.
   AppUser({
     required this.name,
     required this.school,

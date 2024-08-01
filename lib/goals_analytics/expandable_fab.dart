@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 // Below, the expandable floating action button is created
-// It stores children buttons, whetherit should be open initially, and the distance of the children from itself
+// It stores children buttons, whether it should be open initially, and the distance of the children from itself
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
     super.key,
@@ -29,7 +29,7 @@ class _ExpandableFabState extends State<ExpandableFab>
 
   @override
 
-  // When the class's initial state is displayed, all the vairables are set to given values
+  // When the class's initial state is displayed, all the variables are set to given values
   // Tbe animation type is also set
   void initState() {
     super.initState();
@@ -224,7 +224,7 @@ class ActionButton extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: icon,
         ),
-    ),
+      ),
     );
   }
 }
